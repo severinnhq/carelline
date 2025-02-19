@@ -7,6 +7,7 @@ export async function POST(request: Request) {
     const db = client.db("webstore")
     const { name, description, price, salePrice, mainImage, categories, sizes, galleryImages } = await request.json()
 
+    
     const product = {
       name,
       description,
