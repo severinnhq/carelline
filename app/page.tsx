@@ -7,17 +7,27 @@ import BlackFridayCountdown from '../components/BlackFridayCountdown';
 import ReviewSection from '@/components/ReviewSection';
 import FAQSection from '@/components/faq';
 import { useCountdown } from '@/lib/CountdownContext';
-import { Header } from '@/components//Header';
+import { Header } from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import CartModal from '@/components/CartModal';
 import { useCart } from '@/lib/CartContext';
+
+// Updated Product interface with required properties
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  mainImage: string;
+  sizes: string[];  // Array of available sizes
+  // Add other product properties as needed
+}
 
 const SHOW_COUNTDOWN = false;
 
 export default function Home() {
   const { setIsCountdownActive } = useCountdown();
   const { cartItems, addToCart, removeFromCart, updateQuantity } = useCart();
-  const [cartProduct, setCartProduct] = useState<any>(null);
+  const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -28,11 +38,6 @@ export default function Home() {
   if (SHOW_COUNTDOWN) {
     return <BlackFridayCountdown />;
   }
-
-  // Dummy handler for adding to cart—update as needed based on your product selection logic.
-  const handleAddToCart = (product: any) => {
-    setCartProduct(product);
-  };
 
   // Once the user confirms (e.g., selecting a size) in the CartModal, add the product.
   const handleConfirmAddToCart = (size: string) => {
@@ -45,14 +50,12 @@ export default function Home() {
 
   return (
     <main className="flex flex-col min-h-screen">
-      {/* Header remains at the top */}
       <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
 
       <section id="hero">
         <HeroSection />
       </section>
 
-      {/* New Feature Section with image and collapsible items */}
       <section id="features">
         <FeatureSection />
       </section>
@@ -65,9 +68,6 @@ export default function Home() {
         <FAQSection />
       </section>
 
-  
-
-      {/* Cart Modal for product selection */}
       {cartProduct && (
         <CartModal
           product={cartProduct}
@@ -76,7 +76,6 @@ export default function Home() {
         />
       )}
 
-      {/* Sidebar displays the cart items */}
       <Sidebar
         cartItems={cartItems}
         isOpen={isSidebarOpen}
