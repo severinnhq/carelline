@@ -42,7 +42,7 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-[90] transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md' : 'bg-transparent'
+        isScrolled ? 'bg-white shadow-md' : 'bg-gray-300'
       } ${sora.className}`}>
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
           <Button 
