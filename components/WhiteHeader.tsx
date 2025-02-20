@@ -41,8 +41,8 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
               <Image
                 src="/blacklogo.png"
                 alt="Logo"
-                width={160}
-                height={60}
+                width={120}
+                height={45}
                 className="object-contain cursor-pointer"
               />
             </Link>

@@ -52,7 +52,7 @@ const Footer = () => {
         <div className="space-y-4">
           <div className="mb-4">
             <Image
-              src="/whitelogo.png"
+              src="/footerlogo.png"
               alt="Rewealed"
               width={150}
               height={50}
