@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { X, Home, Star, Mail, Instagram, ListOrdered, HelpCircle } from 'lucide-react'
+import { X, Home, Star, Instagram, ListOrdered, HelpCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Sora } from 'next/font/google'
