@@ -21,31 +21,31 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true)
-      } else {
-        setIsScrolled(false)
-      }
+      setIsScrolled(window.scrollY > 10)
     }
     window.addEventListener('scroll', handleScroll)
     handleScroll() // Check initial scroll position
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-[90] transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md' : 'bg-white'
-      } ${sora.className}`}>
+      <header
+        className={`fixed top-0 left-0 right-0 z-[90] transition-all duration-300 ${
+          isScrolled ? 'bg-white shadow-md' : 'bg-transparent'
+        } ${sora.className}`}
+      >
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
           <Button
             variant="ghost"
             size="icon"
-            className={`${isScrolled ? 'text-gray-600 hover:text-gray-900' : 'text-black hover:text-gray-700'}`}
+            className={`${
+              isScrolled
+                ? 'text-gray-600 hover:text-gray-900'
+                : 'text-black hover:text-gray-700'
+            }`}
             onClick={() => setIsMenuOpen(true)}
           >
             <MenuIcon size={24} />
@@ -54,7 +54,7 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
           <div className="flex-grow flex justify-center">
             <Link href="/">
               <Image
-                src={isScrolled ? "/blacklogo.png" : "/whitelogo.png"}
+                src={isScrolled ? "/transparentlogo.png" : "/transparentlogo.png"}
                 alt="Logo"
                 width={120}
                 height={45}
@@ -65,7 +65,11 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
           <Button
             variant="ghost"
             size="icon"
-            className={`${isScrolled ? 'text-gray-600 hover:text-gray-900' : 'text-black   hover:text-gray-700'} relative`}
+            className={`${
+              isScrolled
+                ? 'text-gray-600 hover:text-gray-900'
+                : 'text-black hover:text-gray-700'
+            } relative`}
             onClick={onCartClick}
           >
             <ShoppingBag size={24} />

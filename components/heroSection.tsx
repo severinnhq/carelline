@@ -8,6 +8,7 @@ const sora = Sora({ subsets: ['latin'] })
 
 export default function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
 
   useEffect(() => {
     setIsLoaded(true)
@@ -39,11 +40,10 @@ export default function HeroSection() {
   }
 
   const videoVariants = {
-    hidden: { opacity: 0, scale: 1.1, rotate: -3 },
+    hidden: { opacity: 0, scale: 1.05 },
     visible: {
       opacity: 1,
       scale: 1,
-      rotate: 0,
       transition: {
         duration: 0.6,
         delay: 0.5,
@@ -53,82 +53,142 @@ export default function HeroSection() {
   }
 
   return (
-    <section className={`relative min-h-screen w-full overflow-hidden ${sora.className}`}>
-      {/* Background Design Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50" />
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
-        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
+    <section
+      className={`relative h-screen w-full overflow-hidden bg-white ${sora.className}`}
+    >
+      {/* Base Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-60" />
+
+      {/* Curved Background Layers – maintain aspect ratio with slice */}
+      <div className="absolute inset-0" aria-hidden="true">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 1440 800"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <path
+            fill="rgba(255,240,240,1)"
+            fillRule="evenodd"
+            d="M0,0 C320,100 420,300 1440,400 L1440,800 L0,800 Z"
+          />
+        </svg>
+      </div>
+      <div className="absolute inset-0" aria-hidden="true">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 1440 800"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <path
+            fill="rgba(255,230,230,1)"
+            fillRule="evenodd"
+            d="M1440,0 C1120,200 1020,400 0,300 L0,800 L1440,800 Z"
+          />
+        </svg>
+      </div>
+      <div className="absolute inset-0" aria-hidden="true">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 1440 800"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <path
+            fill="rgba(255,245,245,1)"
+            fillRule="evenodd"
+            d="M0,600 C480,700 960,500 1440,600 L1440,800 L0,800 Z"
+          />
+        </svg>
       </div>
 
-      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 pb-16 h-full">
-        <div className="flex flex-col lg:flex-row min-h-screen pt-16 md:pt-24 lg:pt-20">
-          {/* Left Column: Hero Text, Description & Button */}
-          <div className="lg:w-1/3 flex flex-col justify-center items-center text-center lg:items-start lg:text-left mt-16 sm:mt-24 md:mt-32 lg:mt-0">
+      {/* Main Content */}
+      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-16 h-full flex flex-col items-center justify-center mt-12 md:mt-0">
+        {/* Added gap-16 (64px) and lg:gap-32 (128px) for even bigger spacing */}
+        <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-16 lg:gap-32 w-full">
+          {/* Left Column: Text & Button - increased width and made fully fluid */}
+          <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
             <motion.h1
-              className="font-bold text-gray-900 mb-6 text-3xl sm:text-4xl md:text-5xl"
+              className="font-bold mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-800"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={0}
               variants={textVariants}
             >
-              Your Hero Text
+              Ready
+              <span className="text-[#dc2626]">Before</span>
+              <br />
+              You Need to Be
+              <br />
+        
             </motion.h1>
             <motion.p
-              className="text-gray-700 mb-8 max-w-xs sm:max-w-sm mx-auto lg:mx-0 text-base sm:text-lg md:text-xl"
+              className="mb-8 text-gray-600 text-base sm:text-lg w-full max-w-xl"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={1}
               variants={textVariants}
             >
-              This is a short description about your product or service.
+              Connect ambiguous, siloed data into the most trusted, reusable resource for your organization.
             </motion.p>
             <motion.div
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={buttonVariants}
             >
-              <Link href="/product/67b6f90829e091cfe70668a7/">
-                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                  Get Started
+              <Link href="/book-demo">
+                <button className="px-6 py-3 bg-[#dc2626] text-white font-medium rounded-md hover:bg-red-700 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5">
+                  Schedule a Demo
                 </button>
               </Link>
             </motion.div>
           </div>
-          
-          {/* Right Column: Video Placeholder */}
-          <div className="lg:w-2/3 flex items-center justify-center lg:justify-end mt-16 sm:mt-24 lg:mt-0">
+
+          {/* Right Column: Video Dashboard */}
+          <div className="w-full lg:w-3/5 z-10 mt-4 lg:mt-0 flex justify-center">
             <motion.div
-              className="w-full bg-white/80 backdrop-blur-sm rounded-2xl aspect-video flex items-center justify-center shadow-2xl"
-              style={{ minWidth: '300px', maxWidth: '650px' }}
+              className="w-full max-w-xl md:max-w-3xl relative"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={videoVariants}
             >
-              <span className="text-gray-600 text-base sm:text-lg">Video Placeholder</span>
+              <div className="relative">
+                {/* Background Accent */}
+                <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-xl transform translate-x-4 translate-y-4"></div>
+                {/* Main Video Card with Enhanced Shadow */}
+                <div className="relative bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
+                  {/* Card Header */}
+                  <div className="h-12 bg-gray-100 border-b flex items-center px-4">
+                    <div className="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                  </div>
+                  {/* Video Container */}
+                  <div className="relative aspect-video bg-gray-50">
+                    {!isVideoLoaded && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                        <div className="animate-pulse flex flex-col items-center">
+                          <div className="w-16 h-16 bg-gray-200 rounded-full mb-4"></div>
+                          <div className="h-4 bg-gray-200 rounded w-32"></div>
+                        </div>
+                      </div>
+                    )}
+                    <video
+                      className="w-full h-full object-cover"
+                      onLoadedData={() => setIsVideoLoaded(true)}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    >
+                      <source src="/api/placeholder/video" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
     </section>
   )
 }

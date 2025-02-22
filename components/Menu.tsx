@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { X, Home, ShoppingBag, Mail, Instagram } from 'lucide-react'
+import { X, Home, Star, Mail, Instagram, ListOrdered, HelpCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Sora } from 'next/font/google'
@@ -13,8 +13,7 @@ interface MenuProps {
   onClose: () => void;
 }
 
-// Define the custom XIcon component using your SVG markup.
-// It accepts SVG props so you can pass a className (or any other props).
+// XIcon component remains the same...
 const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -44,10 +43,36 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
     onClose()
   }
 
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
+    onClose()
+
+    // Extract the id from the href
+    const id = href.split('#')[1]
+    if (!id) return
+
+    // Wait for the menu to close before scrolling
+    setTimeout(() => {
+      const element = document.getElementById(id)
+      if (element) {
+        // Adjust offset based on the section
+        const offset = id === 'feature-section' ? 128 : 96 // Increased offset for feature section
+        const elementPosition = element.getBoundingClientRect().top
+        const offsetPosition = elementPosition + window.pageYOffset - offset
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        })
+      }
+    }, 300) // Matching the menu close animation duration
+  }
+
   const menuItems = [
     { name: 'Home', icon: Home, href: '/', onClick: handleHomeClick },
-    { name: 'Products', icon: ShoppingBag, href: '/#products', onClick: onClose },
-    { name: 'Contact', icon: Mail, href: '/#contact', onClick: onClose },
+    { name: 'Steps', icon: ListOrdered, href: '/#feature-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#feature-section') },
+    { name: 'Reviews', icon: Star, href: '/#review-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#review-section') },
+    { name: 'FAQ', icon: HelpCircle, href: '/#faq-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#faq-section') },
   ]
 
   return (
