@@ -40,9 +40,7 @@ const Footer = () => {
     }
   };
 
-  const handleHomeClick = () => {
-    sessionStorage.removeItem('productListScrollPosition');
-  };
+
 
   return (
     <footer id="footer" className={`bg-gray-900 text-gray-300 py-12 px-4 ${sora.className}`}>
