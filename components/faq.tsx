@@ -8,20 +8,20 @@ export default function FAQSection() {
 
   const faqs = [
     {
-      question: "What does this hoodie represent?",
-      answer: "It represents leaving excuses behind, embracing ambition, and being part of a movement that refuses to settle for mediocrity."
+      question: "How quickly can an anti-choking device remove an airway obstruction?",
+      answer: "Our anti-choking devices are designed to create strong, safe suction that can help remove airway blockages within seconds of proper application. However, these devices should be used as part of a comprehensive response that includes calling emergency services."
     },
     {
-      question: "Why is the motto 'Not for Everyone'?",
-      answer: "Because this hoodie isn't for people who settle. It's for those ready to wake up, face hard truths, and make a change."
+      question: "Can anyone use these anti-choking devices, or do you need special training?",
+      answer: "While our devices are designed to be user-friendly, we strongly recommend watching our included instructional video and practicing with the training materials provided. No special certification is required, but familiarity with the device before an emergency is essential."
     },
     {
-      question: "What's the purpose of REWEALED?",
-      answer: "To remind you that time is running out. This hoodie represents urgency, focus, and aligning with others who are done waiting for 'someday'."
+      question: "What age groups are these devices suitable for?",
+      answer: "Our anti-choking devices are designed for use on both children (over 12 months) and adults. Each device comes with clear instructions for age-appropriate usage and proper mask sizing to ensure a safe seal."
     },
     {
-      question: "Why is REWEALED expensive?",
-      answer: "Because it's not just a hoodie. It's a symbol of ambition, a statement of purpose, and a connection to a community that values action over excuses. Quality and meaning come at a price—it's for those who understand the difference."
+      question: "What's the shelf life of the device, and does it require any maintenance?",
+      answer: "Our anti-choking devices have a 2-year warranty and typically last several years when properly stored. We recommend checking the device monthly for any damage and keeping it in its protective case at room temperature. No regular maintenance is required beyond basic cleaning after use."
     }
   ]
 
@@ -41,7 +41,7 @@ export default function FAQSection() {
     <div id="faq-section" className="max-w-6xl mx-auto px-4 mt-[4rem] mb-[4rem] md:mt-[8rem] md:mb-[8rem]">
       <h1 className="text-4xl sm:text-5xl font-bold mb-[1rem] md:mb-[1rem] text-center uppercase tracking-wider">STRAIGHT TO THE POINT</h1>
       <p className="text-center text-gray-600 mb-[4rem] text-lg mx-auto max-w-[600px] w-full px-4 sm:px-6 md:px-8">
-      We know you don’t have time to waste, so here are the answers you’re looking for—clear and direct.
+      When seconds matter, you need answers fast. Here's everything you should know
       </p>
 
       <div className="space-y-6">

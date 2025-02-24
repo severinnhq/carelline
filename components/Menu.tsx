@@ -1,10 +1,11 @@
+// Menu.tsx
 'use client'
-
 import React, { useEffect } from 'react'
 import { X, Home, Star, Instagram, ListOrdered, HelpCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Sora } from 'next/font/google'
+import { getScrollOffset } from '@/utils/scrollUtils'
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -13,7 +14,6 @@ interface MenuProps {
   onClose: () => void;
 }
 
-// XIcon component remains the same...
 const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -47,25 +47,22 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
     e.preventDefault()
     onClose()
 
-    // Extract the id from the href
     const id = href.split('#')[1]
     if (!id) return
 
-    // Wait for the menu to close before scrolling
     setTimeout(() => {
       const element = document.getElementById(id)
       if (element) {
-        // Adjust offset based on the section
-        const offset = id === 'feature-section' ? 128 : 96 // Increased offset for feature section
+        const offset = getScrollOffset(id)
         const elementPosition = element.getBoundingClientRect().top
-        const offsetPosition = elementPosition + window.pageYOffset - offset
+        const offsetPosition = elementPosition + window.scrollY - offset
 
         window.scrollTo({
           top: offsetPosition,
           behavior: 'smooth'
         })
       }
-    }, 300) // Matching the menu close animation duration
+    }, 300)
   }
 
   const menuItems = [

@@ -28,7 +28,7 @@ const FeatureSection = () => {
   ];
 
   return (
-    <div id="feature-section" className="py-32">
+    <div id="feature-section" className="pt-48 pb-48"> {/* Modified padding to be asymmetric */}
       <section className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center">
           {/* Left side: Image area with a slight scale-down effect */}

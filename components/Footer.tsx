@@ -1,9 +1,10 @@
+// Footer.tsx
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Instagram } from 'lucide-react'
-import { useEffect } from 'react'
 import { Sora } from 'next/font/google'
+import { getScrollOffset } from '@/utils/scrollUtils'
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -20,34 +21,31 @@ const XIcon = () => (
 )
 
 const Footer = () => {
-  useEffect(() => {
-    const smoothScroll = (e: MouseEvent) => {
-      e.preventDefault();
-      const target = e.target as HTMLAnchorElement;
-      const id = target.getAttribute('href')?.slice(1);
-      if (id) {
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          });
-        }
-      }
-    };
-    const links = document.querySelectorAll('a[href^="#"]');
-    links.forEach(link => {
-      link.addEventListener('click', smoothScroll as EventListener);
-    });
-    return () => {
-      links.forEach(link => {
-        link.removeEventListener('click', smoothScroll as EventListener);
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    
+    const id = href.split('#')[1];
+    if (!id) return;
+
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = getScrollOffset(id);
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
       });
-    };
-  }, []);
+    }
+  };
+
+  const handleHomeClick = () => {
+    sessionStorage.removeItem('productListScrollPosition');
+  };
 
   return (
-    <footer className={`bg-gray-900 text-gray-300 py-12 px-4 ${sora.className}`}>
+    <footer id="footer" className={`bg-gray-900 text-gray-300 py-12 px-4 ${sora.className}`}>
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="space-y-4">
           <div className="mb-4">
@@ -73,31 +71,66 @@ const Footer = () => {
           </div>
         </div>
         <div className="space-y-4">
-          <h4 className="text-lg font-semibold text-white">Quick Links</h4>
+          <h4 className="text-lg font-semibold text-white">Navigation</h4>
           <ul className="space-y-2">
             <li>
-              <Link href="#hero" className="hover:text-white transition-colors">Home</Link>
+              <Link 
+                href="/#hero" 
+                className="hover:text-white transition-colors"
+                onClick={(e) => handleSmoothScroll(e, '/#hero')}
+              >
+                Home
+              </Link>
             </li>
             <li>
-              <Link href="#products" className="hover:text-white transition-colors">Products</Link>
+              <Link 
+                href="/#feature-section" 
+                className="hover:text-white transition-colors"
+                onClick={(e) => handleSmoothScroll(e, '/#feature-section')}
+              >
+                Steps
+              </Link>
             </li>
             <li>
-              <Link href="#contact" className="hover:text-white transition-colors">Contact</Link>
+              <Link 
+                href="/#review-section" 
+                className="hover:text-white transition-colors"
+                onClick={(e) => handleSmoothScroll(e, '/#review-section')}
+              >
+                Reviews
+              </Link>
+            </li>
+            <li>
+              <Link 
+                href="/#faq-section" 
+                className="hover:text-white transition-colors"
+                onClick={(e) => handleSmoothScroll(e, '/#faq-section')}
+              >
+                FAQ
+              </Link>
             </li>
           </ul>
         </div>
         <div className="space-y-4">
           <h4 className="text-lg font-semibold text-white">Policies</h4>
           <ul className="space-y-2">
-            <li>
-              <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            </li>
-            <li>
-              <Link href="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link>
-            </li>
-            <li>
-              <Link href="/refund" className="hover:text-white transition-colors">Refund Policy</Link>
-            </li>
+          <li>
+  <Link href="/privacy" className="hover:text-white transition-colors">
+    Privacy Policy
+  </Link>
+</li>
+<li>
+  <Link href="/terms" className="hover:text-white transition-colors">
+    Terms & Conditions
+  </Link>
+</li>
+<li>
+  <Link href="/refund" className="hover:text-white transition-colors">
+    Refund Policy
+  </Link>
+</li>
+
+
           </ul>
         </div>
       </div>

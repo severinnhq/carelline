@@ -14,7 +14,7 @@ const sora = Sora({
 })
 
 export const metadata: Metadata = {
-  title: 'REWEALED | Not For Everyone',
+  title: 'Every Second Counts',
 }
 
 export default function RootLayout({
