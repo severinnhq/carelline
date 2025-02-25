@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Sora } from 'next/font/google'
 import Link from 'next/link'
@@ -7,13 +7,100 @@ import Link from 'next/link'
 const sora = Sora({ subsets: ['latin'] })
 
 export default function HeroSection() {
+  // Start with isMuted true so that autoplay can work
   const [isLoaded, setIsLoaded] = useState(false)
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  const [videoError, setVideoError] = useState(false)
+  const [isMuted, setIsMuted] = useState(true)
+  const [showPlayButton, setShowPlayButton] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     setIsLoaded(true)
+
+    // IMPORTANT: Reset muted state whenever component mounts
+    setIsMuted(true)
+    if (videoRef.current) {
+      videoRef.current.muted = true
+    }
+
+    // If the video element is already ready, show it
+    if (videoRef.current && videoRef.current.readyState >= 3) {
+      setIsVideoLoaded(true)
+    }
+
+    // Fallback timer: reveal the video container after 5 seconds even if load events haven't fired
+    const timer = setTimeout(() => {
+      setIsVideoLoaded(true)
+    }, 5000)
+
+    return () => clearTimeout(timer)
   }, [])
 
+  // When video data loads, attempt to autoplay (while muted)
+  // This function no longer automatically unmutes after a delay
+  const handleVideoLoadedData = () => {
+    setIsVideoLoaded(true)
+    if (videoRef.current) {
+      // Ensure it's muted so autoplay is allowed
+      videoRef.current.muted = true
+      videoRef.current
+        .play()
+        .catch((err) => {
+          console.error('Autoplay failed:', err)
+          setShowPlayButton(true)
+        })
+    }
+  }
+
+  // Fallback if autoplay is blocked: allow the user to click to start playback.
+  const handlePlayButtonClick = () => {
+    if (videoRef.current) {
+      videoRef.current
+        .play()
+        .then(() => {
+          setShowPlayButton(false)
+          // Keep it muted - user can unmute manually if desired
+        })
+        .catch((err) => {
+          console.error('Play button click failed:', err)
+        })
+    }
+  }
+
+  // Toggle mute state when the sound button is clicked.
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted
+      setIsMuted(videoRef.current.muted)
+    }
+  }
+
+  // Keep the video playing on page focus or visibility change.
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && videoRef.current) {
+        videoRef.current.play().catch((err) =>
+          console.error('Video play failed on visibility change:', err)
+        )
+      }
+    }
+    const handleFocus = () => {
+      if (videoRef.current) {
+        videoRef.current.play().catch((err) =>
+          console.error('Video play failed on focus:', err)
+        )
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [])
+
+  // Animation variants for Framer Motion
   const textVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: (i: number) => ({
@@ -26,7 +113,6 @@ export default function HeroSection() {
       },
     }),
   }
-
   const buttonVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -34,11 +120,10 @@ export default function HeroSection() {
       y: 0,
       transition: {
         duration: 0.4,
-        ease: "easeOut",
+        ease: 'easeOut',
       },
     },
   }
-
   const videoVariants = {
     hidden: { opacity: 0, scale: 1.05 },
     visible: {
@@ -52,20 +137,17 @@ export default function HeroSection() {
     },
   }
 
-  return (
-    <section
-      className={`relative h-screen w-full overflow-hidden bg-white ${sora.className}`}
-    >
-      {/* Base Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-60" />
+  // Choose an alternative video source if there is an error.
+  const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
 
-      {/* Curved Background Layers – maintain aspect ratio with slice */}
+  return (
+    <section className={`relative h-screen w-full overflow-hidden bg-white ${sora.className}`}>
+      {/* Base Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100" />
+
+      {/* Curved Background Layers */}
       <div className="absolute inset-0" aria-hidden="true">
-        <svg
-          className="w-full h-full"
-          viewBox="0 0 1440 800"
-          preserveAspectRatio="xMidYMid slice"
-        >
+        <svg className="w-full h-full" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice">
           <path
             fill="rgba(255,240,240,1)"
             fillRule="evenodd"
@@ -74,11 +156,7 @@ export default function HeroSection() {
         </svg>
       </div>
       <div className="absolute inset-0" aria-hidden="true">
-        <svg
-          className="w-full h-full"
-          viewBox="0 0 1440 800"
-          preserveAspectRatio="xMidYMid slice"
-        >
+        <svg className="w-full h-full" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice">
           <path
             fill="rgba(255,230,230,1)"
             fillRule="evenodd"
@@ -87,11 +165,7 @@ export default function HeroSection() {
         </svg>
       </div>
       <div className="absolute inset-0" aria-hidden="true">
-        <svg
-          className="w-full h-full"
-          viewBox="0 0 1440 800"
-          preserveAspectRatio="xMidYMid slice"
-        >
+        <svg className="w-full h-full" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice">
           <path
             fill="rgba(255,245,245,1)"
             fillRule="evenodd"
@@ -102,9 +176,8 @@ export default function HeroSection() {
 
       {/* Main Content */}
       <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-16 h-full flex flex-col items-center justify-center mt-12 md:mt-0">
-        {/* Added gap-16 (64px) and lg:gap-32 (128px) for even bigger spacing */}
         <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-16 lg:gap-32 w-full">
-          {/* Left Column: Text & Button - increased width and made fully fluid */}
+          {/* Left Column: Text & Button */}
           <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
             <motion.h1
               className="font-bold mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-800"
@@ -113,12 +186,10 @@ export default function HeroSection() {
               custom={0}
               variants={textVariants}
             >
-              Állj készen
-              <span className="text-[#dc2626]">Állj készenlőtt</span>
+              Állj készen,
+              <span className="text-[#dc2626]"> készenlétben</span>
               <br />
               jön a baj
-              <br />
-        
             </motion.h1>
             <motion.p
               className="mb-8 text-gray-600 text-base sm:text-lg w-full max-w-xl"
@@ -136,7 +207,7 @@ export default function HeroSection() {
             >
               <Link href="/product/67b6f90829e091cfe70668a7">
                 <button className="px-6 py-3 bg-[#dc2626] text-white font-medium rounded-md hover:bg-red-700 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5">
-                  Felkészülők
+                  Felkészülök
                 </button>
               </Link>
             </motion.div>
@@ -153,7 +224,7 @@ export default function HeroSection() {
               <div className="relative">
                 {/* Background Accent */}
                 <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-xl transform translate-x-4 translate-y-4"></div>
-                {/* Main Video Card with Enhanced Shadow */}
+                {/* Main Video Card */}
                 <div className="relative bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
                   {/* Card Header */}
                   <div className="h-12 bg-gray-100 border-b flex items-center px-4">
@@ -172,16 +243,82 @@ export default function HeroSection() {
                       </div>
                     )}
                     <video
-                      className="w-full h-full object-cover"
-                      onLoadedData={() => setIsVideoLoaded(true)}
-                      autoPlay
-                      muted
+                      ref={videoRef}
+                      className={`w-full h-full object-cover ${isVideoLoaded ? 'block' : 'hidden'}`}
+                      onLoadedData={handleVideoLoadedData}
+                      onError={() => {
+                        console.error('Video failed to load')
+                        setVideoError(true)
+                        setIsVideoLoaded(true)
+                      }}
                       loop
                       playsInline
+                      autoPlay
+                      muted={isMuted}
+                      src={videoSrc}
                     >
-                      <source src="/api/placeholder/video" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
+                    {/* Overlay play button if autoplay was blocked */}
+                    {showPlayButton && (
+                      <button
+                        onClick={handlePlayButtonClick}
+                        className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50"
+                        aria-label="Play Video"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-12 w-12 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M14.752 11.168l-5.197-3.03A1 1 0 008 9.03v5.94a1 1 0 001.555.832l5.197-3.03a1 1 0 000-1.664z"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                    {/* Sound Toggle Button */}
+<button
+  onClick={toggleMute}
+  className="absolute bottom-4 right-4 z-20 bg-white p-2 rounded-full hover:bg-white/90 focus:outline-none shadow-md transition-all"
+  aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+>
+  {isMuted ? (
+    // Muted icon - with speaker and X
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6 text-gray-800"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H2v6h4l5 4V5z" />
+      <g transform="translate(3, 4)">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6l4 4m0-4l-4 4" />
+      </g>
+    </svg>
+  ) : (
+    // Unmuted icon - with speaker and sound waves
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6 text-gray-800"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H2v6h4l5 4V5z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.54 8.46a5 5 0 010 7.07" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.07 4.93a10 10 0 010 14.14" />
+    </svg>
+  )}
+</button>
                   </div>
                 </div>
               </div>
