@@ -143,7 +143,7 @@ const ReviewSection = () => {
     },
     { 
       src: "/uploads/reviews/review11.png", 
-      name: "Bodzán Imre", 
+      name: "Bodzán Margó", 
       text: "Gyorsan és egyszerűen használható. Életeket menthet."
     },
     { 
