@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { X, Home, Star, ListOrdered, HelpCircle, Mail, Facebook, Instagram, ShoppingBag } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
 import { Sora } from 'next/font/google'
 import { getScrollOffset } from '@/utils/scrollUtils'
 
@@ -15,6 +16,10 @@ interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
+  const router = useRouter()
+  const pathname = usePathname()
+  const isHomePage = pathname === '/'
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -39,19 +44,40 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
     const id = href.split('#')[1]
     if (!id) return
 
-    setTimeout(() => {
-      const element = document.getElementById(id)
-      if (element) {
-        const offset = getScrollOffset(id)
-        const elementPosition = element.getBoundingClientRect().top
-        const offsetPosition = elementPosition + window.scrollY - offset
+    if (isHomePage) {
+      // We're already on the home page, just scroll to the section
+      setTimeout(() => {
+        const element = document.getElementById(id)
+        if (element) {
+          const offset = getScrollOffset(id)
+          const elementPosition = element.getBoundingClientRect().top
+          const offsetPosition = elementPosition + window.scrollY - offset
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        })
-      }
-    }, 300)
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          })
+        }
+      }, 300)
+    } else {
+      // We're not on the home page, navigate to home page first and then scroll
+      router.push('/')
+      
+      // Need to wait a bit longer for the page to load before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(id)
+        if (element) {
+          const offset = getScrollOffset(id)
+          const elementPosition = element.getBoundingClientRect().top
+          const offsetPosition = elementPosition + window.scrollY - offset
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          })
+        }
+      }, 600)
+    }
   }
 
   const menuItems = [

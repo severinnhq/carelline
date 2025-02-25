@@ -3,27 +3,53 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Mail, Facebook, Instagram } from 'lucide-react'
 import { Sora } from 'next/font/google'
+import { useRouter, usePathname } from 'next/navigation'
 import { getScrollOffset } from '@/utils/scrollUtils'
 
 const sora = Sora({ subsets: ['latin'] })
 
 const Footer = () => {
+  const router = useRouter()
+  const pathname = usePathname()
+  const isHomePage = pathname === '/'
+
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     
     const id = href.split('#')[1];
     if (!id) return;
 
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = getScrollOffset(id);
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - offset;
+    if (isHomePage) {
+      // Already on home page, just scroll to the section
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = getScrollOffset(id);
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    } else {
+      // Navigate to home page first, then scroll to section
+      router.push('/');
+
+      // Wait for navigation to complete before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          const offset = getScrollOffset(id);
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 600);
     }
   };
 
