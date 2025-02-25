@@ -411,7 +411,7 @@ export default function ProductList() {
     <>
       <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
       <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[4rem] md:mt-[4rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
-        <h1 className="text-4xl sm:text-5xl font-bold mb-[2rem] md:mb-[4rem] text-center uppercase tracking-wider">FIRST SALE OF THE YEAR</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold mb-[2rem] md:mb-[4rem] text-center uppercase tracking-wider">REMÉLJÜK SOSE LESZ RÁJUK SZÜKSÉG</h1>
         
         {isLoading && (
           <div className="text-center mb-6">
