@@ -1,7 +1,7 @@
 // Menu.tsx
 'use client'
 import React, { useEffect } from 'react'
-import { X, Home, Star, ListOrdered, HelpCircle, Mail, Facebook, ShoppingBag } from 'lucide-react'
+import { X, Home, Star, ListOrdered, HelpCircle, Mail, Facebook, Instagram, ShoppingBag } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Sora } from 'next/font/google'
@@ -117,6 +117,13 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
                   >
                     <span className="sr-only">Facebook</span>
                     <Facebook className="h-6 w-6" />
+                  </a>
+                  <a 
+                    href="https://www.instagram.com/carelline_official" 
+                    className="text-gray-400 hover:text-gray-500 transition-colors"
+                  >
+                    <span className="sr-only">Instagram</span>
+                    <Instagram className="h-6 w-6" />
                   </a>
                   <a 
                     href="mailto:carelline@outlook.com" 

@@ -97,52 +97,21 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
                   className="rounded object-cover mr-4"
                 />
                 <div>
-                  <h3 className="font-semibold">{product.name}</h3>
-                  <p className="text-sm">
-  {product.salePrice ? (
-    <>
-      <span className="text-[#be2323] font-bold">{product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
-      <span className="text-gray-500 line-through ml-2">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
-    </>
-  ) : (
-    <span className="font-bold">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
-  )}
-</p>
+                  <h3 className="text-base font-semibold">{product.name}</h3>
+                  <p className="mt-1">
+                    {product.salePrice ? (
+                      <>
+                        <span className="text-[#be2323] font-bold text-lg">{product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+                        <span className="text-gray-500 line-through ml-2 text-sm">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+                      </>
+                    ) : (
+                      <span className="font-bold text-lg">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+                    )}
+                  </p>
                 </div>
               </div>
-              <div className="mb-4">
-                <p className="text-sm font-semibold mb-2">Méret:</p>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes.includes('One Size') ? (
-                    <Button
-                      variant="outline"
-                      className={`w-24 h-12 ${selectedSize === 'One Size' ? 'border-2 border-black' : 'border border-gray-300'}`}
-                      onClick={() => setSelectedSize('One Size')}
-                    >
-                      One Size
-                    </Button>
-                  ) : (
-                    allSizes.map((size) => {
-                      const isAvailable = product.sizes.includes(size)
-                      return (
-                        <Button
-                          key={size}
-                          variant="outline"
-                          className={`${size === 'One Size' ? "w-24 h-12" : "w-10 h-10"} p-0 
-                            ${!isAvailable && "line-through opacity-50"} 
-                            ${selectedSize === size ? 'border-2 border-black' : 'border border-gray-300'}
-                            transition-all duration-200
-                          `}
-                          onClick={() => isAvailable && setSelectedSize(size)}
-                          disabled={!isAvailable}
-                        >
-                          {size}
-                        </Button>
-                      )
-                    })
-                  )}
-                </div>
-              </div>
+             
+            
               <Button 
                 className="w-full bg-black text-white hover:bg-gray-800 transition-colors duration-200" 
                 disabled={!selectedSize && !product.sizes.includes('One Size')}

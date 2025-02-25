@@ -45,7 +45,7 @@ const ShippingProgressBar: React.FC<ShippingProgressBarProps> = ({ currentAmount
       <div className="mb-2">
         {remainingAmount > 0 ? (
           <p className="text-sm text-gray-900">
-          Adj hozzá <span className="font-semibold">{remainingAmount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span> -ot az ingyenes szállításhoz.
+    Még <span className="font-semibold">{remainingAmount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span> hiányzik az ingyenes szállításhoz.
         </p>
         ) : (
           <p className="text-sm text-gray-900 font-semibold">
@@ -234,7 +234,7 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                     {cartTotal >= 100
                       ? "Nincs szállítási költség, "
                       : "A szállítási költséget és "}
-                    {"a VAT-ot a pénztárnál számoljuk ki. "}
+                    {"árak az ÁFÁ-t tartalmazzák. "}
                   </p>
                   <div className="mt-6 space-y-4">
                     <Button onClick={processCheckout} disabled={isLoading} className="w-full bg-black text-white hover:bg-gray-800">

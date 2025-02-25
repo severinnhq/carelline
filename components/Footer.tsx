@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Mail, Facebook } from 'lucide-react'
+import { Mail, Facebook, Instagram } from 'lucide-react'
 import { Sora } from 'next/font/google'
 import { getScrollOffset } from '@/utils/scrollUtils'
 
@@ -48,6 +48,9 @@ const Footer = () => {
           <div className="flex space-x-4">
             <Link href="https://www.facebook.com/profile.php?id=61573174178989" className="hover:text-white transition-colors">
               <Facebook size={20} />
+            </Link>
+            <Link href="https://www.instagram.com/" className="hover:text-white transition-colors">
+              <Instagram size={20} />
             </Link>
             <Link href="mailto:carelline@outlook.com" className="hover:text-white transition-colors">
               <Mail size={20} />

@@ -35,7 +35,7 @@ export function FloatingProductBox({ product, selectedSize, quantity, onAddToCar
       />
       <div className="flex-grow">
         <h3 className="font-semibold text-sm">{product.name}</h3>
-        <p className="text-sm text-gray-600">Méret: {selectedSize}</p>
+
         <p className="text-sm text-gray-600">Mennyiség: {quantity}</p>
         <p className="text-sm font-bold">
   {product.salePrice ? (

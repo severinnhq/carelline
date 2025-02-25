@@ -318,11 +318,11 @@ export default function ProductPage() {
                   </div>
                 )}
                 <div className="mb-4">
-                  <h2 className="text-lg font-semibold mb-2">Méret:</h2>
+                  <h2 className="text-lg font-semibold mb-2">Kiszerelés</h2>
                   <div className="flex flex-wrap gap-2">
                     {product.sizes.includes('One Size') ? (
                       <Button variant="outline" className="border-2 border-black text-black">
-                        One Size
+                        Családi
                       </Button>
                     ) : (
                       availableSizes.map((size) => (
