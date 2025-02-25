@@ -186,10 +186,10 @@ export default function HeroSection() {
               custom={0}
               variants={textVariants}
             >
-              Állj készen,
-              <span className="text-[#dc2626]"> készenlétben</span>
+              Legyen kéznél
+              <span className="text-[#dc2626]"> vészhelyzetben</span>
               <br />
-              jön a baj
+   
             </motion.h1>
             <motion.p
               className="mb-8 text-gray-600 text-base sm:text-lg w-full max-w-xl"
@@ -198,7 +198,7 @@ export default function HeroSection() {
               custom={1}
               variants={textVariants}
             >
-              Connect ambiguous, siloed data into the most trusted, reusable resource for your organization.
+             Innovatív fulladásgátló eszközünk másodpercek alatt tisztítja meg a légutat!
             </motion.p>
             <motion.div
               initial="hidden"
