@@ -85,7 +85,8 @@ export function useCheckout() {
           const errorData = JSON.parse(responseText);
           setError(errorData.error || 'Failed to create checkout session');
           throw new Error(errorData.error || 'Failed to create checkout session');
-        } catch (_) {
+        } catch {
+          // Omitting the parameter entirely for the unused catch variable
           setError(`Server error (${response.status}): ${responseText}`);
           throw new Error(`Server error (${response.status}): ${responseText}`);
         }
