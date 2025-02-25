@@ -1,5 +1,7 @@
+// SuccessPage.tsx
 'use client'
 
+import { motion } from 'framer-motion'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { CheckCircle } from 'lucide-react'
@@ -10,31 +12,47 @@ export default function SuccessPage() {
   const router = useRouter()
 
   useEffect(() => {
-    // Clear the cart
     localStorage.removeItem('cartItems')
   }, [])
 
   return (
-    <div className="container mx-auto p-4 h-screen flex items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <div className="flex justify-center mb-4">
-            <CheckCircle className="w-16 h-16 text-green-500" />
-          </div>
-          <CardTitle className="text-2xl font-bold text-center">Sikeres rendelés!</CardTitle>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 flex items-center justify-center p-4"
+    >
+      <Card className="w-full max-w-md shadow-xl rounded-2xl overflow-hidden border-0">
+        <CardHeader className="bg-green-50/50 p-8">
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            className="flex justify-center mb-6"
+          >
+            <div className="p-4 bg-green-100 rounded-full">
+              <CheckCircle className="w-16 h-16 text-green-600" strokeWidth={1.5} />
+            </div>
+          </motion.div>
+          <CardTitle className="text-3xl font-extrabold text-center text-green-900">
+            Sikeres rendelés!
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-center mb-4">
-          Rendelése sikeresen rögzítésre került. Amint feladjuk a terméket/termékeket, küldünk egy e-mailt a szállítási információkkal kapcsolatban.
+
+        <CardContent className="p-8">
+          <p className="text-center text-gray-700 mb-6 leading-relaxed">
+            Rendelése sikeresen rögzítésre került. Amint feladjuk a terméket/termékeket, küldünk egy e-mailt a szállítási információkkal kapcsolatban.
           </p>
+          
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <Button onClick={() => router.push('/')} variant="outline" className="w-full">
-          Vissza a kezdőlapra
-          </Button>
+
+        <CardFooter className="p-8 pt-0">
+        <Button 
+              onClick={() => router.push('/')}
+              className="w-full bg-red-600 hover:bg-red-700 text-white h-12 rounded-xl transition-all duration-300"
+            >
+              Vissza a kezdőlapra
+            </Button>
         </CardFooter>
       </Card>
-    </div>
+    </motion.div>
   )
 }
-

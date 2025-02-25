@@ -45,8 +45,8 @@ const ShippingProgressBar: React.FC<ShippingProgressBarProps> = ({ currentAmount
       <div className="mb-2">
         {remainingAmount > 0 ? (
           <p className="text-sm text-gray-900">
-            Adj hozzá <span className="font-semibold">{remainingAmount.toFixed(2)} Ft</span> -ot az ingyenes szállításhoz.
-          </p>
+          Adj hozzá <span className="font-semibold">{remainingAmount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span> -ot az ingyenes szállításhoz.
+        </p>
         ) : (
           <p className="text-sm text-gray-900 font-semibold">
             Ingyenes szállítás!
@@ -130,7 +130,7 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
               {cartItems.length > 0 && (
                 <ShippingProgressBar
                   currentAmount={cartTotal}
-                  freeShippingThreshold={100}
+                  freeShippingThreshold={30000}
                 />
               )}
 
@@ -184,9 +184,9 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                                       {item.product.name}
                                     </Link>
                                   </h3>
-                                  <p className="ml-4">
-                                    {((item.product.salePrice || item.product.price) * item.quantity).toFixed(2)} Ft
-                                  </p>
+                                  <p className="ml-4 text-sm whitespace-nowrap">
+  {((item.product.salePrice || item.product.price) * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+</p>
                                 </div>
                                 <p className="mt-1 text-sm text-gray-500">Méret: {item.size}</p>
                               </div>
@@ -227,8 +227,8 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                   <div className="flex justify-between text-lg font-semibold text-gray-900">
                     <p>Összesen</p>
                     <p>
-                      {cartTotal.toFixed(2)} Ft
-                    </p>
+  {cartTotal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+</p>
                   </div>
                   <p className="mt-0.5 text-sm text-gray-500">
                     {cartTotal >= 100

@@ -335,28 +335,29 @@ export default function RecommendedProducts() {
       </div>
       <div className="p-4">
         <h2 className="text-xl font-semibold text-black">{product.name}</h2>
+       
         <div className="mt-2 flex items-center justify-between">
-          <div>
-            {product.sizes.length === 0 ? (
-              <span className="text-lg text-black">
-                Elfogyott
-              </span>
-            ) : product.salePrice ? (
-              <>
-                <span className="text-lg font-bold text-[#be2323]">
-                  {product.salePrice.toFixed(2)} Ft
-                </span>
-                <span className="text-sm text-gray-500 line-through ml-2">
-                  {product.price.toFixed(2)} Ft
-                </span>
-              </>
-            ) : (
-              <span className="text-lg font-bold text-black">
-                {product.price.toFixed(2)} Ft
-              </span>
-            )}
-          </div>
-        </div>
+  <div>
+    {product.sizes.length === 0 ? (
+      <span className="text-lg text-black">
+        Elfogyott
+      </span>
+    ) : product.salePrice ? (
+      <>
+        <span className="text-lg font-bold text-[#be2323]">
+          {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
+        </span>
+        <span className="text-sm text-gray-500 line-through ml-2">
+          {Math.round(product.price).toLocaleString('hu-HU')} Ft
+        </span>
+      </>
+    ) : (
+      <span className="text-lg font-bold text-black">
+        {Math.round(product.price).toLocaleString('hu-HU')} Ft
+      </span>
+    )}
+  </div>
+</div>
       </div>
     </div>
   )

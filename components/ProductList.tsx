@@ -371,7 +371,7 @@ export default function ProductList() {
                 }}
                 className="bg-black text-white hover:bg-gray-800 text-sm py-2 px-4 w-full"
               >
-                <span className="font-bold">+ Add to Cart</span>
+                <span className="font-bold">+ Kosárba</span>
               </Button>
             </div>
             <div className="absolute bottom-4 right-4 md:hidden">
@@ -392,24 +392,24 @@ export default function ProductList() {
         <h2 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-semibold text-black">{product.name}</h2>
         <div className="mt-2 flex items-center justify-between">
           <div>
-            {product.sizes.length === 0 ? (
-              <span className="text-sm sm:text-base lg:text-lg text-black">
-                Sold Out
-              </span>
-            ) : product.salePrice ? (
-              <>
-                <span className="text-base sm:text-lg lg:text-xl font-bold text-[#be2323]">
-                  €{product.salePrice.toFixed(2)}
-                </span>
-                <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through ml-2">
-                  €{product.price.toFixed(2)}
-                </span>
-              </>
-            ) : (
-              <span className="text-base sm:text-lg lg:text-xl font-semibold text-black">
-                €{product.price.toFixed(2)}
-              </span>
-            )}
+          {product.sizes.length === 0 ? (
+  <span className="text-sm sm:text-base lg:text-lg text-black">
+    Sold Out
+  </span>
+) : product.salePrice ? (
+  <>
+    <span className="text-base sm:text-lg lg:text-xl font-bold text-[#be2323]">
+      {product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+    </span>
+    <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through ml-2">
+      {product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+    </span>
+  </>
+) : (
+  <span className="text-base sm:text-lg lg:text-xl font-semibold text-black">
+    {product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+  </span>
+)}
           </div>
         </div>
       </div>

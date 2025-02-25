@@ -99,15 +99,15 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
                 <div>
                   <h3 className="font-semibold">{product.name}</h3>
                   <p className="text-sm">
-                    {product.salePrice ? (
-                      <>
-                        <span className="text-[#be2323] font-bold">€{product.salePrice.toFixed(2)}</span>
-                        <span className="text-gray-500 line-through ml-2">€{product.price.toFixed(2)}</span>
-                      </>
-                    ) : (
-                      <span className="font-bold">€{product.price.toFixed(2)}</span>
-                    )}
-                  </p>
+  {product.salePrice ? (
+    <>
+      <span className="text-[#be2323] font-bold">{product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+      <span className="text-gray-500 line-through ml-2">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+    </>
+  ) : (
+    <span className="font-bold">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+  )}
+</p>
                 </div>
               </div>
               <div className="mb-4">
@@ -159,4 +159,3 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
 }
 
 export default CartModal
-
