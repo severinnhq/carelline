@@ -18,7 +18,7 @@ interface FloatingProductBoxProps {
   onAddToCart: () => void
 }
 
-export function FloatingProductBox({ product, selectedSize, quantity, onAddToCart }: FloatingProductBoxProps) {
+export function FloatingProductBox({ product, quantity, onAddToCart }: FloatingProductBoxProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}

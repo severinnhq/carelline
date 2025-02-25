@@ -55,7 +55,7 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
     setIsOpen(false)
   }
 
-  const allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+
 
   return (
     <AnimatePresence onExitComplete={onClose}>
