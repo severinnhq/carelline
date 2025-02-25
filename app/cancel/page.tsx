@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { XCircle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function CancelPage() {
   const router = useRouter()
