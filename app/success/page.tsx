@@ -21,17 +21,16 @@ export default function SuccessPage() {
           <div className="flex justify-center mb-4">
             <CheckCircle className="w-16 h-16 text-green-500" />
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Order Successful!</CardTitle>
-          <CardDescription className="text-center">Thank you for your purchase</CardDescription>
+          <CardTitle className="text-2xl font-bold text-center">Sikeres rendelés!</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-center mb-4">
-            Your order has been successfully placed. We&apos;ll send you an email with the order details and tracking information once your package has shipped.
+          Rendelésed sikeresen rögzítésre került. Amint feladjuk a terméket/termékeket, küldünk egy e-mailt a szállítási információkkal kapcsolatban.
           </p>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button onClick={() => router.push('/')} className="w-full">
-            Return to Home
+          <Button onClick={() => router.push('/')} variant="outline" className="w-full">
+          Vissza a kezdőlapra
           </Button>
         </CardFooter>
       </Card>

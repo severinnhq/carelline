@@ -8,7 +8,7 @@ export function ShippingFeatures() {
           <div className="flex flex-col items-center text-center p-6">
             <Truck className="h-16 w-16 mb-6 text-primary stroke-[1.5]" />
             <div>
-              <h3 className="text-xl font-semibold">Ingyenes szállítás.</h3>
+              <h3 className="text-xl font-semibold">Ingyenes szállítás</h3>
               <p className="text-sm text-muted-foreground mt-2">40 000FT felett.</p>
             </div>
           </div>

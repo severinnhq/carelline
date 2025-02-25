@@ -24,10 +24,7 @@ const TermsAndConditions = () => {
         <section>
           <h2 className="text-2xl font-semibold mb-4">1. Feltételek elfogadása</h2>
           <p className="mb-4">
-            A weboldalunk használatával és fulladásgátló eszközeink vásárlásával Ön elfogadja, hogy ezek a Felhasználási Feltételek kötelezőek Önre nézve. Kérjük, figyelmesen olvassa el azokat vásárlás előtt.
-          </p>
-          <p className="mb-4 text-red-600 font-semibold">
-            Felhívjuk figyelmét, hogy termékeink és szolgáltatásaink hatékonyságát nem tudjuk 100%-ban garantálni. Nem vállalunk felelősséget a nem megfelelő használatból vagy váratlan körülményekből eredő következményekért.
+            A weboldalunk használatával és termékeink megvásárlásával Ön elfogadja, hogy ezek a Felhasználási Feltételek kötelezőek Önre nézve. Kérjük, figyelmesen olvassa el vásárlás előtt.
           </p>
         </section>
 
@@ -61,7 +58,7 @@ const TermsAndConditions = () => {
           <ul className="list-disc pl-6 space-y-2">
             <li>Világszerte elérhető szállítás</li>
             <li>A szállítási idő régiótól függően változik</li>
-            <li>A szállítási költségek a kifizetéskor kerülnek kiszámításra</li>
+            <li>A szállítási költségek a pénztárnál kerülnek kiszámításra</li>
             <li>Nem vállalunk felelősséget a vámért vagy importadókért</li>
           </ul>
         </section>
@@ -77,6 +74,9 @@ const TermsAndConditions = () => {
             <li>Nem vállalunk felelősséget az eszköz helytelen használatáért</li>
             <li>Az eszköz nem helyettesíti a szakszerű orvosi ellátást</li>
           </ul>
+          <p className="mb-4 mt-4 font">
+            Felhívjuk figyelmét, hogy termékeink és szolgáltatásaink hatékonyságát nem tudjuk 100%-ban garantálni. Nem vállalunk felelősséget a nem megfelelő használatból vagy váratlan körülményekből eredő következményekért.
+          </p>
         </section>
 
         <section>
@@ -87,31 +87,21 @@ const TermsAndConditions = () => {
           <ul className="list-disc pl-6 space-y-2">
             <li>Másolhatja vagy reprodukálhatja tartalmunkat engedély nélkül</li>
             <li>Használhatja védjegyeinket vagy márkajelzéseinket</li>
-            <li>Módosíthatja vagy megváltoztathatja termékterveinket</li>
             <li>Értékesítheti tovább termékeinket engedély nélkül</li>
           </ul>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">7. Tiltott felhasználás</h2>
-          <p className="mb-4">Ön vállalja, hogy nem:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Használja a termékeket törvénytelen célokra</li>
-            <li>Kísérli meg visszafejteni az eszközöket</li>
-            <li>Végez engedély nélküli módosításokat a termékeken</li>
-            <li>Értékesíti tovább vagy terjeszti a termékeket engedély nélkül</li>
-          </ul>
-        </section>
+       
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">8. Irányadó jog</h2>
+          <h2 className="text-2xl font-semibold mb-4">7. Irányadó jog</h2>
           <p className="mb-4">
             Ezeket a felhasználási feltételeket az alkalmazandó jogszabályok szerint kell értelmezni. Bármilyen jogvita kizárólag a joghatóságunkban illetékes bíróságok hatáskörébe tartozik.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">9. Feltételek módosítása</h2>
+          <h2 className="text-2xl font-semibold mb-4">8. Feltételek módosítása</h2>
           <p className="mb-4">
             Fenntartjuk a jogot, hogy ezeket a felhasználási feltételeket bármikor frissítsük vagy módosítsuk előzetes értesítés nélkül. A weboldal vagy a termékek ilyen változtatások utáni folyamatos használata az új feltételek elfogadását jelenti.
           </p>

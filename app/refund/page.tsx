@@ -18,17 +18,15 @@ const RefundPolicy = () => {
         </Button>
       </Link>
 
-      <h1 className="text-3xl font-bold mb-8">Visszatérítési és Visszaküldési Szabályzat</h1>
+      <h1 className="text-3xl font-bold mb-8">Visszatérítési szabályzat</h1>
       
       <div className="space-y-6">
         <section>
           <h2 className="text-2xl font-semibold mb-4">1. Visszaküldési időszak</h2>
           <p className="mb-4">
-            Minden fulladásgátló eszközünkre 14 napos visszaküldési időszakot biztosítunk. Ez az időszak a rendelés kézhezvételének napjától kezdődik, amelyet a szállítási szolgáltató kézbesítési visszaigazolása igazol.
+            Minden termékünkre 14 napos visszaküldési időszakot biztosítunk. Ez az időszak a rendelés kézhezvételének napjától kezdődik, amelyet a szállítási szolgáltató kézbesítési visszaigazolása igazol.
           </p>
-          <p className="mb-4 text-red-600 font-semibold">
-            Felhívjuk figyelmét, hogy termékeink és szolgáltatásaink hatékonyságát nem tudjuk 100%-ban garantálni. Nem vállalunk felelősséget a nem megfelelő használatból vagy váratlan körülményekből eredő következményekért.
-          </p>
+          
         </section>
 
         <section>
@@ -36,10 +34,10 @@ const RefundPolicy = () => {
           <p className="mb-4">A visszaküldés kezdeményezéséhez kérjük, kövesse az alábbi lépéseket:</p>
           <ol className="list-decimal pl-6 space-y-2">
             <li>Vegye fel a kapcsolatot ügyfélszolgálati csapatunkkal a kézbesítéstől számított 14 napon belül</li>
-            <li>Kapjon egy visszaküldési engedélyszámot</li>
-            <li>Csomagolja be biztonságosan a terméket az eredeti csomagolásába</li>
-            <li>Mellékelje a visszaküldési engedélyszámot a küldeményhez</li>
-            <li>Küldje el a terméket a megadott visszaküldési címre</li>
+            <li>Jegyezze fel az ügyfélszolgálattól kapott egyedi azonosítót</li>
+            <li>Csomagolja be biztonságosan a terméket, az eredeti csomagolásába</li>
+            <li>Mellékelje a visszaküldési azosítót a küldeményhez</li>
+            <li>Küldje el a terméket az ügyfélszolgálattal egyeztetett címre</li>
           </ol>
         </section>
 
@@ -70,7 +68,7 @@ const RefundPolicy = () => {
             <li>A jóváhagyott visszatérítéseket 3-5 munkanapon belül feldolgozzuk</li>
             <li>A visszatérítés az eredeti fizetési módra történik</li>
             <li>E-mailben értesítést kap, amikor a visszatérítést feldolgoztuk</li>
-            <li>A banki feldolgozási idők változhatnak (általában 5-10 munkanap)</li>
+            <li>A banki feldolgozási idők változhatnak</li>
           </ul>
         </section>
 
@@ -82,7 +80,7 @@ const RefundPolicy = () => {
           <ul className="list-disc pl-6 space-y-2">
             <li>14 napos időszak után visszaküldött termékek</li>
             <li>Túlzott használat vagy sérülés jeleit mutató termékek</li>
-            <li>Eredeti csomagolás vagy alkatrészek nélküli termékek</li>
+            <li>Eredeti csomagolás nélküli termékek</li>
             <li>Módosított vagy átalakított termékek</li>
           </ul>
         </section>
@@ -94,7 +92,6 @@ const RefundPolicy = () => {
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Dokumentálja a sérülést fényképekkel</li>
-            <li>Vegye fel velünk a kapcsolatot a kézbesítéstől számított 24 órán belül</li>
             <li>Őrizze meg az eredeti csomagolást ellenőrzés céljából</li>
             <li>Várja meg az utasításokat, mielőtt visszaküldené a terméket</li>
           </ul>

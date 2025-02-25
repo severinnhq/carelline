@@ -32,6 +32,13 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
+        {/* Favicon Links */}
+        <link rel="icon" type="image/png" href="/favicon16.png" sizes="16x16" />
+        <link rel="icon" type="image/png" href="/favicon32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="/favicon64.png" sizes="64x64" />
+        <link rel="icon" type="image/png" href="/favicon96.png" sizes="96x96" />
+        <link rel="icon" type="image/png" href="/favicon128.png" sizes="128x128" />
+        <link rel="icon" type="image/png" href="/favicon192.png" sizes="192x192" />
       </head>
       <body>
         <CountdownProvider>

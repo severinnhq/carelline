@@ -15,24 +15,20 @@ export default function CancelPage() {
           <div className="flex justify-center mb-4">
             <XCircle className="w-16 h-16 text-red-500" />
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Order Cancelled</CardTitle>
-          <CardDescription className="text-center">Your order was not completed</CardDescription>
+          <CardTitle className="text-2xl font-bold text-center">Rendelés törölve</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-center mb-4">
-            We&apos;re sorry to see you go. If you experienced any issues during checkout or have any questions, please don&apos;t hesitate to contact our customer support.
+            Sajnáljuk, hogy elálltál a rendeléstől. Ha problémát tapasztaltál a rendelés leadásakor, vagy kérdéseid vannak, kérjük, vedd fel a kapcsolatot ügyfélszolgálatunkkal.
           </p>
         </CardContent>
         <CardFooter className="flex justify-center gap-4">
           <Button onClick={() => router.push('/')} variant="outline" className="w-full">
-            Return to Home
+            Vissza a kezdőlapra
           </Button>
-          <Button onClick={() => router.push('/cart')} className="w-full">
-            Back to Cart
-          </Button>
+         
         </CardFooter>
       </Card>
     </div>
   )
 }
-
