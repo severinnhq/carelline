@@ -74,8 +74,8 @@ export function useCheckout() {
           } else {
             clearCart();
           }
-        } catch (parseError) {
-          console.error('Failed to parse response:', responseText, parseError);
+        } catch (error) {
+          console.error('Failed to parse response:', responseText, error);
           setError('Invalid response from server');
           throw new Error('Invalid response from server');
         }
@@ -85,7 +85,7 @@ export function useCheckout() {
           const errorData = JSON.parse(responseText);
           setError(errorData.error || 'Failed to create checkout session');
           throw new Error(errorData.error || 'Failed to create checkout session');
-        } catch (parseError) {
+        } catch (_) {
           setError(`Server error (${response.status}): ${responseText}`);
           throw new Error(`Server error (${response.status}): ${responseText}`);
         }
