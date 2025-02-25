@@ -44,6 +44,14 @@ export default function ProductPage() {
   const productRef = useRef<HTMLDivElement>(null);
   const [activeEmailInput, setActiveEmailInput] = useState<boolean>(false)
   const [notifyMessage, setNotifyMessage] = useState<{ type: 'success' | 'error', content: string } | null>(null)
+  const [selectedColor, setSelectedColor] = useState<string>('white-yellow')
+  
+  // Available colors (for the specific product only)
+  const colors = [
+    { name: 'White-Yellow', value: 'white-yellow', available: true },
+    { name: 'Yellow-White', value: 'yellow-white', available: false },
+    { name: 'White-Black', value: 'white-black', available: false }
+  ]
 
   useEffect(() => {
     async function fetchProduct() {
@@ -84,13 +92,21 @@ export default function ProductPage() {
 
   const handleAddToCart = () => {
     if (product && selectedSize) {
-      addToCart(product, selectedSize, quantity)
+      // Include color information for the specific product
+      const productWithColor = id === '67b6f90829e091cfe70668a7' 
+        ? { ...product, selectedColor } 
+        : product
+      addToCart(productWithColor, selectedSize, quantity)
       setIsSidebarOpen(true)
     }
   }
 
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size)
+  }
+
+  const handleColorSelect = (color: string) => {
+    setSelectedColor(color)
   }
 
   const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -162,6 +178,7 @@ export default function ProductPage() {
 
   const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   const isProductAvailable = product.sizes.length > 0
+  const showColorPicker = id === '67b6f90829e091cfe70668a7'
 
   const faqs = [
     {
@@ -181,6 +198,45 @@ export default function ProductPage() {
       )
     }
   ]
+
+  // Custom color circle renderer
+  const renderColorCircle = (colorValue: string) => {
+    const colorAvailable = colors.find(c => c.value === colorValue)?.available || false;
+    
+    switch(colorValue) {
+      case 'white-yellow':
+        return (
+          <div className={`w-10 h-10 rounded-full border ${colorAvailable ? 'border-gray-300' : 'border-gray-200'} overflow-hidden relative ${!colorAvailable && 'opacity-70'}`}>
+            <div className="absolute top-0 right-0 bottom-0 left-0">
+              <div className="h-3/4 bg-white"></div>
+              <div className="h-1/4 bg-yellow-400"></div>
+            </div>
+          </div>
+        );
+      case 'yellow-white':
+        return (
+          <div className={`w-10 h-10 rounded-full border ${colorAvailable ? 'border-gray-300' : 'border-gray-200'} overflow-hidden relative ${!colorAvailable && 'opacity-70'}`}>
+            <div className="absolute top-0 right-0 bottom-0 left-0">
+              <div className="h-3/4 bg-yellow-400"></div>
+              <div className="h-1/4 bg-white"></div>
+            </div>
+          </div>
+        );
+      case 'white-black':
+        return (
+          <div className={`w-10 h-10 rounded-full border ${colorAvailable ? 'border-gray-300' : 'border-gray-200'} overflow-hidden relative ${!colorAvailable && 'opacity-70'}`}>
+            <div className="absolute top-0 right-0 bottom-0 left-0">
+              <div className="h-3/4 bg-white"></div>
+              <div className="h-1/4 bg-black"></div>
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div className={`w-10 h-10 rounded-full border ${colorAvailable ? 'border-gray-300' : 'border-gray-200'} bg-${colorValue} ${!colorAvailable && 'opacity-70'}`}></div>
+        );
+    }
+  };
 
   return (
     <div className={sora.className}>
@@ -241,6 +297,38 @@ export default function ProductPage() {
             <hr className="border-t border-gray-300 my-4 w-1/2" />
             {isProductAvailable ? (
               <>
+                {showColorPicker && (
+                  <div className="mb-4">
+                    <h2 className="text-lg font-semibold mb-2">Szín:</h2>
+                    <div className="flex flex-wrap gap-2">
+                      {colors.map((color) => (
+                        <button
+                          key={color.value}
+                          onClick={() => color.available && handleColorSelect(color.value)}
+                          className={`relative ${
+                            selectedColor === color.value 
+                              ? 'ring-2 ring-offset-2 ring-black' 
+                              : ''
+                          }`}
+                          disabled={!color.available}
+                          title={color.name}
+                          aria-label={`${color.name} color ${!color.available ? '(unavailable)' : ''}`}
+                        >
+                          {renderColorCircle(color.value)}
+                          {!color.available && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-full h-0.5 bg-gray-500 rotate-45 transform origin-center"></div>
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {selectedColor.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('-')}
+                      {selectedColor !== 'white-yellow' && ' - Currently unavailable'}
+                    </p>
+                  </div>
+                )}
                 <div className="mb-4">
                   <h2 className="text-lg font-semibold mb-2">Méret:</h2>
                   <div className="flex flex-wrap gap-2">

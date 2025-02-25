@@ -12,6 +12,7 @@ import { ShoppingCart, BellIcon } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Sora } from 'next/font/google'
+import { getScrollOffset } from '@/utils/scrollUtils' // Import the same utility used in Footer
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -113,14 +114,57 @@ export default function ProductList() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Handle smooth scrolling when component mounts
   useEffect(() => {
-    // Restore scroll position on component mount
-    const savedScrollPosition = sessionStorage.getItem('productListScrollPosition');
-    if (savedScrollPosition) {
-      window.scrollTo(0, parseInt(savedScrollPosition));
-      sessionStorage.removeItem('productListScrollPosition');
+    // Check if there's a hash in the URL 
+    if (window.location.hash) {
+      const id = window.location.hash.substring(1);
+      const element = document.getElementById(id);
+      
+      if (element) {
+        // Use the same getScrollOffset function from the Footer component
+        const offset = getScrollOffset(id);
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - offset;
+
+        // Smooth scroll to the element
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    } else {
+      // Restore scroll position on component mount if no hash
+      const savedScrollPosition = sessionStorage.getItem('productListScrollPosition');
+      if (savedScrollPosition) {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+        sessionStorage.removeItem('productListScrollPosition');
+      }
     }
-  }, []);
+  }, [products]); // Depend on products to ensure elements are rendered
+
+  // Add smooth scrolling function similar to Footer
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    
+    const id = href.split('#')[1];
+    if (!id) return;
+
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = getScrollOffset(id);
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+
+      // Update URL without full page reload
+      window.history.pushState(null, '', href);
+    }
+  };
 
   const fetchProducts = async () => {
     try {
@@ -387,7 +431,7 @@ export default function ProductList() {
   return (
     <>
       <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
-      <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[2rem] md:mt-[8rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
+      <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[4rem] md:mt-[4rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
         <h1 className="text-4xl sm:text-5xl font-bold mb-[2rem] md:mb-[4rem] text-center uppercase tracking-wider">FIRST SALE OF THE YEAR</h1>
         
         {isLoading && (
@@ -396,9 +440,9 @@ export default function ProductList() {
           </div>
         )}
         
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {isLoading
-            ? Array(8).fill(null).map((_, index) => <div key={index}>{renderSkeletonCard()}</div>)
+            ? Array(6).fill(null).map((_, index) => <div key={index}>{renderSkeletonCard()}</div>)
             : products.map((product, index) => renderProductCard(product, index))}
         </div>
         {cartProduct && (

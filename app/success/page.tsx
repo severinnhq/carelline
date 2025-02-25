@@ -25,7 +25,7 @@ export default function SuccessPage() {
         </CardHeader>
         <CardContent>
           <p className="text-center mb-4">
-          Rendelésed sikeresen rögzítésre került. Amint feladjuk a terméket/termékeket, küldünk egy e-mailt a szállítási információkkal kapcsolatban.
+          Rendelése sikeresen rögzítésre került. Amint feladjuk a terméket/termékeket, küldünk egy e-mailt a szállítási információkkal kapcsolatban.
           </p>
         </CardContent>
         <CardFooter className="flex justify-center">

@@ -1,7 +1,7 @@
 // Menu.tsx
 'use client'
 import React, { useEffect } from 'react'
-import { X, Home, Star, ListOrdered, HelpCircle, Mail, Facebook } from 'lucide-react'
+import { X, Home, Star, ListOrdered, HelpCircle, Mail, Facebook, ShoppingBag } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Sora } from 'next/font/google'
@@ -56,6 +56,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
 
   const menuItems = [
     { name: 'Főoldal', icon: Home, href: '/', onClick: handleHomeClick },
+    { name: 'Termékek', icon: ShoppingBag, href: '/#products', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#products') },
     { name: 'Használat', icon: ListOrdered, href: '/#feature-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#feature-section') },
     { name: 'Vélemények', icon: Star, href: '/#review-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#review-section') },
     { name: 'GYIK', icon: HelpCircle, href: '/#faq-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#faq-section') },

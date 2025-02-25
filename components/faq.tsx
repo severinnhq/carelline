@@ -8,11 +8,15 @@ export default function FAQSection() {
 
   const faqs = [
     {
-      question: "Milyen gyorsan képes a fulladásgátló eszköz eltávolítani a légúti elzáródást?",
-      answer: "Fulladásgátló eszközeinket úgy tervezték, hogy erős, biztonságos szívást hozzanak létre, amely a megfelelő alkalmazást követően másodperceken belül segíthet a légúti elzáródások eltávolításában. Ezeket az eszközöket azonban egy átfogó válaszlépés részeként kell használni, amely magában foglalja a sürgősségi szolgálat hívását is."
+      question: "Hogy működik és miylen gyorsan képes felszabadítani a légutat??",
+      answer: "Vákumot képezve, erős szívással 1 pumpálással azat már az első szívás megtisztítja a légutat, de mindig fontos, hogy sürgősségi segítséget is kérjünk."
     },
     {
-      question: "Bárki használhatja ezeket a fojtásgátló eszközöket, vagy speciális képzésre van szükség?",
+      question: "Mit tegyek ha az első szívás nem volt sikeres?",
+      answer: "Szinte mindig egyből sikerül, ha mégsem, pumpáljon tovább, illetve a sürgősségi segítség elengedhetetlen."
+    },
+    {
+      question: "Van szükség előzetes speciális képzésre?",
       answer: "Eszközeinket felhasználóbarátra terveztük. Nem szükséges különösebb képesítés, de a készülékkel való ismerkedés vészhelyzet előtt elengedhetetlen."
     },
     {

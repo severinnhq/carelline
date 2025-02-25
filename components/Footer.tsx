@@ -68,6 +68,15 @@ const Footer = () => {
             </li>
             <li>
               <Link 
+                href="/#products" 
+                className="hover:text-white transition-colors"
+                onClick={(e) => handleSmoothScroll(e, '/#products')}
+              >
+                Termékek
+              </Link>
+            </li>
+            <li>
+              <Link 
                 href="/#feature-section" 
                 className="hover:text-white transition-colors"
                 onClick={(e) => handleSmoothScroll(e, '/#feature-section')}

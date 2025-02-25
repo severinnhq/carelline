@@ -10,6 +10,7 @@ import { useCountdown } from '@/lib/CountdownContext';
 import { Header } from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import CartModal from '@/components/CartModal';
+import ProductList from '../components/ProductList'
 import { useCart } from '@/lib/CartContext';
 
 // Updated Product interface with required properties
@@ -58,6 +59,10 @@ export default function Home() {
 
       <section id="features">
         <FeatureSection />
+      </section>
+
+      <section id="products">
+        <ProductList />
       </section>
 
       <section id="review">

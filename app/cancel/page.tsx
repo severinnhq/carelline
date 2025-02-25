@@ -19,7 +19,7 @@ export default function CancelPage() {
         </CardHeader>
         <CardContent>
           <p className="text-center mb-4">
-            Sajnáljuk, hogy elálltál a rendeléstől. Ha problémát tapasztaltál a rendelés leadásakor, vagy kérdéseid vannak, kérjük, vedd fel a kapcsolatot ügyfélszolgálatunkkal.
+            Sajnáljuk, hogy elállt a rendelésétől. Ha problémát tapasztal a rendelés leadásakor, vagy kérdései vannak, kérjük, vegye fel a kapcsolatot ügyfélszolgálatunkkal.
           </p>
         </CardContent>
         <CardFooter className="flex justify-center gap-4">
