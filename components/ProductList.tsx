@@ -143,28 +143,7 @@ export default function ProductList() {
     }
   }, [products]); // Depend on products to ensure elements are rendered
 
-  // Add smooth scrolling function similar to Footer
-  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    
-    const id = href.split('#')[1];
-    if (!id) return;
-
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = getScrollOffset(id);
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-
-      // Update URL without full page reload
-      window.history.pushState(null, '', href);
-    }
-  };
+ 
 
   const fetchProducts = async () => {
     try {
