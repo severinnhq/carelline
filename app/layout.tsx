@@ -39,12 +39,39 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/favicon96.png" sizes="96x96" />
         <link rel="icon" type="image/png" href="/favicon128.png" sizes="128x128" />
         <link rel="icon" type="image/png" href="/favicon192.png" sizes="192x192" />
+
+        {/* Meta Pixel Code */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '9200175736698365');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
       </head>
       <body>
         <CountdownProvider>
           <LayoutWrapper>{children}</LayoutWrapper>
         </CountdownProvider>
         <Analytics />
+        {/* Meta Pixel Noscript */}
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=9200175736698365&ev=PageView&noscript=1"
+          />
+        </noscript>
       </body>
     </html>
   )
