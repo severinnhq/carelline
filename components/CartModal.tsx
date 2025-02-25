@@ -111,7 +111,7 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
                 </div>
               </div>
               <div className="mb-4">
-                <p className="text-sm font-semibold mb-2">Select Size:</p>
+                <p className="text-sm font-semibold mb-2">Méret:</p>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.includes('One Size') ? (
                     <Button
@@ -148,7 +148,7 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
                 disabled={!selectedSize && !product.sizes.includes('One Size')}
                 onClick={handleAddToCart}
               >
-                Add to Cart
+                + Kosárba
               </Button>
             </motion.div>
           </motion.div>

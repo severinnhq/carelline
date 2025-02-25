@@ -45,11 +45,11 @@ const ShippingProgressBar: React.FC<ShippingProgressBarProps> = ({ currentAmount
       <div className="mb-2">
         {remainingAmount > 0 ? (
           <p className="text-sm text-gray-900">
-            Add <span className="font-semibold">€{remainingAmount.toFixed(2)}</span> for free shipping
+            Adj hozzá <span className="font-semibold">{remainingAmount.toFixed(2)} Ft</span> -ot az ingyenes szállításhoz.
           </p>
         ) : (
           <p className="text-sm text-gray-900 font-semibold">
-            You've qualified for free shipping!
+            Ingyenes szállítás!
           </p>
         )}
       </div>
@@ -110,7 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
               <div className="flex-shrink-0 py-2">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center">
-                    <h2 className="text-xl font-semibold text-gray-900">Cart</h2>
+                    <h2 className="text-xl font-semibold text-gray-900">Kosár</h2>
                     <div className="ml-2 bg-black rounded-full w-6 h-6 flex items-center justify-center">
                       <span className="text-xs text-white">
                         {cartItems.reduce((total, item) => total + item.quantity, 0)}
@@ -139,11 +139,11 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                   {cartItems.length === 0 ? (
                     <div className="text-center py-12">
                       <ShoppingBag className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
-                      <h3 className="mt-2 text-base font-semibold text-gray-900">Your cart is empty</h3>
-                      <p className="mt-1 text-sm text-gray-600">Start adding some items to your cart!</p>
+                      <h3 className="mt-2 text-base font-semibold text-gray-900">A kosara üres</h3>
+                      <p className="mt-1 text-sm text-gray-600">Adjon hozzá egy terméket!</p>
                       <div className="mt-6">
                         <Button onClick={onClose} variant="outline" className="w-full">
-                          Continue Shopping
+                          Vásárlás folytatása
                         </Button>
                       </div>
                     </div>
@@ -185,10 +185,10 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                                     </Link>
                                   </h3>
                                   <p className="ml-4">
-                                    €{((item.product.salePrice || item.product.price) * item.quantity).toFixed(2)}
+                                    {((item.product.salePrice || item.product.price) * item.quantity).toFixed(2)} Ft
                                   </p>
                                 </div>
-                                <p className="mt-1 text-sm text-gray-500">Size: {item.size}</p>
+                                <p className="mt-1 text-sm text-gray-500">Méret: {item.size}</p>
                               </div>
                               <div className="flex-1 flex items-end justify-between text-sm">
                                 <div className="flex items-center">
@@ -208,7 +208,7 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                                     className="text-[13px] font-normal text-black hover:text-gray-800 relative group"
                                     aria-label={`Remove ${item.product.name} from cart`}
                                   >
-                                    Remove
+                                    Eltávolít
                                     <span className="absolute bottom-0 left-0 w-full h-[0.5px] bg-black transform origin-left transition-transform duration-300 ease-out group-hover:scale-x-0"></span>
                                   </button>
                                 </div>
@@ -225,23 +225,23 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
               {cartItems.length > 0 && (
                 <div className="flex-shrink-0 border-t border-gray-200 pt-6">
                   <div className="flex justify-between text-lg font-semibold text-gray-900">
-                    <p>Subtotal</p>
+                    <p>Összesen</p>
                     <p>
-                      €{cartTotal.toFixed(2)}
+                      {cartTotal.toFixed(2)} Ft
                     </p>
                   </div>
                   <p className="mt-0.5 text-sm text-gray-500">
                     {cartTotal >= 100
-                      ? "Free shipping included."
-                      : "Shipping calculated at checkout."}
-                    {" Taxes calculated at checkout."}
+                      ? "Nincs szállítási költség, "
+                      : "A szállítási költséget és "}
+                    {"a VAT-ot a pénztárnál számoljuk ki. "}
                   </p>
                   <div className="mt-6 space-y-4">
                     <Button onClick={processCheckout} disabled={isLoading} className="w-full bg-black text-white hover:bg-gray-800">
-                      {isLoading ? 'Processing...' : 'Checkout'}
+                      {isLoading ? 'Feldolgozás...' : 'Pénztár'}
                     </Button>
                     <Button onClick={onClose} variant="outline" className="w-full border-black text-black hover:bg-gray-100">
-                      Continue Shopping
+                      Vásárlás folytatása
                     </Button>
                   </div>
                 </div>
@@ -255,4 +255,3 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
 }
 
 export default Sidebar
-

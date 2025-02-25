@@ -8,8 +8,8 @@ export function ShippingFeatures() {
           <div className="flex flex-col items-center text-center p-6">
             <Truck className="h-16 w-16 mb-6 text-primary stroke-[1.5]" />
             <div>
-              <h3 className="text-xl font-semibold">Free Shipping</h3>
-              <p className="text-sm text-muted-foreground mt-2">On orders over €100</p>
+              <h3 className="text-xl font-semibold">Ingyenes szállítás.</h3>
+              <p className="text-sm text-muted-foreground mt-2">40 000FT felett.</p>
             </div>
           </div>
         </div>
@@ -18,8 +18,8 @@ export function ShippingFeatures() {
           <div className="flex flex-col items-center text-center p-6">
             <RefreshCcw className="h-16 w-16 mb-6 text-primary stroke-[1.5]" />
             <div>
-              <h3 className="text-xl font-semibold">14-Day Size Change</h3>
-              <p className="text-sm text-muted-foreground mt-2">Easy size exchanges</p>
+              <h3 className="text-xl font-semibold">14 napos visszaküldés</h3>
+              <p className="text-sm text-muted-foreground mt-2">Az átvételtől számítva.</p>
             </div>
           </div>
         </div>
@@ -28,8 +28,8 @@ export function ShippingFeatures() {
           <div className="flex flex-col items-center text-center p-6">
             <ShieldCheck className="h-16 w-16 mb-6 text-primary stroke-[1.5]" />
             <div>
-              <h3 className="text-xl font-semibold">Secure Payments</h3>
-              <p className="text-sm text-muted-foreground mt-2">100% protected checkout</p>
+              <h3 className="text-xl font-semibold">Biztonságos fizetés</h3>
+              <p className="text-sm text-muted-foreground mt-2">100%-os védelem a pénztárnál.</p>
             </div>
           </div>
         </div>

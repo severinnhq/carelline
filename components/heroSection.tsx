@@ -113,10 +113,10 @@ export default function HeroSection() {
               custom={0}
               variants={textVariants}
             >
-              Ready
-              <span className="text-[#dc2626]">Before</span>
+              Állj készen
+              <span className="text-[#dc2626]">Állj készenlőtt</span>
               <br />
-              You Need to Be
+              jön a baj
               <br />
         
             </motion.h1>
@@ -134,9 +134,9 @@ export default function HeroSection() {
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={buttonVariants}
             >
-              <Link href="/book-demo">
+              <Link href="/product/67b6f90829e091cfe70668a7">
                 <button className="px-6 py-3 bg-[#dc2626] text-white font-medium rounded-md hover:bg-red-700 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5">
-                  Schedule a Demo
+                  Felkészülők
                 </button>
               </Link>
             </motion.div>

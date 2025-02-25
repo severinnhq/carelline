@@ -106,10 +106,10 @@ export default function ProductPage() {
         body: JSON.stringify({ email, productId: product?._id ?? '', productName: product?.name ?? 'Unknown Product' }),
       })
       if (response.ok) {
-        setNotifyMessage({ type: 'success', content: 'You\'ll be notified when in stock.' })
+        setNotifyMessage({ type: 'success', content: 'Értesítve lesz, amint elérhető.' })
         emailInput.value = '' // Clear the input
       } else {
-        setNotifyMessage({ type: 'error', content: 'Already subscribed or error occurred.' })
+        setNotifyMessage({ type: 'error', content: 'Már feliratkozott.' })
       }
     } catch (error) {
       console.error('Error saving email:', error)
@@ -165,11 +165,11 @@ export default function ProductPage() {
 
   const faqs = [
     {
-      question: "Description",
+      question: "Leírás",
       answer: product.description
     },
     {
-      question: "Payment & Shipping",
+      question: "Fizetés & Szállítás",
       answer: (
         <>
           <h5 className="font-medium text-black mb-2">Payment Options:</h5>
@@ -231,18 +231,18 @@ export default function ProductPage() {
             <div className="mb-4">
               {product.salePrice ? (
                 <div>
-                  <span className="text-2xl font-bold text-[#be2323] mr-2">€{product.salePrice.toFixed(2)}</span>
-                  <span className="text-lg text-gray-500 line-through">€{product.price.toFixed(2)}</span>
+                  <span className="text-2xl font-bold text-[#be2323] mr-2">{product.salePrice.toLocaleString()} Ft</span>
+                  <span className="text-lg text-gray-500 line-through">{product.price.toLocaleString()} Ft</span>
                 </div>
               ) : (
-                <span className="text-2xl font-bold">€{product.price.toFixed(2)}</span>
+                <span className="text-2xl font-bold">{product.price.toLocaleString()} Ft</span>
               )}
             </div>
             <hr className="border-t border-gray-300 my-4 w-1/2" />
             {isProductAvailable ? (
               <>
                 <div className="mb-4">
-                  <h2 className="text-lg font-semibold mb-2">Select Size:</h2>
+                  <h2 className="text-lg font-semibold mb-2">Méret:</h2>
                   <div className="flex flex-wrap gap-2">
                     {product.sizes.includes('One Size') ? (
                       <Button
@@ -273,7 +273,7 @@ export default function ProductPage() {
                   </div>
                 </div>
                 <div className="mb-4">
-                  <h2 className="text-lg font-semibold mb-2">Quantity:</h2>
+                  <h2 className="text-lg font-semibold mb-2">Mennyiség:</h2>
                   <div className="flex items-center">
                     <Button
                       variant="outline"
@@ -299,7 +299,7 @@ export default function ProductPage() {
                     onClick={handleAddToCart}
                     className="w-full py-6 text-xl font-bold bg-black text-white hover:bg-gray-800"
                   >
-                    Add to Cart
+                    Kosárba
                   </Button>
                 </div>
               </>
@@ -341,7 +341,7 @@ export default function ProductPage() {
                     )}
                   </div>
                 )}
-                <p className="text-[#be2323] font-semibold mt-4">This product is currently sold out.</p>
+                <p className="text-[#be2323] font-semibold mt-4">A termék jelenleg nem elérhető.</p>
               </div>
             )}
             <div className="mt-6 space-y-4">
@@ -401,4 +401,3 @@ export default function ProductPage() {
     </div>
   )
 }
-

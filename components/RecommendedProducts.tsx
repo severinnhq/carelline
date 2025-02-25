@@ -93,13 +93,13 @@ export default function RecommendedProducts() {
       if (response.ok) {
         setNotifyMessages(prev => ({
           ...prev,
-          [productId]: { type: 'success', content: 'You\'ll be notified when in stock.' }
+          [productId]: { type: 'success', content: 'Értesítve lesz, amint elérhető.' }
         }))
         emailInput.value = '' // Clear the input
       } else {
         setNotifyMessages(prev => ({
           ...prev,
-          [productId]: { type: 'error', content: 'Already subscribed or error occurred.' }
+          [productId]: { type: 'error', content: 'Már feliratkozott.' }
         }))
       }
     } catch (error) {
@@ -252,7 +252,7 @@ export default function RecommendedProducts() {
                 onClick={(e) => handleNotifyClick(e, product._id)}
               >
                 <BellIcon className="h-4 w-4 mr-1 animate-ring" />
-                Notify Me
+                Értesítést kérek
               </Button>
             </div>
             {activeEmailInput === product._id && (
@@ -316,7 +316,7 @@ export default function RecommendedProducts() {
                 }}
                 className="bg-black text-white hover:bg-gray-800 text-sm py-2 px-4 w-full"
               >
-                <span className="font-bold">+ Add to Cart</span>
+                <span className="font-bold">+ Kosárba</span>
               </Button>
             </div>
             <div className="absolute bottom-4 right-4 md:hidden">
@@ -339,20 +339,20 @@ export default function RecommendedProducts() {
           <div>
             {product.sizes.length === 0 ? (
               <span className="text-lg text-black">
-                Sold Out
+                Elfogyott
               </span>
             ) : product.salePrice ? (
               <>
                 <span className="text-lg font-bold text-[#be2323]">
-                  €{product.salePrice.toFixed(2)}
+                  {product.salePrice.toFixed(2)} Ft
                 </span>
                 <span className="text-sm text-gray-500 line-through ml-2">
-                  €{product.price.toFixed(2)}
+                  {product.price.toFixed(2)} Ft
                 </span>
               </>
             ) : (
               <span className="text-lg font-bold text-black">
-                €{product.price.toFixed(2)}
+                {product.price.toFixed(2)} Ft
               </span>
             )}
           </div>
@@ -376,7 +376,7 @@ export default function RecommendedProducts() {
   return (
     <>
       <div className={`container mx-auto p-4 py-24 ${sora.className}`} ref={containerRef}>
-        <h2 className="text-4xl font-bold mb-12">WE ALSO RECOMMEND</h2>
+        <h2 className="text-4xl font-bold mb-12">Ezeket is ajánljuk</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {isLoading
             ? Array(3).fill(null).map((_, index) => <div key={index}>{renderSkeletonCard()}</div>)
@@ -432,4 +432,3 @@ export default function RecommendedProducts() {
     </>
   )
 }
-

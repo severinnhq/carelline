@@ -12,15 +12,19 @@ const sora = Sora({ subsets: ['latin'] })
 type ReviewImageProps = {
   src: string
   alt: string
-  overlayText: string
+  reviewText: string
+  reviewerName: string
   className?: string
 }
 
-const ReviewImage: React.FC<ReviewImageProps> = ({ src, alt, overlayText, className = '' }) => (
+const ReviewImage: React.FC<ReviewImageProps> = ({ src, alt, reviewText, reviewerName, className = '' }) => (
   <div className={`group relative overflow-hidden rounded-lg shadow-lg ${className}`}>
     <Image src={src} alt={alt} fill className="object-cover" />
     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition duration-300 flex items-center justify-center">
-      <span className="text-white text-center p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">{overlayText}</span>
+      <div className="text-white text-center p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <p className="mb-2">{reviewText}</p>
+        <p className="font-bold">{reviewerName}</p>
+      </div>
     </div>
   </div>
 )
@@ -85,6 +89,75 @@ const ReviewSection = () => {
     return () => window.removeEventListener('resize', adjustMargin)
   }, [])
 
+  // Array of review data
+  const reviews = [
+    { 
+      src: "/uploads/reviews/review1.png", 
+      name: "Ignácz Ádám", 
+      text: "Ez a készülék életet mentett a családomban. Szó szerint. Minden szülőnek ajánlom!"
+    },
+    { 
+      src: "/uploads/reviews/review2.png", 
+      name: "Mohácsi Eszter", 
+      text: "Nagyon gyors és hatékony! Sosem gondoltam volna, hogy egyszer szükség lesz rá, de hála az égnek kéznél volt!"
+    },
+    { 
+      src: "/uploads/reviews/review3.png", 
+      name: "Tóth László", 
+      text: "Egy étteremben lettem rosszul, és egy ilyen eszköz mentette meg az életemet. Nem is tudom, mi lett volna nélküle."
+    },
+    { 
+      src: "/uploads/reviews/review4.png", 
+      name: "Krinszki-Nagy Anna", 
+      text: "Könnyű kezelni.* lekopogom* még csak teszteltem, remélem nem is lesz szükség rá éles helyzetben."
+    },
+    { 
+      src: "/uploads/reviews/review5.png", 
+      name: "Kanozsai Erzsébet", 
+      text: "A legjobb döntés, amit valaha hoztam. Minden otthonban ott kellene lennie!"
+    },
+    { 
+      src: "/uploads/reviews/review6.png", 
+      name: "Horváth Noémi", 
+      text: "Először szkeptikus voltam, de amikor a kisfiam elkezdett fuldokolni, ez a készülék megmentette őt. Köszönöm!"
+    },
+    { 
+      src: "/uploads/reviews/review7.png", 
+      name: "Balogh Dániel", 
+      text: "Érdemes beruházni rá. Gyors, hatékony és életet menthet!"
+    },
+    { 
+      src: "/uploads/reviews/review8.png", 
+      name: "Farkas Zsófia", 
+      text: "A nagypapámnál kellett használnunk, és sikerült! Minden család számára kötelező kellene legyen."
+    },
+    { 
+      src: "/uploads/reviews/review9.png", 
+      name: "Ambrusné Anita", 
+      text: "Minden étteremben és otthonban ott kellene lennie! Nem lehet eléggé hangsúlyozni a fontosságát."
+    },
+    { 
+      src: "/uploads/reviews/review10.png", 
+      name: "Sándor Boglárka", 
+      text: "Minden szülő rémálma a fulladás. Ez az eszköz biztonságot nyújt."
+    },
+    { 
+      src: "/uploads/reviews/review11.png", 
+      name: "Bodzán Imre", 
+      text: "Gyorsan és egyszerűen használható. Életeket menthet."
+    },
+    { 
+      src: "/uploads/reviews/review12.png", 
+      name: "Pappné Sipos Lilla", 
+      text: "Amikor vészhelyzet volt, csak ez tudott segíteni. Hálás vagyok érte!"
+    },
+    { 
+      src: "/uploads/reviews/review13.png", 
+      name: "ifj. Bodnár Mihály", 
+      text: "Nem szabad az ördögöt a falra festeni, távolálljék tőlem, de ha én vagy bárki a családban veszélybe kerül, megfizethetetlen segítséget nyújtana."
+    }
+  ]
+
   return (
     <>
       <div ref={higherScrollTargetRef} className="h-[2rem] md:h-[4rem]" />
@@ -101,7 +174,7 @@ const ReviewSection = () => {
                     transition: 'right 0.3s ease-in-out'
                   }}
                 >
-                  The
+                  A
                 </span>
                 <div className="relative w-[clamp(10rem,32vw,16rem)] h-[clamp(2.5rem,8vw,4rem)]">
                   <Image
@@ -120,7 +193,7 @@ const ReviewSection = () => {
                     transition: 'left 0.3s ease-in-out'
                   }}
                 >
-                  effect
+                  effekt
                 </span>
               </div>
             </h2>
@@ -130,53 +203,61 @@ const ReviewSection = () => {
             <div className="sm:hidden relative overflow-hidden">
               <div className={`grid grid-cols-10 gap-2 auto-rows-[minmax(80px,auto)] transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isExpanded ? 'h-[1400px]' : 'h-[400px]'}`}>
                 <ReviewImage
-                  src="/uploads/reviews/review1.png"
-                  alt="Review 10"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[0].src}
+                  alt={`Review by ${reviews[0].name}`}
+                  reviewText={reviews[0].text}
+                  reviewerName={reviews[0].name}
                   className="col-span-10 row-span-2"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review10.png"
-                  alt="Review 1"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[9].src}
+                  alt={`Review by ${reviews[9].name}`}
+                  reviewText={reviews[9].text}
+                  reviewerName={reviews[9].name}
                   className="col-span-5 row-span-2"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review2.png"
-                  alt="Review 2"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[1].src}
+                  alt={`Review by ${reviews[1].name}`}
+                  reviewText={reviews[1].text}
+                  reviewerName={reviews[1].name}
                   className="col-span-5 row-span-2"
                 />
                 {isExpanded && (
                   <>
                     <ReviewImage
-                      src="/uploads/reviews/review3.png"
-                      alt="Review 3"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[2].src}
+                      alt={`Review by ${reviews[2].name}`}
+                      reviewText={reviews[2].text}
+                      reviewerName={reviews[2].name}
                       className="col-span-6 row-span-2"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review11.png"
-                      alt="Review 4"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[10].src}
+                      alt={`Review by ${reviews[10].name}`}
+                      reviewText={reviews[10].text}
+                      reviewerName={reviews[10].name}
                       className="col-span-4 row-span-2"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review5.png"
-                      alt="Review 5"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[4].src}
+                      alt={`Review by ${reviews[4].name}`}
+                      reviewText={reviews[4].text}
+                      reviewerName={reviews[4].name}
                       className="col-span-5 row-span-2"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review6.png"
-                      alt="Review 6"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[5].src}
+                      alt={`Review by ${reviews[5].name}`}
+                      reviewText={reviews[5].text}
+                      reviewerName={reviews[5].name}
                       className="col-span-5 row-span-2"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review9.png"
-                      alt="Review 9"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[8].src}
+                      alt={`Review by ${reviews[8].name}`}
+                      reviewText={reviews[8].text}
+                      reviewerName={reviews[8].name}
                       className="col-span-10 row-span-4"
                     />
                   </>
@@ -189,65 +270,75 @@ const ReviewSection = () => {
             <div className="hidden sm:block lg:hidden relative overflow-hidden">
               <div className={`grid grid-cols-12 gap-3 auto-rows-[minmax(120px,auto)] transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isExpanded ? 'h-[2200px]' : 'h-[800px]'}`}>
                 <ReviewImage
-                  src="/uploads/reviews/review1.png"
-                  alt="Review 1"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[0].src}
+                  alt={`Review by ${reviews[0].name}`}
+                  reviewText={reviews[0].text}
+                  reviewerName={reviews[0].name}
                   className="col-span-12 row-span-4"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review2.png"
-                  alt="Review 2"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[1].src}
+                  alt={`Review by ${reviews[1].name}`}
+                  reviewText={reviews[1].text}
+                  reviewerName={reviews[1].name}
                   className="col-span-5 row-span-3"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review11.png"
-                  alt="Review 3"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[10].src}
+                  alt={`Review by ${reviews[10].name}`}
+                  reviewText={reviews[10].text}
+                  reviewerName={reviews[10].name}
                   className="col-span-7 row-span-3"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review4.png"
-                  alt="Review 4"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[3].src}
+                  alt={`Review by ${reviews[3].name}`}
+                  reviewText={reviews[3].text}
+                  reviewerName={reviews[3].name}
                   className="col-span-7 row-span-3"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review5.png"
-                  alt="Review 5"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[4].src}
+                  alt={`Review by ${reviews[4].name}`}
+                  reviewText={reviews[4].text}
+                  reviewerName={reviews[4].name}
                   className="col-span-5 row-span-3"
                 />
                 {isExpanded && (
                   <>
                     <ReviewImage
-                      src="/uploads/reviews/review9.png"
-                      alt="Review 6"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[8].src}
+                      alt={`Review by ${reviews[8].name}`}
+                      reviewText={reviews[8].text}
+                      reviewerName={reviews[8].name}
                       className="col-span-12 row-span-4"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review7.png"
-                      alt="Review 7"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[6].src}
+                      alt={`Review by ${reviews[6].name}`}
+                      reviewText={reviews[6].text}
+                      reviewerName={reviews[6].name}
                       className="col-span-6 row-span-3"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review13.png"
-                      alt="Review 8"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[12].src}
+                      alt={`Review by ${reviews[12].name}`}
+                      reviewText={reviews[12].text}
+                      reviewerName={reviews[12].name}
                       className="col-span-6 row-span-3"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review3.png"
-                      alt="Review 9"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[2].src}
+                      alt={`Review by ${reviews[2].name}`}
+                      reviewText={reviews[2].text}
+                      reviewerName={reviews[2].name}
                       className="col-span-8 row-span-3"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review1.png"
-                      alt="Review 10"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[0].src}
+                      alt={`Review by ${reviews[0].name}`}
+                      reviewText={reviews[0].text}
+                      reviewerName={reviews[0].name}
                       className="col-span-4 row-span-3"
                     />
                   </>
@@ -260,83 +351,96 @@ const ReviewSection = () => {
             <div className="hidden lg:block relative overflow-hidden">
               <div className={`grid grid-cols-12 gap-3 auto-rows-[minmax(100px,auto)] transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isExpanded ? 'h-[2000px]' : 'h-[600px]'}`}>
                 <ReviewImage
-                  src="/uploads/reviews/review1.png"
-                  alt="Review 1"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[0].src}
+                  alt={`Review by ${reviews[0].name}`}
+                  reviewText={reviews[0].text}
+                  reviewerName={reviews[0].name}
                   className="col-span-8 row-span-4"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review2.png"
-                  alt="Review 2"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[1].src}
+                  alt={`Review by ${reviews[1].name}`}
+                  reviewText={reviews[1].text}
+                  reviewerName={reviews[1].name}
                   className="col-span-4 row-span-2"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review3.png"
-                  alt="Review 3"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[2].src}
+                  alt={`Review by ${reviews[2].name}`}
+                  reviewText={reviews[2].text}
+                  reviewerName={reviews[2].name}
                   className="col-span-4 row-span-2"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review4.png"
-                  alt="Review 4"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[3].src}
+                  alt={`Review by ${reviews[3].name}`}
+                  reviewText={reviews[3].text}
+                  reviewerName={reviews[3].name}
                   className="col-span-6 row-span-3"
                 />
                 <ReviewImage
-                  src="/uploads/reviews/review5.png"
-                  alt="Review 5"
-                  overlayText="Lorem ipsum dolor sit amet"
+                  src={reviews[4].src}
+                  alt={`Review by ${reviews[4].name}`}
+                  reviewText={reviews[4].text}
+                  reviewerName={reviews[4].name}
                   className="col-span-6 row-span-3"
                 />
                 {isExpanded && (
                   <>
                     <ReviewImage
-                      src="/uploads/reviews/review6.png"
-                      alt="Review 7"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[5].src}
+                      alt={`Review by ${reviews[5].name}`}
+                      reviewText={reviews[5].text}
+                      reviewerName={reviews[5].name}
                       className="col-span-4 row-span-2"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review7.png"
-                      alt="Review 6"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[6].src}
+                      alt={`Review by ${reviews[6].name}`}
+                      reviewText={reviews[6].text}
+                      reviewerName={reviews[6].name}
                       className="col-span-8 row-span-4"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review8.png"
-                      alt="Review 8"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[7].src}
+                      alt={`Review by ${reviews[7].name}`}
+                      reviewText={reviews[7].text}
+                      reviewerName={reviews[7].name}
                       className="col-span-4 row-span-2"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review9.png"
-                      alt="Review 9"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[8].src}
+                      alt={`Review by ${reviews[8].name}`}
+                      reviewText={reviews[8].text}
+                      reviewerName={reviews[8].name}
                       className="col-span-6 row-span-3"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review10.png"
-                      alt="Review 10"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[9].src}
+                      alt={`Review by ${reviews[9].name}`}
+                      reviewText={reviews[9].text}
+                      reviewerName={reviews[9].name}
                       className="col-span-6 row-span-3"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review11.png"
-                      alt="Review 1"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[10].src}
+                      alt={`Review by ${reviews[10].name}`}
+                      reviewText={reviews[10].text}
+                      reviewerName={reviews[10].name}
                       className="col-span-4 row-span-2"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review12.png"
-                      alt="Review 2"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[11].src}
+                      alt={`Review by ${reviews[11].name}`}
+                      reviewText={reviews[11].text}
+                      reviewerName={reviews[11].name}
                       className="col-span-4 row-span-2"
                     />
                     <ReviewImage
-                      src="/uploads/reviews/review13.png"
-                      alt="Review 3"
-                      overlayText="Lorem ipsum dolor sit amet"
+                      src={reviews[12].src}
+                      alt={`Review by ${reviews[12].name}`}
+                      reviewText={reviews[12].text}
+                      reviewerName={reviews[12].name}
                       className="col-span-4 row-span-2"
                     />
                   </>
@@ -352,7 +456,7 @@ const ReviewSection = () => {
               aria-expanded={isExpanded}
               aria-controls="review-section"
             >
-              <span className="font-medium text-sm">{isExpanded ? 'Show Less' : 'Show More'}</span>
+              <span className="font-medium text-sm">{isExpanded ? 'Kevesebb' : 'Több'}</span>
               {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </Button>
           </div>

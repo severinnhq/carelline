@@ -8,20 +8,20 @@ export default function FAQSection() {
 
   const faqs = [
     {
-      question: "How quickly can an anti-choking device remove an airway obstruction?",
-      answer: "Our anti-choking devices are designed to create strong, safe suction that can help remove airway blockages within seconds of proper application. However, these devices should be used as part of a comprehensive response that includes calling emergency services."
+      question: "Milyen gyorsan képes a fulladásgátló eszköz eltávolítani a légúti elzáródást?",
+      answer: "Fulladásgátló eszközeinket úgy tervezték, hogy erős, biztonságos szívást hozzanak létre, amely a megfelelő alkalmazást követően másodperceken belül segíthet a légúti elzáródások eltávolításában. Ezeket az eszközöket azonban egy átfogó válaszlépés részeként kell használni, amely magában foglalja a sürgősségi szolgálat hívását is."
     },
     {
-      question: "Can anyone use these anti-choking devices, or do you need special training?",
-      answer: "While our devices are designed to be user-friendly, we strongly recommend watching our included instructional video and practicing with the training materials provided. No special certification is required, but familiarity with the device before an emergency is essential."
+      question: "Bárki használhatja ezeket a fojtásgátló eszközöket, vagy speciális képzésre van szükség?",
+      answer: "Eszközeinket felhasználóbarátra terveztük. Nem szükséges különösebb képesítés, de a készülékkel való ismerkedés vészhelyzet előtt elengedhetetlen."
     },
     {
-      question: "What age groups are these devices suitable for?",
-      answer: "Our anti-choking devices are designed for use on both children (over 12 months) and adults. Each device comes with clear instructions for age-appropriate usage and proper mask sizing to ensure a safe seal."
+      question: "Milyen korosztályok számára alkalmasak ezek az eszközök?",
+      answer: "Bármilyen korosztály számára alkalmasak az eszközök, csecsemőkre és idősekre is egyaránt."
     },
     {
-      question: "What's the shelf life of the device, and does it require any maintenance?",
-      answer: "Our anti-choking devices have a 2-year warranty and typically last several years when properly stored. We recommend checking the device monthly for any damage and keeping it in its protective case at room temperature. No regular maintenance is required beyond basic cleaning after use."
+      question: "Mennyi az eszköz élettartama, és igényel-e karbantartást?",
+      answer: "Megfelelő tárolás esetén általában több évig tartanak. Javasoljuk, hogy havonta ellenőrizze az eszközt, hogy nincs-e rajta sérülés, és szobahőmérsékleten, védőtokban tartsa. A használat utáni alapvető tisztításon kívül nincs szükség rendszeres karbantartásra."
     }
   ]
 
@@ -39,9 +39,9 @@ export default function FAQSection() {
 
   return (
     <div id="faq-section" className="max-w-6xl mx-auto px-4 mt-[4rem] mb-[4rem] md:mt-[8rem] md:mb-[8rem]">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-[1rem] md:mb-[1rem] text-center uppercase tracking-wider">STRAIGHT TO THE POINT</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-[1rem] md:mb-[1rem] text-center uppercase tracking-wider">FONTOS TUDNIVALÓK</h1>
       <p className="text-center text-gray-600 mb-[4rem] text-lg mx-auto max-w-[600px] w-full px-4 sm:px-6 md:px-8">
-      When seconds matter, you need answers fast. Here's everything you should know
+      Amikor minden másodperc számít, gyors válaszokra van szükséged. Íme minden, amit érdemes tudni.
       </p>
 
       <div className="space-y-6">

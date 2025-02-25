@@ -55,7 +55,7 @@ const Footer = () => {
               className="w-auto h-auto"
             />
           </div>
-          <p className="text-xl font-semibold">Not for everyone.</p>
+          <p className="text-xl font-semibold">Minden másodperc számít</p>
           <div className="flex space-x-4">
             <Link href="https://www.tiktok.com/@rewealedapparel" className="hover:text-white transition-colors">
               <TikTokIcon />
@@ -69,7 +69,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="space-y-4">
-          <h4 className="text-lg font-semibold text-white">Navigation</h4>
+          <h4 className="text-lg font-semibold text-white">Navigáció</h4>
           <ul className="space-y-2">
             <li>
               <Link 
@@ -77,7 +77,7 @@ const Footer = () => {
                 className="hover:text-white transition-colors"
                 onClick={(e) => handleSmoothScroll(e, '/#hero')}
               >
-                Home
+                Főoldal
               </Link>
             </li>
             <li>
@@ -86,7 +86,7 @@ const Footer = () => {
                 className="hover:text-white transition-colors"
                 onClick={(e) => handleSmoothScroll(e, '/#feature-section')}
               >
-                Steps
+                Használat
               </Link>
             </li>
             <li>
@@ -95,7 +95,7 @@ const Footer = () => {
                 className="hover:text-white transition-colors"
                 onClick={(e) => handleSmoothScroll(e, '/#review-section')}
               >
-                Reviews
+                Vélemények
               </Link>
             </li>
             <li>
@@ -104,27 +104,27 @@ const Footer = () => {
                 className="hover:text-white transition-colors"
                 onClick={(e) => handleSmoothScroll(e, '/#faq-section')}
               >
-                FAQ
+                GYIK
               </Link>
             </li>
           </ul>
         </div>
         <div className="space-y-4">
-          <h4 className="text-lg font-semibold text-white">Policies</h4>
+          <h4 className="text-lg font-semibold text-white">Információ</h4>
           <ul className="space-y-2">
           <li>
   <Link href="/privacy" className="hover:text-white transition-colors">
-    Privacy Policy
+  Adatvédelmi szabályzat
   </Link>
 </li>
 <li>
   <Link href="/terms" className="hover:text-white transition-colors">
-    Terms & Conditions
+  Általános szerződési feltételek
   </Link>
 </li>
 <li>
   <Link href="/refund" className="hover:text-white transition-colors">
-    Refund Policy
+  Visszatérítési szabályzat
   </Link>
 </li>
 
@@ -133,7 +133,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm">
-        <p>&copy; {new Date().getFullYear()} Rewealed. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Carelline. Minden jog fenntartva.</p>
       </div>
     </footer>
   )

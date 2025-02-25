@@ -14,109 +14,112 @@ const TermsAndConditions = () => {
           variant="outline"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back
+          Vissza
         </Button>
       </Link>
 
-      <h1 className="text-3xl font-bold mb-8">Terms and Conditions</h1>
+      <h1 className="text-3xl font-bold mb-8">Felhasználási Feltételek</h1>
       
       <div className="space-y-6">
         <section>
-          <h2 className="text-2xl font-semibold mb-4">1. Agreement to Terms</h2>
+          <h2 className="text-2xl font-semibold mb-4">1. Feltételek elfogadása</h2>
           <p className="mb-4">
-            By accessing our website and purchasing our anti-choking devices, you agree to be bound by these Terms and Conditions. Please read them carefully before making a purchase.
+            A weboldalunk használatával és fulladásgátló eszközeink vásárlásával Ön elfogadja, hogy ezek a Felhasználási Feltételek kötelezőek Önre nézve. Kérjük, figyelmesen olvassa el azokat vásárlás előtt.
+          </p>
+          <p className="mb-4 text-red-600 font-semibold">
+            Felhívjuk figyelmét, hogy termékeink és szolgáltatásaink hatékonyságát nem tudjuk 100%-ban garantálni. Nem vállalunk felelősséget a nem megfelelő használatból vagy váratlan körülményekből eredő következményekért.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">2. Product Information</h2>
+          <h2 className="text-2xl font-semibold mb-4">2. Termékinformáció</h2>
           <p className="mb-4">
-            Our anti-choking devices are designed to assist in emergency situations. However:
+            Fulladásgátló eszközeink vészhelyzetekben nyújtanak segítséget. Azonban:
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>They are not a substitute for proper medical care or training</li>
-            <li>Users should familiarize themselves with the device's instructions</li>
-            <li>Products should be stored as directed in the user manual</li>
-            <li>Regular inspection of the device is recommended</li>
+            <li>Nem helyettesítik a megfelelő orvosi ellátást vagy képzést</li>
+            <li>A felhasználóknak meg kell ismerkedniük az eszköz használati utasításával</li>
+            <li>A termékeket a használati utasításban leírtak szerint kell tárolni</li>
+            <li>Ajánlott az eszköz rendszeres ellenőrzése</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">3. Ordering and Payment</h2>
-          <p className="mb-4">When placing an order:</p>
+          <h2 className="text-2xl font-semibold mb-4">3. Rendelés és fizetés</h2>
+          <p className="mb-4">Rendelés leadásakor:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>All prices are listed in the designated currency</li>
-            <li>Payment is required at the time of purchase</li>
-            <li>Orders are subject to availability</li>
-            <li>We reserve the right to refuse any order</li>
+            <li>Minden ár a feltüntetett pénznemben szerepel</li>
+            <li>A fizetés a vásárlás időpontjában esedékes</li>
+            <li>A rendelések a készlet erejéig érvényesek</li>
+            <li>Fenntartjuk a jogot bármely rendelés elutasítására</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">4. Shipping</h2>
-          <p className="mb-4">Our shipping terms include:</p>
+          <h2 className="text-2xl font-semibold mb-4">4. Szállítás</h2>
+          <p className="mb-4">Szállítási feltételeink a következők:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Worldwide shipping availability</li>
-            <li>Delivery times vary by location</li>
-            <li>Shipping costs are calculated at checkout</li>
-            <li>We are not responsible for customs duties or import taxes</li>
+            <li>Világszerte elérhető szállítás</li>
+            <li>A szállítási idő régiótól függően változik</li>
+            <li>A szállítási költségek a kifizetéskor kerülnek kiszámításra</li>
+            <li>Nem vállalunk felelősséget a vámért vagy importadókért</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">5. Product Use and Liability</h2>
+          <h2 className="text-2xl font-semibold mb-4">5. Termékhasználat és felelősség</h2>
           <p className="mb-4">
-            While our products are designed to assist in emergency situations, we cannot guarantee their effectiveness in all circumstances. By purchasing our products, you acknowledge:
+            Bár termékeinket vészhelyzetekben való segítségnyújtásra terveztük, nem garantálhatjuk hatékonyságukat minden körülmény között. Termékeink megvásárlásával Ön elismeri:
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>The device should be used as directed in the instructions</li>
-            <li>Proper training in emergency response is recommended</li>
-            <li>We are not liable for misuse or improper use of the device</li>
-            <li>The device is not a substitute for professional medical care</li>
+            <li>Az eszközt az utasításoknak megfelelően kell használni</li>
+            <li>Ajánlott a vészhelyzeti reagálás megfelelő képzése</li>
+            <li>Nem vállalunk felelősséget az eszköz helytelen használatáért</li>
+            <li>Az eszköz nem helyettesíti a szakszerű orvosi ellátást</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">6. Intellectual Property</h2>
+          <h2 className="text-2xl font-semibold mb-4">6. Szellemi tulajdon</h2>
           <p className="mb-4">
-            All content on our website, including text, graphics, logos, and images, is protected by intellectual property rights. You may not:
+            Weboldalunk minden tartalma, beleértve a szöveget, grafikát, logókat és képeket, szellemi tulajdonjogi védelem alatt áll. Ön nem:
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Copy or reproduce our content without permission</li>
-            <li>Use our trademarks or brand elements</li>
-            <li>Modify or alter our product designs</li>
-            <li>Resell our products without authorization</li>
+            <li>Másolhatja vagy reprodukálhatja tartalmunkat engedély nélkül</li>
+            <li>Használhatja védjegyeinket vagy márkajelzéseinket</li>
+            <li>Módosíthatja vagy megváltoztathatja termékterveinket</li>
+            <li>Értékesítheti tovább termékeinket engedély nélkül</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">7. Prohibited Uses</h2>
-          <p className="mb-4">You agree not to:</p>
+          <h2 className="text-2xl font-semibold mb-4">7. Tiltott felhasználás</h2>
+          <p className="mb-4">Ön vállalja, hogy nem:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Use the products for any unlawful purpose</li>
-            <li>Attempt to reverse engineer the devices</li>
-            <li>Make unauthorized modifications to the products</li>
-            <li>Resell or distribute the products without permission</li>
+            <li>Használja a termékeket törvénytelen célokra</li>
+            <li>Kísérli meg visszafejteni az eszközöket</li>
+            <li>Végez engedély nélküli módosításokat a termékeken</li>
+            <li>Értékesíti tovább vagy terjeszti a termékeket engedély nélkül</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">8. Governing Law</h2>
+          <h2 className="text-2xl font-semibold mb-4">8. Irányadó jog</h2>
           <p className="mb-4">
-            These terms and conditions are governed by and construed in accordance with applicable laws. Any disputes shall be subject to the exclusive jurisdiction of the courts in our jurisdiction.
+            Ezeket a felhasználási feltételeket az alkalmazandó jogszabályok szerint kell értelmezni. Bármilyen jogvita kizárólag a joghatóságunkban illetékes bíróságok hatáskörébe tartozik.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">9. Changes to Terms</h2>
+          <h2 className="text-2xl font-semibold mb-4">9. Feltételek módosítása</h2>
           <p className="mb-4">
-            We reserve the right to update or modify these terms and conditions at any time without prior notice. Continued use of our website or products after such changes constitutes acceptance of the new terms.
+            Fenntartjuk a jogot, hogy ezeket a felhasználási feltételeket bármikor frissítsük vagy módosítsuk előzetes értesítés nélkül. A weboldal vagy a termékek ilyen változtatások utáni folyamatos használata az új feltételek elfogadását jelenti.
           </p>
         </section>
 
         <footer className="mt-12 text-sm text-gray-600">
-          <p>Last updated: February 2025</p>
-          <p className="mt-2">For questions about these terms, please contact our customer service team.</p>
+          <p>Utolsó frissítés: 2025. február</p>
+          <p className="mt-2">Ezen feltételekkel kapcsolatos kérdéseivel forduljon ügyfélszolgálati csapatunkhoz.</p>
         </footer>
       </div>
     </div>

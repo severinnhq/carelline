@@ -8,21 +8,21 @@ const FeatureSection = () => {
 
   const features = [
     {
-      title: 'Step 1',
+      title: '1. lépés',
       description:
-        'This is the description for step 1. It explains the first feature in detail.',
+        'Helyezze a maszkot az orr és száj főlé.',
       image: '/uploads/step1.png',
     },
-    {
-      title: 'Step 2',
+    { 
+      title: '2. lépés',  
       description:
-        'Here is the description for step 2. It provides more insights about the second feature.',
+        'Nyomja be a maszkot, ezzel egy vákumot képezve.',
       image: '/uploads/step2.png',
     },
     {
-      title: 'Step 3',
+      title: '3. lépés',
       description:
-        'Discover step 3 with this description that outlines its benefits and details.',
+        'Végül húzza fel, majd ismétlje.',
       image: '/uploads/step3.png',
     },
   ];

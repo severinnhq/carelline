@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
+// Make sure your API key is correctly set in your environment variables
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-12-18.acacia',
 })
@@ -19,33 +20,89 @@ interface CartItem {
 
 export async function POST(request: NextRequest) {
   try {
-    const cartItems: CartItem[] = await request.json()
-    console.log('Received cart items:', JSON.stringify(cartItems, null, 2))
+    // Log the request headers to check for content type issues
+    console.log('Request headers:', Object.fromEntries(request.headers.entries()));
+    
+    let cartItems: CartItem[];
+    try {
+      // Get the request body text first for debugging
+      const bodyText = await request.text();
+      console.log('Raw request body:', bodyText);
+      
+      // Try to parse it as JSON
+      if (!bodyText || bodyText.trim() === '') {
+        return NextResponse.json({ error: 'Empty request body' }, { status: 400 });
+      }
+      
+      cartItems = JSON.parse(bodyText);
+    } catch (parseError) {
+      console.error('Failed to parse request body:', parseError);
+      return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 });
+    }
+    
+    console.log('Received cart items:', JSON.stringify(cartItems, null, 2));
 
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
-      console.error('Invalid cart items:', cartItems)
-      return NextResponse.json({ error: 'Invalid cart items' }, { status: 400 })
+      console.error('Invalid cart items:', cartItems);
+      return NextResponse.json({ error: 'Invalid cart items' }, { status: 400 });
     }
 
-    const lineItems = cartItems.map((item) => ({
-      price_data: {
-        currency: 'eur',
-        product_data: {
-          name: `${item.product.name} (${item.size})`,
-          images: [`${process.env.NEXT_PUBLIC_BASE_URL}/api/product-image?filename=${encodeURIComponent(item.product.mainImage)}`],
-          metadata: {
-            productId: item.product._id,
-            size: item.size,
-          },
-        },
-        unit_amount: item.product.salePrice 
-          ? Math.round(item.product.salePrice * 100)
-          : Math.round(item.product.price * 100),
-      },
-      quantity: item.quantity,
-    }))
+    // Define Stripe's minimum amount for HUF
+    const MIN_AMOUNT_HUF = 175;
+    
+    // Track the total before shipping for validation
+    let totalBeforeShipping = 0;
 
-    console.log('Line items:', JSON.stringify(lineItems, null, 2))
+    // For HUF currency, ensure prices are whole numbers with no decimal places
+    const lineItems = cartItems.map((item) => {
+      // Calculate the price in HUF
+      let priceInHUF;
+      if (item.product.salePrice) {
+        // If the price is already in HUF, just round it to whole number
+        priceInHUF = Math.round(item.product.salePrice);
+      } else {
+        // If the price is already in HUF, just round it to whole number
+        priceInHUF = Math.round(item.product.price);
+      }
+      
+      // Ensure it's a non-zero positive integer (important for HUF)
+      if (priceInHUF <= 0) {
+        console.error(`Invalid price for product ${item.product._id}: ${priceInHUF}`);
+        priceInHUF = 200; // Set a higher minimum price to prevent errors
+      }
+      
+      const lineItemTotal = priceInHUF * item.quantity;
+      totalBeforeShipping += lineItemTotal;
+      
+      console.log(`Product: ${item.product.name}, Price: ${priceInHUF} HUF, Quantity: ${item.quantity}, Line Total: ${lineItemTotal} HUF`);
+      
+      return {
+        price_data: {
+          currency: 'huf',
+          product_data: {
+            name: `${item.product.name} (${item.size})`,
+            images: [`${process.env.NEXT_PUBLIC_BASE_URL}/api/product-image?filename=${encodeURIComponent(item.product.mainImage)}`],
+            metadata: {
+              productId: item.product._id,
+              size: item.size,
+            },
+          },
+          unit_amount_decimal: (priceInHUF * 100).toString(), // Convert to smallest currency unit (fillér)
+        },
+        quantity: item.quantity,
+      };
+    });
+
+    console.log('Line items:', JSON.stringify(lineItems, null, 2));
+    console.log(`Total before shipping: ${totalBeforeShipping} HUF`);
+
+    // Check if total is below Stripe's minimum for HUF
+    if (totalBeforeShipping < MIN_AMOUNT_HUF) {
+      console.error(`Total amount ${totalBeforeShipping} HUF is below Stripe's minimum of ${MIN_AMOUNT_HUF} HUF`);
+      return NextResponse.json({ 
+        error: `Order total must be at least ${MIN_AMOUNT_HUF} HUF to process payment` 
+      }, { status: 400 });
+    }
 
     // Create a compact version of cart items for metadata
     const compactCartItems = cartItems.map(item => ({
@@ -54,27 +111,41 @@ export async function POST(request: NextRequest) {
       s: item.size,
       q: item.quantity,
       p: item.product.salePrice || item.product.price
-    }))
+    }));
 
     // Convert to JSON and truncate if necessary
-    let cartItemsSummary = JSON.stringify(compactCartItems)
+    let cartItemsSummary = JSON.stringify(compactCartItems);
     if (cartItemsSummary.length > 500) {
-      cartItemsSummary = cartItemsSummary.substring(0, 497) + '...'
+      cartItemsSummary = cartItemsSummary.substring(0, 497) + '...';
     }
 
-    // Calculate total amount
-    const totalAmount = lineItems.reduce((sum, item) => sum + (item.price_data.unit_amount * item.quantity), 0)
+    // Calculate total amount correctly in fillér (smallest HUF unit)
+    const totalAmount = totalBeforeShipping;
 
     // Determine if standard shipping should be free
-    const isStandardShippingFree = totalAmount >= 10000 // 100€ in cents
+    const freeShippingThreshold = 38000; // HUF equivalent of 100 EUR
+    const isStandardShippingFree = totalAmount >= freeShippingThreshold;
 
-    const shippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[] = [
+    // Define shipping costs
+    const standardShippingCost = isStandardShippingFree ? 0 : 1900; // HUF equivalent of 5 EUR
+    const expressShippingCost = 3800; // HUF equivalent of 10 EUR
+
+    // Make sure even with free shipping, the total meets Stripe's minimum
+    const minShippingTotal = totalAmount + standardShippingCost;
+    if (minShippingTotal < MIN_AMOUNT_HUF) {
+      console.error(`Total with standard shipping ${minShippingTotal} HUF is below Stripe's minimum`);
+      return NextResponse.json({ 
+        error: `Order total including shipping must be at least ${MIN_AMOUNT_HUF} HUF to process payment` 
+      }, { status: 400 });
+    }
+
+    const shippingOptions = [
       {
         shipping_rate_data: {
           type: 'fixed_amount',
           fixed_amount: {
-            amount: isStandardShippingFree ? 0 : 500,
-            currency: 'eur',
+            amount: standardShippingCost * 100, // Convert to fillér
+            currency: 'huf',
           },
           display_name: isStandardShippingFree ? 'Free Standard Shipping' : 'Standard Shipping',
           delivery_estimate: {
@@ -93,8 +164,8 @@ export async function POST(request: NextRequest) {
         shipping_rate_data: {
           type: 'fixed_amount',
           fixed_amount: {
-            amount: 1000,
-            currency: 'eur',
+            amount: expressShippingCost * 100, // Convert to fillér
+            currency: 'huf',
           },
           display_name: 'Express Shipping',
           delivery_estimate: {
@@ -109,13 +180,16 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-    ]
+    ];
 
-    const session = await stripe.checkout.sessions.create({
+    console.log('Creating Stripe checkout session with HUF currency');
+    
+    const sessionParams = {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      currency: 'eur',
+      locale: 'hu',
+      currency: 'huf',
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
       shipping_address_collection: {
@@ -137,19 +211,26 @@ export async function POST(request: NextRequest) {
           message: 'We\'ll email you instructions to track your order.',
         },
       },
-    })
+    };
+    
+    console.log('Session parameters:', JSON.stringify(sessionParams, null, 2));
+    
+    const session = await stripe.checkout.sessions.create(sessionParams as Stripe.Checkout.SessionCreateParams);
 
-    console.log('Stripe session created:', session.id)
-    return NextResponse.json({ sessionId: session.id })
+    console.log('Stripe session created:', session.id);
+    return NextResponse.json({ sessionId: session.id });
   } catch (err: unknown) {
-    console.error('Stripe session creation error:', err)
+    console.error('Stripe session creation error:', err);
     if (err instanceof Stripe.errors.StripeError) {
-      console.error('Stripe error details:', err.message, err.type, err.raw)
+      console.error('Stripe error details:', err.message, err.type, err.raw);
+      return NextResponse.json(
+        { error: `Stripe error: ${err.message}` },
+        { status: 400 }
+      );
     }
     return NextResponse.json(
       { error: err instanceof Error ? err.message : 'An unknown error occurred' },
       { status: 500 }
-    )
+    );
   }
 }
-

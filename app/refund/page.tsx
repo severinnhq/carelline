@@ -14,93 +14,95 @@ const RefundPolicy = () => {
           variant="outline"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back
+          Vissza
         </Button>
       </Link>
 
-      <h1 className="text-3xl font-bold mb-8">Refund & Return Policy</h1>
+      <h1 className="text-3xl font-bold mb-8">Visszatérítési és Visszaküldési Szabályzat</h1>
       
-      {/* Rest of the component remains the same */}
       <div className="space-y-6">
         <section>
-          <h2 className="text-2xl font-semibold mb-4">1. Return Period</h2>
+          <h2 className="text-2xl font-semibold mb-4">1. Visszaküldési időszak</h2>
           <p className="mb-4">
-            We offer a 14-day return window for all our anti-choking devices. This period begins from the date you receive your order, as confirmed by our shipping carrier's delivery confirmation.
+            Minden fulladásgátló eszközünkre 14 napos visszaküldési időszakot biztosítunk. Ez az időszak a rendelés kézhezvételének napjától kezdődik, amelyet a szállítási szolgáltató kézbesítési visszaigazolása igazol.
+          </p>
+          <p className="mb-4 text-red-600 font-semibold">
+            Felhívjuk figyelmét, hogy termékeink és szolgáltatásaink hatékonyságát nem tudjuk 100%-ban garantálni. Nem vállalunk felelősséget a nem megfelelő használatból vagy váratlan körülményekből eredő következményekért.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">2. Return Process</h2>
-          <p className="mb-4">To initiate a return, please follow these steps:</p>
+          <h2 className="text-2xl font-semibold mb-4">2. Visszaküldési folyamat</h2>
+          <p className="mb-4">A visszaküldés kezdeményezéséhez kérjük, kövesse az alábbi lépéseket:</p>
           <ol className="list-decimal pl-6 space-y-2">
-            <li>Contact our customer service team within 14 days of delivery</li>
-            <li>Receive a return authorization number</li>
-            <li>Package the item securely in its original packaging</li>
-            <li>Include the return authorization number with your shipment</li>
-            <li>Ship the item to our designated return address</li>
+            <li>Vegye fel a kapcsolatot ügyfélszolgálati csapatunkkal a kézbesítéstől számított 14 napon belül</li>
+            <li>Kapjon egy visszaküldési engedélyszámot</li>
+            <li>Csomagolja be biztonságosan a terméket az eredeti csomagolásába</li>
+            <li>Mellékelje a visszaküldési engedélyszámot a küldeményhez</li>
+            <li>Küldje el a terméket a megadott visszaküldési címre</li>
           </ol>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">3. Return Shipping Costs</h2>
+          <h2 className="text-2xl font-semibold mb-4">3. Visszaküldési szállítási költségek</h2>
           <p className="mb-4">
-            Customers are responsible for return shipping costs under normal circumstances. However, if you received a defective item, we will reimburse your return shipping costs once we verify the factory defect.
+            A visszaküldés szállítási költségeit normál körülmények között a vásárlók viselik. Ha azonban hibás terméket kapott, a visszaküldési költségeket megtérítjük, miután ellenőriztük a gyári hibát.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">4. Refund Eligibility</h2>
-          <p className="mb-4">Full refunds are provided in the following cases:</p>
+          <h2 className="text-2xl font-semibold mb-4">4. Visszatérítési jogosultság</h2>
+          <p className="mb-4">Teljes visszatérítést az alábbi esetekben biztosítunk:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Factory defects (even if the product has been used)</li>
-            <li>Items returned unused in original packaging within 14 days</li>
-            <li>Incorrect items shipped</li>
-            <li>Items damaged during transit</li>
+            <li>Gyári hibák (még akkor is, ha a terméket már használták)</li>
+            <li>14 napon belül, eredeti csomagolásban, használatlanul visszaküldött termékek</li>
+            <li>Tévesen kiszállított termékek</li>
+            <li>Szállítás közben megsérült termékek</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">5. Refund Process</h2>
+          <h2 className="text-2xl font-semibold mb-4">5. Visszatérítési folyamat</h2>
           <p className="mb-4">
-            Once we receive your returned item, our team will inspect it within 2 business days. After verification:
+            A visszaküldött termék kézhezvételét követően csapatunk 2 munkanapon belül megvizsgálja azt. Ellenőrzés után:
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Approved refunds will be processed within 3-5 business days</li>
-            <li>Refunds will be issued to the original payment method</li>
-            <li>You will receive an email confirmation when your refund is processed</li>
-            <li>Bank processing times may vary (typically 5-10 business days)</li>
+            <li>A jóváhagyott visszatérítéseket 3-5 munkanapon belül feldolgozzuk</li>
+            <li>A visszatérítés az eredeti fizetési módra történik</li>
+            <li>E-mailben értesítést kap, amikor a visszatérítést feldolgoztuk</li>
+            <li>A banki feldolgozási idők változhatnak (általában 5-10 munkanap)</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">6. Non-Refundable Items</h2>
+          <h2 className="text-2xl font-semibold mb-4">6. Nem visszatéríthető termékek</h2>
           <p className="mb-4">
-            We cannot accept returns or provide refunds for:
+            Nem fogadunk el visszaküldést és nem biztosítunk visszatérítést az alábbi esetekben:
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Items returned after the 14-day window</li>
-            <li>Products with signs of excessive use or damage</li>
-            <li>Items missing original packaging or components</li>
-            <li>Products that have been modified or altered</li>
+            <li>14 napos időszak után visszaküldött termékek</li>
+            <li>Túlzott használat vagy sérülés jeleit mutató termékek</li>
+            <li>Eredeti csomagolás vagy alkatrészek nélküli termékek</li>
+            <li>Módosított vagy átalakított termékek</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">7. Damaged Items</h2>
+          <h2 className="text-2xl font-semibold mb-4">7. Sérült termékek</h2>
           <p className="mb-4">
-            If you receive a damaged item, please:
+            Ha sérült terméket kap, kérjük:
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Document the damage with photos</li>
-            <li>Contact us within 24 hours of delivery</li>
-            <li>Keep all original packaging for inspection</li>
-            <li>Wait for instructions before returning the item</li>
+            <li>Dokumentálja a sérülést fényképekkel</li>
+            <li>Vegye fel velünk a kapcsolatot a kézbesítéstől számított 24 órán belül</li>
+            <li>Őrizze meg az eredeti csomagolást ellenőrzés céljából</li>
+            <li>Várja meg az utasításokat, mielőtt visszaküldené a terméket</li>
           </ul>
         </section>
 
         <footer className="mt-12 text-sm text-gray-600">
-          <p>Last updated: February 2025</p>
-          <p className="mt-2">This refund policy is subject to change without notice. Please contact our customer service team with any questions.</p>
+          <p>Utolsó frissítés: 2025. február</p>
+          <p className="mt-2">Ez a visszatérítési szabályzat előzetes értesítés nélkül változhat. Kérjük, bármilyen kérdéssel forduljon ügyfélszolgálati csapatunkhoz.</p>
         </footer>
       </div>
     </div>

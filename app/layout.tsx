@@ -14,7 +14,7 @@ const sora = Sora({
 })
 
 export const metadata: Metadata = {
-  title: 'Every Second Counts',
+  title: 'Minden másodperc számít',
 }
 
 export default function RootLayout({
