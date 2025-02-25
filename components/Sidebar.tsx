@@ -188,7 +188,7 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
   {((item.product.salePrice || item.product.price) * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
 </p>
                                 </div>
-                                <p className="mt-1 text-sm text-gray-500">Méret: {item.size}</p>
+                             
                               </div>
                               <div className="flex-1 flex items-end justify-between text-sm">
                                 <div className="flex items-center">
