@@ -8,8 +8,8 @@ export default function FAQSection() {
 
   const faqs = [
     {
-      question: "Hogy működik és miylen gyorsan képes felszabadítani a légutat??",
-      answer: "Vákumot képezve, erős szívással 1 pumpálással azat már az első szívás megtisztítja a légutat, de mindig fontos, hogy sürgősségi segítséget is kérjünk."
+      question: "Hogy működik és milyen gyorsan képes felszabadítani a légutat?",
+      answer: "Vákumot képezve, erős szívással 1 pumpálással azaz már az első szívás megtisztítja a légutat, de mindig fontos, hogy sürgősségi segítséget is kérjünk."
     },
     {
       question: "Mit tegyek ha az első szívás nem volt sikeres?",
