@@ -327,7 +327,7 @@ export default function HeroSection() {
             >
               {/* Single baby emoji */}
               <div className="flex items-center justify-center w-6 h-6 bg-blue-50 rounded-full">
-                <span className="text-lg" role="img" aria-label="Baby">👶</span>
+                <span className="text-lg" role="img" aria-label="Baby">👶👴</span>
               </div>
               <p className="px-2 text-xs text-gray-600 whitespace-nowrap">
                  <strong className="font-bold text-gray-900">122</strong> regisztrált életett mentettünk meg
