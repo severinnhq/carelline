@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Sora } from 'next/font/google'
 import Link from 'next/link'
-import { Circle } from 'lucide-react'
 
 const sora = Sora({ subsets: ['latin'] })
 
