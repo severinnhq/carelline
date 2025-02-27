@@ -115,67 +115,67 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review1.png", 
       name: "Ignácz Ádám", 
-      text: "Ez a készülék életet mentett a családomban. Szó szerint. Minden szülőnek ajánlom!"
+      text: ",,Ez a készülék életet mentett a családomban. Szó szerint. Minden szülőnek ajánlom!''"
     },
     { 
       src: "/uploads/reviews/review2.png", 
       name: "Mohácsi Eszter", 
-      text: "Nagyon gyors és hatékony! Sosem gondoltam volna, hogy egyszer szükség lesz rá, de hála az égnek kéznél volt!"
+      text: ",,Nagyon gyors és hatékony! Sosem gondoltam volna, hogy egyszer szükség lesz rá, de hála az égnek kéznél volt!''"
     },
     { 
       src: "/uploads/reviews/review3.png", 
       name: "Tóth László", 
-      text: "Egy étteremben lettem rosszul, és egy ilyen eszköz mentette meg az életemet. Nem is tudom, mi lett volna nélküle."
+      text: ",,Egy étteremben lettem rosszul, és egy ilyen eszköz mentette meg az életemet. Nem is tudom, mi lett volna nélküle.''"
     },
     { 
       src: "/uploads/reviews/review4.png", 
       name: "Krinszki-Nagy Anna", 
-      text: "Könnyű kezelni.* lekopogom* még csak teszteltem, remélem nem is lesz szükség rá éles helyzetben."
+      text: ",,Könnyű kezelni.* lekopogom* még csak teszteltem, remélem nem is lesz szükség rá éles helyzetben.''"
     },
     { 
       src: "/uploads/reviews/review5.png", 
       name: "Kanozsai Erzsébet", 
-      text: "A legjobb döntés, amit valaha hoztam. Minden otthonban ott kellene lennie!"
+      text: ",,A legjobb döntés, amit valaha hoztam. Minden otthonban ott kellene lennie!''"
     },
     { 
       src: "/uploads/reviews/review6.png", 
       name: "Horváth Noémi", 
-      text: "Először szkeptikus voltam, de amikor a kisfiam elkezdett fuldokolni, ez a készülék megmentette őt. Köszönöm!"
+      text: ",,Először szkeptikus voltam, de amikor a kisfiam elkezdett fuldokolni, ez a készülék megmentette őt. Köszönöm!''"
     },
     { 
       src: "/uploads/reviews/review7.png", 
       name: "Balogh Dániel", 
-      text: "Érdemes beruházni rá. Gyors, hatékony és életet menthet!"
+      text: ",,Érdemes beruházni rá. Gyors, hatékony és életet menthet!''"
     },
     { 
       src: "/uploads/reviews/review8.png", 
       name: "Farkas Zsófia", 
-      text: "A nagypapámnál kellett használnunk, és sikerült! Minden család számára kötelező kellene legyen."
+      text: ",,A nagypapámnál kellett használnunk, és sikerült! Minden család számára kötelező kellene legyen.''"
     },
     { 
       src: "/uploads/reviews/review9.png", 
       name: "Ambrusné Anita", 
-      text: "Minden étteremben és otthonban ott kellene lennie! Nem lehet eléggé hangsúlyozni a fontosságát."
+      text: ",,Minden étteremben és otthonban ott kellene lennie! Nem lehet eléggé hangsúlyozni a fontosságát.''"
     },
     { 
       src: "/uploads/reviews/review10.png", 
       name: "Sándor Boglárka", 
-      text: "Minden szülő rémálma a fulladás. Ez az eszköz biztonságot nyújt."
+      text: ",,Minden szülő rémálma a fulladás. Ez az eszköz biztonságot nyújt.''"
     },
     { 
       src: "/uploads/reviews/review11.png", 
       name: "Bodzán Margó", 
-      text: "Gyorsan és egyszerűen használható. Életeket menthet."
+      text: ",,Gyorsan és egyszerűen használható. Életeket menthet.''"
     },
     { 
       src: "/uploads/reviews/review12.png", 
       name: "Pappné Sipos Lilla", 
-      text: "Amikor vészhelyzet volt, csak ez tudott segíteni. Hálás vagyok érte!"
+      text: ",,Amikor vészhelyzet volt, csak ez tudott segíteni. Hálás vagyok érte!''"
     },
     { 
       src: "/uploads/reviews/review13.png", 
       name: "ifj. Bodnár Mihály", 
-      text: "Nem szabad az ördögöt a falra festeni, távolálljék tőlem, de ha én vagy bárki a családban veszélybe kerül, megfizethetetlen segítséget nyújtana."
+      text: ",,Nem szabad az ördögöt a falra festeni, távolálljék tőlem, de ha én vagy bárki a családban veszélybe kerül, megfizethetetlen segítséget nyújtana.''"
     }
   ]
 
