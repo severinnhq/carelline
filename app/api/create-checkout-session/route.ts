@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
 
     // Define shipping costs
     const standardShippingCost = isStandardShippingFree ? 0 : 1490; // HUF equivalent of 5 EUR
-    const expressShippingCost = 2290; // HUF equivalent of 10 EUR
+    const expressShippingCost = 2990; // HUF equivalent of 10 EUR
 
     // Make sure even with free shipping, the total meets Stripe's minimum
     const minShippingTotal = totalAmount + standardShippingCost;

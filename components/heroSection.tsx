@@ -3,8 +3,51 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Sora } from 'next/font/google'
 import Link from 'next/link'
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 const sora = Sora({ subsets: ['latin'] })
+
+// Avatar Components
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Root
+    ref={ref}
+    className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className)}
+    {...props}
+  />
+));
+Avatar.displayName = AvatarPrimitive.Root.displayName;
+
+const AvatarImage = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Image
+    ref={ref}
+    className={cn("aspect-square h-full w-full", className)}
+    {...props}
+  />
+));
+AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+
+const AvatarFallback = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Fallback
+    ref={ref}
+    className={cn(
+      "flex h-full w-full items-center justify-center rounded-[inherit] bg-secondary text-xs",
+      className,
+    )}
+    {...props}
+  />
+));
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
 export default function HeroSection() {
   // Start with isMuted true so that autoplay can work
@@ -164,6 +207,20 @@ export default function HeroSection() {
     }
   }
 
+  // Avatar component animation
+  const avatarComponentVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        delay: 0.6,
+        ease: 'easeOut',
+      },
+    },
+  }
+
   // Choose an alternative video source if there is an error.
   const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
 
@@ -252,12 +309,29 @@ export default function HeroSection() {
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={buttonVariants}
+              className="mb-12" /* Increased spacing from mb-6 to mb-12 */
             >
               <Link href="/product/67b6f90829e091cfe70668a7">
                 <button className="px-6 py-3 bg-[#dc2626] text-white font-medium rounded-md hover:bg-red-700 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5">
                   Felkészülök
                 </button>
               </Link>
+            </motion.div>
+            
+            {/* Added Saved Children Section with baby emoji instead of avatar images */}
+            <motion.div 
+              initial="hidden"
+              animate={isLoaded ? 'visible' : 'hidden'}
+              variants={avatarComponentVariants}
+              className="inline-flex items-center rounded-full border border-gray-200 bg-white p-2 shadow shadow-black/5 mx-auto lg:mx-0"
+            >
+              {/* Single baby emoji */}
+              <div className="flex items-center justify-center w-6 h-6 bg-blue-50 rounded-full">
+                <span className="text-lg" role="img" aria-label="Baby">👶</span>
+              </div>
+              <p className="px-2 text-xs text-gray-600 whitespace-nowrap">
+                 <strong className="font-bold text-gray-900">122</strong> regisztrált életett mentettünk meg
+              </p>
             </motion.div>
           </div>
 
