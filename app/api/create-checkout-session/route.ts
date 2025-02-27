@@ -23,9 +23,9 @@ interface RequestPayload {
   promoCode?: string;
 }
 
-// Define literal type constants to avoid inline assertions
-const FIXED_AMOUNT: 'fixed_amount' = 'fixed_amount';
-const BUSINESS_DAY: 'business_day' = 'business_day';
+const FIXED_AMOUNT = 'fixed_amount' as const;
+const BUSINESS_DAY = 'business_day' as const;
+
 
 export async function POST(request: NextRequest) {
   try {
