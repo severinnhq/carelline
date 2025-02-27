@@ -303,7 +303,7 @@ export default function HeroSection() {
               custom={1}
               variants={textVariants}
             >
-             Innovatív fulladásgátló eszközünk másodpercek alatt tisztítja meg a légutat!
+             Innovatív fulladásgátló eszközeink másodpercek alatt tisztítják meg a légutat!
             </motion.p>
             <motion.div
               initial="hidden"
@@ -312,28 +312,18 @@ export default function HeroSection() {
               className="mb-12" /* Increased spacing from mb-6 to mb-12 */
             >
               <Link href="/product/67b6f90829e091cfe70668a7">
-                <button className="px-6 py-3 bg-[#dc2626] text-white font-medium rounded-md hover:bg-red-700 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5">
-                  Felkészülök
-                </button>
+              <button 
+  className="bg-[#dc2626] text-white font-semibold rounded-xl hover:bg-red-700 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-[1.375rem]"
+  style={{ padding: "0.75rem 1.75rem" }}
+>
+  LEGYEN FELKÉSZÜLVE!
+</button>
+
               </Link>
             </motion.div>
             
-            {/* Added Saved Children Section with baby emoji instead of avatar images */}
-            <motion.div 
-  initial="hidden"
-  animate={isLoaded ? 'visible' : 'hidden'}
-  variants={avatarComponentVariants}
-  className="inline-flex items-center rounded-full border border-gray-200 bg-white p-2 shadow shadow-black/5 mx-auto lg:mx-0"
->
-  {/* Container for the emojis */}
-  <div className="flex items-center justify-center w-12 h-6 bg-blue-50 rounded-full">
-    <span className="text-lg" role="img" aria-label="Baby">👶</span>
-    <span className="text-lg" role="img" aria-label="Old">👴</span>
-  </div>
-  <p className="px-2 text-xs text-gray-600 whitespace-nowrap">
-    <strong className="font-bold text-gray-900">122</strong> regisztrált életett mentettünk meg
-  </p>
-</motion.div>
+          
+
 
           </div>
 
