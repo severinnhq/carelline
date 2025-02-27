@@ -231,11 +231,11 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
 </p>
                   </div>
                   <p className="mt-0.5 text-sm text-gray-500">
-                    {cartTotal >= 100
-                      ? "Nincs szállítási költség, "
-                      : "A szállítási költséget és "}
-                    {"árak az ÁFÁ-t tartalmazzák. "}
-                  </p>
+  {cartTotal >= 30000
+    ? "Nincs szállítási költség, "
+    : "A szállítási költséget a pénztárnál számoljuk ki, az "}
+  {"árak az ÁFÁ-t tartalmazzák. "}
+</p>
                   <div className="mt-6 space-y-4">
                     <Button onClick={processCheckout} disabled={isLoading} className="w-full bg-black text-white hover:bg-gray-800">
                       {isLoading ? 'Feldolgozás...' : 'Pénztár'}

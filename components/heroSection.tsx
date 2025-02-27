@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Sora } from 'next/font/google'
 import Link from 'next/link'
+import { Circle } from 'lucide-react'
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -136,6 +137,33 @@ export default function HeroSection() {
       },
     },
   }
+  
+  // Badge animation
+  const badgeVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        delay: 0.1,
+        ease: 'easeOut',
+      },
+    },
+  }
+  
+  // Circle vibration animation
+  const circleVibrateVariants = {
+    animate: {
+      scale: [1, 1.2, 1],
+      opacity: [0.7, 1, 0.7],
+      transition: {
+        repeat: Infinity,
+        duration: 1.5,
+        ease: "easeInOut",
+      }
+    }
+  }
 
   // Choose an alternative video source if there is an error.
   const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
@@ -179,6 +207,27 @@ export default function HeroSection() {
         <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-16 lg:gap-32 w-full">
           {/* Left Column: Text & Button */}
           <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
+            {/* Updated Badge with additional space between circle and text */}
+            <motion.div
+              initial="hidden"
+              animate={isLoaded ? 'visible' : 'hidden'}
+              variants={badgeVariants}
+              className="inline-flex items-center gap-3 px-2.5 py-0.5 rounded-full bg-white shadow-sm border border-gray-100 mb-4 mx-auto lg:mx-0"
+            >
+              <motion.div
+                animate="animate"
+                variants={circleVibrateVariants}
+              >
+                {/* Custom SVG circle that's fully green instead of using the Lucide Circle component */}
+                <svg width="8" height="8" viewBox="0 0 8 8" className="text-green-500">
+                  <circle cx="4" cy="4" r="4" fill="currentColor" />
+                </svg>
+              </motion.div>
+              <span className="text-xs text-black tracking-wide font-medium">
+                 Jelenleg csak <span className="font-bold">11</span> van raktáron
+              </span>
+            </motion.div>
+            
             <motion.h1
               className="font-bold mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-800"
               initial="hidden"
@@ -283,42 +332,42 @@ export default function HeroSection() {
                       </button>
                     )}
                     {/* Sound Toggle Button */}
-<button
-  onClick={toggleMute}
-  className="absolute bottom-4 right-4 z-20 bg-white p-2 rounded-full hover:bg-white/90 focus:outline-none shadow-md transition-all"
-  aria-label={isMuted ? 'Unmute video' : 'Mute video'}
->
-  {isMuted ? (
-    // Muted icon - with speaker and X
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6 text-gray-800"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H2v6h4l5 4V5z" />
-      <g transform="translate(3, 4)">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6l4 4m0-4l-4 4" />
-      </g>
-    </svg>
-  ) : (
-    // Unmuted icon - with speaker and sound waves
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6 text-gray-800"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H2v6h4l5 4V5z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.54 8.46a5 5 0 010 7.07" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.07 4.93a10 10 0 010 14.14" />
-    </svg>
-  )}
-</button>
+                    <button
+                      onClick={toggleMute}
+                      className="absolute bottom-4 right-4 z-20 bg-white p-2 rounded-full hover:bg-white/90 focus:outline-none shadow-md transition-all"
+                      aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+                    >
+                      {isMuted ? (
+                        // Muted icon - with speaker and X
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-gray-800"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H2v6h4l5 4V5z" />
+                          <g transform="translate(3, 4)">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6l4 4m0-4l-4 4" />
+                          </g>
+                        </svg>
+                      ) : (
+                        // Unmuted icon - with speaker and sound waves
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-gray-800"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H2v6h4l5 4V5z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.54 8.46a5 5 0 010 7.07" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.07 4.93a10 10 0 010 14.14" />
+                        </svg>
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>
