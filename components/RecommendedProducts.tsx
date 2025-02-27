@@ -220,9 +220,9 @@ export default function RecommendedProducts() {
     >
       <div className="relative aspect-square overflow-hidden">
         {product.salePrice && (
-          <div className="absolute top-2 left-2 bg-[#be2323] text-white text-xs font-bold px-3 py-1.5 rounded-lg z-20">
-            SALE
-          </div>
+        <div className="absolute top-2 left-2 bg-[#be2323] text-white text-xs font-bold px-3 py-1.5 rounded-lg z-20">
+        -{Math.round(((product.price - product.salePrice) / product.price) * 100)}%
+      </div>
         )}
         <div className={`absolute inset-0 transition-opacity duration-300 ease-out md:group-hover:opacity-0 ${product.sizes.length === 0 ? 'opacity-50' : ''}`}>
           <Image

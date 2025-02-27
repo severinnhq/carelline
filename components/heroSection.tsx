@@ -301,7 +301,7 @@ export default function HeroSection() {
             >
               <Link href="/product/67b6f90829e091cfe70668a7">
               <button 
-  className="bg-[#dc2626] text-white font-semibold rounded-xl hover:bg-red-700 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-[1.375rem]"
+  className="bg-[#dc2626] text-white font-semibold rounded-md hover:bg-red-700 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-[1.375rem]"
   style={{ padding: "0.75rem 1.75rem" }}
 >
   LEGYEN FELKÉSZÜLVE!

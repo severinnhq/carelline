@@ -243,8 +243,8 @@ export default function ProductList() {
       <div className="relative aspect-square overflow-hidden">
         {product.salePrice && (
           <div className="absolute top-2 left-2 bg-[#be2323] text-white text-xs font-bold px-3 py-1.5 rounded-lg z-20">
-            SALE
-          </div>
+          -{Math.round(((product.price - product.salePrice) / product.price) * 100)}%
+        </div>
         )}
         <div className={`absolute inset-0 transition-opacity duration-300 ease-out ${
           product.sizes.length === 0 ? 'opacity-40 md:group-hover:opacity-0' : 'md:group-hover:opacity-0'
@@ -411,7 +411,7 @@ export default function ProductList() {
     <>
       <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
       <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[4rem] md:mt-[4rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
-        <h1 className="text-4xl sm:text-5xl font-bold mb-[2rem] md:mb-[4rem] text-center uppercase tracking-wider">REMÉLJÜK SOSE LESZ RÁJUK SZÜKSÉG</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold mb-[2rem] md:mb-[4rem] text-center uppercase tracking-wider">REMÉLJÜK NEM LESZ RÁJUK SZÜKSÉG</h1>
         
         {isLoading && (
           <div className="text-center mb-6">
