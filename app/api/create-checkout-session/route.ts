@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
     // Apply discount if promoCode is provided and equals "LM4500"
     let discounts: Stripe.Checkout.SessionCreateParams.Discount[] | undefined;
     if (promoCode !== undefined && promoCode.toUpperCase() === 'LM4500') {
-      discounts = [{ coupon: 'LM4500' }];
+      discounts = [{ coupon: 'WnXzcbua' }];  // Use the coupon ID, not the name
       console.log('Promo code applied: LM4500 - discount of 4500 HUF');
     }
 
