@@ -218,7 +218,7 @@ export default function ProductPage() {
           </p>
           <h5 className="font-medium text-black mb-2">Szállítási információk:</h5>
           <p>
-          A normál szállítás általában 6-10 munkanapot vesz igénybe. Az expressz viszont áltlában csak 3-5nap.
+          A normál szállítás általában 6-10 munkanapot vesz igénybe. Az expressz viszont csak 3-5nap.
           </p>
         </>
       )
