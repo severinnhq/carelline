@@ -168,17 +168,7 @@ export default function HeroSection() {
     },
   }
   
-  const circleVibrateVariants = {
-    animate: {
-      scale: [1, 1.2, 1],
-      opacity: [0.7, 1, 0.7],
-      transition: {
-        repeat: Infinity,
-        duration: 1.5,
-        ease: "easeInOut",
-      }
-    }
-  }
+
 
   const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
 
