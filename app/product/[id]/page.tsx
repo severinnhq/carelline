@@ -32,14 +32,6 @@ interface Product {
   galleryImages: string[]
 }
 
-// Define the type for color options, including an optional "gradient" property.
-interface ColorOption {
-  name: string
-  value: string
-  available: boolean
-  gradient?: [string, string]
-}
-
 export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null)
   const [selectedSize, setSelectedSize] = useState<string>('')
@@ -53,30 +45,6 @@ export default function ProductPage() {
   const productRef = useRef<HTMLDivElement>(null)
   const [activeEmailInput, setActiveEmailInput] = useState<boolean>(false)
   const [notifyMessage, setNotifyMessage] = useState<{ type: 'success' | 'error', content: string } | null>(null)
-  // Set the default selected color to "Sárga Kék"
-  const [selectedColor, setSelectedColor] = useState<string>('Sárga Kék')
-
-  // Update the colors array so that only “Sárga Kék” is available.
-  const colors: ColorOption[] = [
-    {
-      name: 'Yellow-Blue',
-      value: 'Sárga Kék',
-      gradient: ['yellow', 'blue'], // yellow top, blue bottom
-      available: true
-    },
-    {
-      name: 'Yellow',
-      value: 'Átlátszó Sárga',
-      gradient: ['white', 'yellow'], // white top, yellow bottom
-      available: false
-    },
-    {
-      name: 'Green',
-      value: 'Átlátszó Zöld',
-      gradient: ['white', 'green'], // white top, green bottom
-      available: false
-    }
-  ]
 
   useEffect(() => {
     async function fetchProduct() {
@@ -117,20 +85,13 @@ export default function ProductPage() {
 
   const handleAddToCart = () => {
     if (product && selectedSize) {
-      const productWithColor = id === '67b6f90829e091cfe70668a7'
-        ? { ...product, selectedColor }
-        : product
-      addToCart(productWithColor, selectedSize, quantity)
+      addToCart(product, selectedSize, quantity)
       setIsSidebarOpen(true)
     }
   }
 
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size)
-  }
-
-  const handleColorSelect = (color: string) => {
-    setSelectedColor(color)
   }
 
   const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -202,7 +163,6 @@ export default function ProductPage() {
 
   const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   const isProductAvailable = product.sizes.length > 0
-  const showColorPicker = id === '67b6f90829e091cfe70668a7'
 
   const faqs = [
     {
@@ -269,55 +229,22 @@ export default function ProductPage() {
           <div className="lg:w-2/5">
             <h1 className="text-5xl font-bold mb-2">{product.name}</h1>
             <div className="mb-4">
-  {product.salePrice ? (
-    <div>
-      <span className="text-2xl font-bold text-[#dc2626] mr-2">
-        {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
-      </span>
-      <span className="text-lg text-gray-500 line-through">
-        {Math.round(product.price).toLocaleString('hu-HU')} Ft
-      </span>
-    </div>
-  ) : (
-    <span className="text-2xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
-  )}
-</div>
+              {product.salePrice ? (
+                <div>
+                  <span className="text-2xl font-bold text-[#dc2626] mr-2">
+                    {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
+                  </span>
+                  <span className="text-lg text-gray-500 line-through">
+                    {Math.round(product.price).toLocaleString('hu-HU')} Ft
+                  </span>
+                </div>
+              ) : (
+                <span className="text-2xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
+              )}
+            </div>
             <hr className="border-t border-gray-300 my-4 w-1/2" />
             {isProductAvailable ? (
               <>
-                {showColorPicker && (
-                  <div className="mb-4">
-                    <h2 className="text-lg font-semibold mb-2">Szín:</h2>
-                    <div className="flex flex-wrap gap-2">
-                      {colors.map((color) => {
-                        // Check if this is the “Sárga Kék” option.
-                        const isSargaKek = color.value === 'Sárga Kék'
-                        const opacityClass = color.available ? (isSargaKek ? 'opacity-100' : 'opacity-70') : 'opacity-50'
-                        return (
-                          <button
-                            key={color.value}
-                            onClick={() => color.available && handleColorSelect(color.value)}
-                            className={`w-10 h-10 rounded-full ${isSargaKek ? 'border-4 border-black' : 'border border-gray-300'} ${selectedColor === color.value ? 'ring-2 ring-offset-2 ring-black' : ''} ${opacityClass} ${!color.available && 'cursor-not-allowed'}`}
-                            style={
-                              color.gradient
-                                ? { background: `linear-gradient(to bottom, ${color.gradient[0]} 50%, ${color.gradient[1]} 50%)` }
-                                : { backgroundColor: color.value }
-                            }
-                            disabled={!color.available}
-                            title={color.name}
-                            aria-label={`${color.name} color ${!color.available ? '(unavailable)' : ''}`}
-                          />
-                        )
-                      })}
-                    </div>
-                    {/* Display the availability text based on the selected color */}
-                    <p className="text-sm text-gray-500 mt-1">
-                      {selectedColor === 'Sárga Kék'
-                        ? 'jelenleg elérhető'
-                        : 'jelenleg nem elérhető'}
-                    </p>
-                  </div>
-                )}
                 <div className="mb-4">
                   <h2 className="text-lg font-semibold mb-2">Kiszerelés</h2>
                   <div className="flex flex-wrap gap-2">

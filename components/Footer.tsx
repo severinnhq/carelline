@@ -75,7 +75,7 @@ const Footer = () => {
             <Link href="https://www.facebook.com/profile.php?id=61573174178989" className="hover:text-white transition-colors">
               <Facebook size={20} />
             </Link>
-            <Link href="https://www.instagram.com/" className="hover:text-white transition-colors">
+            <Link href="https://www.instagram.com/carelline_official" className="hover:text-white transition-colors">
               <Instagram size={20} />
             </Link>
             <Link href="mailto:carelline@outlook.com" className="hover:text-white transition-colors">
