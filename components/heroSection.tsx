@@ -212,7 +212,7 @@ export default function HeroSection() {
           {/* Left Column: Text & Button */}
           <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
             <motion.h1
-              className="font-bold mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl xl:text-6xl leading-tight text-gray-800 mt-4 sm:mt-8 lg:mt-0"
+              className="font-bold text-black mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl xl:text-6xl leading-tight text-gray-800 mt-4 sm:mt-8 lg:mt-0"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={0}
@@ -238,7 +238,7 @@ export default function HeroSection() {
               variants={buttonVariants}
               className="mb-8 sm:mb-12 text-center lg:text-left"
             >
-              <Link href="/product/67b6f90829e091cfe70668a7">
+              <Link href="/product/67c1cce79beb94961403e8f1">
                 <button 
                   className="text-white font-semibold rounded-md transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-base sm:text-lg" 
                   style={{ 
