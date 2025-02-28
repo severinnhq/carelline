@@ -320,7 +320,7 @@ export default function HeroSection() {
               
               {/* Text - Width matches the inline elements above */}
               <p className="text-gray-600 text-sm mt-1 text-center lg:text-left" style={{ width: "fit-content" }}>
-                <span className="font-semibold">1270</span> founders sleep better
+                <span className="font-semibold">122</span> regisztrált életet mentettünk!
               </p>
             </motion.div>
           </div>
