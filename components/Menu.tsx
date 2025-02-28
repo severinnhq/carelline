@@ -83,8 +83,8 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
   const menuItems = [
     { name: 'Főoldal', icon: Home, href: '/', onClick: handleHomeClick },
     { name: 'Termékek', icon: ShoppingBag, href: '/#products', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#products') },
-    { name: 'Használat', icon: ListOrdered, href: '/#feature-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#feature-section') },
     { name: 'Vélemények', icon: Star, href: '/#review-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#review-section') },
+    { name: 'Használat', icon: ListOrdered, href: '/#feature-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#feature-section') },
     { name: 'GYIK', icon: HelpCircle, href: '/#faq-section', onClick: (e: React.MouseEvent<HTMLAnchorElement>) => handleSmoothScroll(e, '/#faq-section') },
   ]
 

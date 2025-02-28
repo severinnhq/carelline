@@ -211,18 +211,18 @@ export default function HeroSection() {
         <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-8 lg:gap-16 w-full">
           {/* Left Column: Text & Button */}
           <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
-            <motion.h1
-              className="font-bold text-black mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl xl:text-6xl leading-tight text-gray-800 mt-4 sm:mt-8 lg:mt-0"
-              initial="hidden"
-              animate={isLoaded ? 'visible' : 'hidden'}
-              custom={0}
-              variants={textVariants}
-            >
-              <span className="block">Legyen kéznél</span>
-              <span className="text-purple-600 block" style={{ color: '#dc2626' }}>
-                vészhelyzetben
-              </span>
-            </motion.h1>
+          <motion.h1
+  className="font-extrabold text-black mb-4 sm:mb-6 text-4xl sm:text-4xl md:text-5xl xl:text-6xl leading-tight mt-4 sm:mt-8 lg:mt-0 tracking-tight"
+  initial="hidden"
+  animate={isLoaded ? 'visible' : 'hidden'}
+  custom={0}
+  variants={textVariants}
+>
+  <span className="block">Legyen kéznél</span>
+  <span className="text-purple-600 block" style={{ color: '#dc2626' }}>
+    vészhelyzetben
+  </span>
+</motion.h1>
             <motion.p
               className="mb-6 sm:mb-8 text-gray-600 text-base sm:text-lg w-full max-w-xl mx-auto lg:mx-0 text-center lg:text-left"
               initial="hidden"

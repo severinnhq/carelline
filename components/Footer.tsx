@@ -106,20 +106,20 @@ const Footer = () => {
             </li>
             <li>
               <Link 
-                href="/#feature-section" 
-                className="hover:text-white transition-colors"
-                onClick={(e) => handleSmoothScroll(e, '/#feature-section')}
-              >
-                Használat
-              </Link>
-            </li>
-            <li>
-              <Link 
                 href="/#review-section" 
                 className="hover:text-white transition-colors"
                 onClick={(e) => handleSmoothScroll(e, '/#review-section')}
               >
                 Vélemények
+              </Link>
+            </li>
+            <li>
+              <Link 
+                href="/#feature-section" 
+                className="hover:text-white transition-colors"
+                onClick={(e) => handleSmoothScroll(e, '/#feature-section')}
+              >
+                Használat
               </Link>
             </li>
             <li>
