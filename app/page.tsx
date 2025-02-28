@@ -57,10 +57,6 @@ export default function Home() {
         <HeroSection />
       </section>
 
-      <section id="features">
-        <FeatureSection />
-      </section>
-
       <section id="products">
         <ProductList />
       </section>
@@ -68,6 +64,12 @@ export default function Home() {
       <section id="review">
         <ReviewSection />
       </section>
+
+      <section id="features">
+        <FeatureSection />
+      </section>
+
+     
 
       <section id="faq">
         <FAQSection />
