@@ -168,19 +168,6 @@ export default function HeroSection() {
     },
   }
   
-  const badgeVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        delay: 0.1,
-        ease: 'easeOut',
-      },
-    },
-  }
-  
   const circleVibrateVariants = {
     animate: {
       scale: [1, 1.2, 1],
@@ -234,27 +221,8 @@ export default function HeroSection() {
         <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-8 lg:gap-16 w-full">
           {/* Left Column: Text & Button */}
           <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
-            {/* Badge with better mobile spacing */}
-            <div className="w-full pt-8 sm:pt-12 lg:pt-0">
-              <motion.div
-                initial="hidden"
-                animate={isLoaded ? 'visible' : 'hidden'}
-                variants={badgeVariants}
-                className="inline-flex items-center gap-3 px-2.5 py-0.5 rounded-full bg-white shadow-sm border border-gray-100 mb-6 mx-auto lg:mx-0"
-              >
-                <motion.div animate="animate" variants={circleVibrateVariants}>
-                  <svg width="8" height="8" viewBox="0 0 8 8" className="text-green-500">
-                    <circle cx="4" cy="4" r="4" fill="currentColor" />
-                  </svg>
-                </motion.div>
-                <span className="text-xs text-black tracking-wide font-medium">
-                  Jelenleg csak <span className="font-bold">11</span> van raktáron
-                </span>
-              </motion.div>
-            </div>
-            
             <motion.h1
-              className="font-bold mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl xl:text-6xl leading-tight text-gray-800"
+              className="font-bold mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl xl:text-6xl leading-tight text-gray-800 mt-4 sm:mt-8 lg:mt-0"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={0}
