@@ -196,7 +196,7 @@ export default function HeroSection() {
   const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
 
   return (
-    <section className={`relative h-screen w-full overflow-hidden bg-white pt-24 lg:pt-32 ${sora.className}`}>
+    <section className={`relative min-h-screen w-full overflow-hidden bg-white pt-24 lg:pt-32 ${sora.className}`}>
       {/* Base Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100" />
 
@@ -229,18 +229,18 @@ export default function HeroSection() {
         </svg>
       </div>
 
-      {/* Main Content - moved down by increasing top padding */}
-      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-20 h-full flex flex-col items-center justify-center mt-4">
-        <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-16 lg:gap-32 w-full">
+      {/* Main Content - changed to better handle mobile layout */}
+      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-8 sm:py-12 md:py-16 flex flex-col items-center justify-center">
+        <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-8 lg:gap-16 w-full">
           {/* Left Column: Text & Button */}
-          <div className="w-full lg:w-2/5 z-10 flex-shrink-0 mt-16">
-            {/* Badge with MUCH more space on mobile */}
-            <div className="w-full pt-20 md:pt-24 lg:pt-0">
+          <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
+            {/* Badge with better mobile spacing */}
+            <div className="w-full pt-8 sm:pt-12 lg:pt-0">
               <motion.div
                 initial="hidden"
                 animate={isLoaded ? 'visible' : 'hidden'}
                 variants={badgeVariants}
-                className="inline-flex items-center gap-3 px-2.5 py-0.5 rounded-full bg-white shadow-sm border border-gray-100 mb-8 mx-auto lg:mx-0"
+                className="inline-flex items-center gap-3 px-2.5 py-0.5 rounded-full bg-white shadow-sm border border-gray-100 mb-6 mx-auto lg:mx-0"
               >
                 <motion.div animate="animate" variants={circleVibrateVariants}>
                   <svg width="8" height="8" viewBox="0 0 8 8" className="text-green-500">
@@ -254,7 +254,7 @@ export default function HeroSection() {
             </div>
             
             <motion.h1
-              className="font-bold mb-6 text-4xl sm:text-5xl md:text-5xl xl:text-6xl 2xl:text-6xl leading-tight text-gray-800"
+              className="font-bold mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl xl:text-6xl leading-tight text-gray-800"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={0}
@@ -266,7 +266,7 @@ export default function HeroSection() {
               </span>
             </motion.h1>
             <motion.p
-              className="mb-8 text-gray-600 text-base sm:text-lg w-full max-w-xl mx-auto lg:mx-0 text-center lg:text-left"
+              className="mb-6 sm:mb-8 text-gray-600 text-base sm:text-lg w-full max-w-xl mx-auto lg:mx-0 text-center lg:text-left"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={1}
@@ -278,11 +278,11 @@ export default function HeroSection() {
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={buttonVariants}
-              className="mb-12 text-center lg:text-left"
+              className="mb-8 sm:mb-12 text-center lg:text-left"
             >
               <Link href="/product/67b6f90829e091cfe70668a7">
                 <button 
-                  className="text-white font-semibold rounded-md transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-base sm:text-base md:text-lg" 
+                  className="text-white font-semibold rounded-md transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-base sm:text-lg" 
                   style={{ 
                     padding: "0.7rem 1.5rem", 
                     backgroundColor: "#dc2626",  
@@ -297,28 +297,28 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right Column: Video Dashboard */}
-          <div className="w-full lg:w-3/5 z-10 mt-4 lg:mt-0 flex justify-center">
+          {/* Right Column: Video Dashboard - Fixed for mobile view */}
+          <div className="w-full lg:w-3/5 z-10 flex justify-center">
             <motion.div
-              className="w-full max-w-xl md:max-w-3xl relative"
+              className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl relative"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={videoVariants}
             >
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-xl transform translate-x-4 translate-y-4"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-xl transform translate-x-2 sm:translate-x-4 translate-y-2 sm:translate-y-4"></div>
                 <div className="relative bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
-                  <div className="h-12 bg-gray-100 border-b flex items-center px-4">
-                    <div className="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                  <div className="h-8 sm:h-10 md:h-12 bg-gray-100 border-b flex items-center px-4">
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-400 mr-2"></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-400 mr-2"></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-400"></div>
                   </div>
                   <div className="relative aspect-video bg-gray-50">
                     {!isVideoLoaded && (
                       <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
                         <div className="animate-pulse flex flex-col items-center">
-                          <div className="w-16 h-16 bg-gray-200 rounded-full mb-4"></div>
-                          <div className="h-4 bg-gray-200 rounded w-32"></div>
+                          <div className="w-10 h-10 sm:w-16 sm:h-16 bg-gray-200 rounded-full mb-4"></div>
+                          <div className="h-3 sm:h-4 bg-gray-200 rounded w-24 sm:w-32"></div>
                         </div>
                       </div>
                     )}
@@ -347,7 +347,7 @@ export default function HeroSection() {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-12 w-12 text-white"
+                          className="h-8 w-8 sm:h-12 sm:w-12 text-white"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -363,13 +363,13 @@ export default function HeroSection() {
                     )}
                     <button
                       onClick={toggleMute}
-                      className="absolute bottom-4 right-4 z-20 bg-white p-2 rounded-full hover:bg-white/90 focus:outline-none shadow-md transition-all"
+                      className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 z-20 bg-white p-1.5 sm:p-2 rounded-full hover:bg-white/90 focus:outline-none shadow-md transition-all"
                       aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                     >
                       {isMuted ? (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6 text-gray-800"
+                          className="h-4 w-4 sm:h-6 sm:w-6 text-gray-800"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -383,7 +383,7 @@ export default function HeroSection() {
                       ) : (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6 text-gray-800"
+                          className="h-4 w-4 sm:h-6 sm:w-6 text-gray-800"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
