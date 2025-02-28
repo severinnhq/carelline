@@ -151,6 +151,7 @@ export default function HeroSection() {
       y: 0,
       transition: {
         duration: 0.4,
+        delay: 0.5, // Added delay here to make button appear after headline and subheadline
         ease: 'easeOut',
       },
     },
@@ -167,13 +168,31 @@ export default function HeroSection() {
       },
     },
   }
-  
-
+  const testimonialsVariant = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        delay: 0.7,
+        ease: [0.25, 0.1, 0.25, 1],
+      },
+    },
+  }
 
   const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
 
   return (
     <section className={`relative min-h-screen w-full overflow-hidden bg-white pt-24 lg:pt-32 ${sora.className}`}>
+      <style jsx>{`
+        @media (max-width: 500px) {
+          .hero-heading {
+            font-size: 2rem;
+          }
+        }
+      `}</style>
+      
       {/* Base Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100" />
 
@@ -212,31 +231,31 @@ export default function HeroSection() {
           {/* Left Column: Text & Button */}
           <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
           <motion.h1
-  className="font-extrabold text-black mb-4 sm:mb-6 text-4xl sm:text-4xl md:text-5xl xl:text-6xl leading-tight mt-4 sm:mt-8 lg:mt-0 tracking-tight"
-  initial="hidden"
-  animate={isLoaded ? 'visible' : 'hidden'}
-  custom={0}
-  variants={textVariants}
->
-  <span className="block">Legyen kéznél</span>
-  <span className="text-purple-600 block" style={{ color: '#dc2626' }}>
-    vészhelyzetben
-  </span>
-</motion.h1>
-            <motion.p
-              className="mb-6 sm:mb-8 text-gray-600 text-base sm:text-lg w-full max-w-xl mx-auto lg:mx-0 text-center lg:text-left"
-              initial="hidden"
-              animate={isLoaded ? 'visible' : 'hidden'}
-              custom={1}
-              variants={textVariants}
-            >
-              Innovatív fulladásgátló eszközeink másodpercek alatt tisztítják meg a légutat!
+            className="hero-heading font-extrabold text-black mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-5xl xl:text-6xl leading-tight mt-4 sm:mt-8 lg:mt-0 tracking-tight w-11/12 sm:w-full mx-auto lg:mx-0"
+            initial="hidden"
+            animate={isLoaded ? 'visible' : 'hidden'}
+            custom={0}
+            variants={textVariants}
+          >
+            <span className="block">Legyen kéznél</span>
+            <span className="text-purple-600 block" style={{ color: '#dc2626' }}>
+              vészhelyzetben
+            </span>
+          </motion.h1>
+          <motion.p
+            className="mb-6 sm:mb-8 text-gray-600 text-base sm:text-lg w-10/12 sm:w-8/12 max-w-lg mx-auto lg:mx-0 text-center lg:text-left"
+            initial="hidden"
+            animate={isLoaded ? 'visible' : 'hidden'}
+            custom={1}
+            variants={textVariants}
+          >
+              Fulladásgátló eszközeink pillanatok alatt tisztítják meg a légutat!
             </motion.p>
             <motion.div
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={buttonVariants}
-              className="mb-8 sm:mb-12 text-center lg:text-left"
+              className="mb-6 sm:mb-8 text-center lg:text-left"
             >
               <Link href="/product/67c1cce79beb94961403e8f1">
                 <button 
@@ -252,6 +271,57 @@ export default function HeroSection() {
                   LEGYEN FELKÉSZÜLVE!
                 </button>
               </Link>
+            </motion.div>
+            
+            {/* Testimonials Section - Redesigned to have images and stars inline */}
+            <motion.div
+              initial="hidden"
+              animate={isLoaded ? 'visible' : 'hidden'}
+              variants={testimonialsVariant}
+              className="flex flex-col items-center lg:items-start mb-6"
+            >
+              <div className="flex items-center w-auto">
+                {/* Profile Images - Made smaller and placed inline */}
+                <div className="flex -space-x-2 mr-2">
+                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-50">
+                    <img src="/api/placeholder/24/24" alt="User 1" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-40">
+                    <img src="/api/placeholder/24/24" alt="User 2" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-30">
+                    <img src="/api/placeholder/24/24" alt="User 3" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-20">
+                    <img src="/api/placeholder/24/24" alt="User 4" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-10">
+                    <img src="/api/placeholder/24/24" alt="User 5" className="w-full h-full object-cover" />
+                  </div>
+                </div>
+                
+                {/* Stars - Placed to the right of the images */}
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <svg 
+                      key={star} 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      className="h-4 w-4 text-yellow-400" 
+                      viewBox="0 0 20 20" 
+                      fill="currentColor"
+                    >
+                      <path 
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" 
+                      />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Text - Width matches the inline elements above */}
+              <p className="text-gray-600 text-sm mt-1 text-center lg:text-left" style={{ width: "fit-content" }}>
+                <span className="font-semibold">1270</span> founders sleep better
+              </p>
             </motion.div>
           </div>
 
