@@ -12,7 +12,6 @@ import { ShoppingCart, BellIcon } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Sora } from 'next/font/google'
-import { getScrollOffset } from '@/utils/scrollUtils' // Import the same utility used in Footer
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -114,36 +113,14 @@ export default function ProductList() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Handle smooth scrolling when component mounts
   useEffect(() => {
-    // Check if there's a hash in the URL 
-    if (window.location.hash) {
-      const id = window.location.hash.substring(1);
-      const element = document.getElementById(id);
-      
-      if (element) {
-        // Use the same getScrollOffset function from the Footer component
-        const offset = getScrollOffset(id);
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.scrollY - offset;
-
-        // Smooth scroll to the element
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }
-    } else {
-      // Restore scroll position on component mount if no hash
-      const savedScrollPosition = sessionStorage.getItem('productListScrollPosition');
-      if (savedScrollPosition) {
-        window.scrollTo(0, parseInt(savedScrollPosition));
-        sessionStorage.removeItem('productListScrollPosition');
-      }
+    // Restore scroll position on component mount
+    const savedScrollPosition = sessionStorage.getItem('productListScrollPosition');
+    if (savedScrollPosition) {
+      window.scrollTo(0, parseInt(savedScrollPosition));
+      sessionStorage.removeItem('productListScrollPosition');
     }
-  }, [products]); // Depend on products to ensure elements are rendered
-
- 
+  }, []);
 
   const fetchProducts = async () => {
     try {
@@ -167,6 +144,11 @@ export default function ProductList() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // Format price to HUF with spaces as thousand separators and no decimal places
+  const formatPriceToHUF = (price: number) => {
+    return Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   }
 
   const handleAddToCart = (product: Product) => {
@@ -242,9 +224,9 @@ export default function ProductList() {
     >
       <div className="relative aspect-square overflow-hidden">
         {product.salePrice && (
-          <div className="absolute top-2 left-2 bg-[#be2323] text-white text-xs font-bold px-3 py-1.5 rounded-lg z-20">
-          -{Math.round(((product.price - product.salePrice) / product.price) * 100)}%
-        </div>
+         <div className="absolute top-2 left-2 bg-[#dc2626] text-white text-xs font-bold px-3 py-1.5 rounded-lg z-20">
+         -{Math.round(((product.price - product.salePrice) / product.price) * 100)}%
+       </div>
         )}
         <div className={`absolute inset-0 transition-opacity duration-300 ease-out ${
           product.sizes.length === 0 ? 'opacity-40 md:group-hover:opacity-0' : 'md:group-hover:opacity-0'
@@ -348,9 +330,9 @@ export default function ProductList() {
                   e.stopPropagation()
                   handleAddToCart(product)
                 }}
-                className="bg-black text-white hover:bg-gray-800 text-sm py-2 px-4 w-full"
+                className="bg-[#dc2626] text-white hover:bg-[#dc2626] text-sm py-2 px-4 w-full"
               >
-                <span className="font-bold">+ Kosárba</span>
+                <span className="font-bold ">+ Kosárba</span>
               </Button>
             </div>
             <div className="absolute bottom-4 right-4 md:hidden">
@@ -371,24 +353,24 @@ export default function ProductList() {
         <h2 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-semibold text-black">{product.name}</h2>
         <div className="mt-2 flex items-center justify-between">
           <div>
-          {product.sizes.length === 0 ? (
-  <span className="text-sm sm:text-base lg:text-lg text-black">
-    Sold Out
-  </span>
-) : product.salePrice ? (
-  <>
-    <span className="text-base sm:text-lg lg:text-xl font-bold text-[#be2323]">
-      {product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
-    </span>
-    <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through ml-2">
-      {product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
-    </span>
-  </>
-) : (
-  <span className="text-base sm:text-lg lg:text-xl font-semibold text-black">
-    {product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
-  </span>
-)}
+            {product.sizes.length === 0 ? (
+              <span className="text-sm sm:text-base lg:text-lg text-black">
+                Sold Out
+              </span>
+            ) : product.salePrice ? (
+              <>
+                <span className="text-base sm:text-lg lg:text-xl font-bold text-[#dc2626]">
+                  {formatPriceToHUF(product.salePrice)} HUF
+                </span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through ml-2">
+                  {formatPriceToHUF(product.price)} HUF
+                </span>
+              </>
+            ) : (
+              <span className="text-base sm:text-lg lg:text-xl font-semibold text-black">
+                {formatPriceToHUF(product.price)} HUF
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -410,8 +392,8 @@ export default function ProductList() {
   return (
     <>
       <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
-      <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[4rem] md:mt-[4rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
-        <h1 className="text-4xl sm:text-5xl font-bold mb-[2rem] md:mb-[4rem] text-center uppercase tracking-wider">REMÉLJÜK NEM LESZ RÁJUK SZÜKSÉG</h1>
+      <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[2rem] md:mt-[8rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
+        <h1 className="text-4xl sm:text-5xl font-bold mb-[2rem] md:mb-[4rem] text-center uppercase tracking-wider">REMELJÜK NEM LESZ RÁJUK SZÜKSÉG</h1>
         
         {isLoading && (
           <div className="text-center mb-6">
@@ -419,9 +401,9 @@ export default function ProductList() {
           </div>
         )}
         
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {isLoading
-            ? Array(6).fill(null).map((_, index) => <div key={index}>{renderSkeletonCard()}</div>)
+            ? Array(8).fill(null).map((_, index) => <div key={index}>{renderSkeletonCard()}</div>)
             : products.map((product, index) => renderProductCard(product, index))}
         </div>
         {cartProduct && (

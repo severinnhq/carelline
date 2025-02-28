@@ -40,7 +40,7 @@ export function FloatingProductBox({ product, quantity, onAddToCart }: FloatingP
         <p className="text-sm font-bold">
   {product.salePrice ? (
     <>
-      <span className="text-[#be2323]">{Math.round(product.salePrice).toLocaleString('hu-HU')} Ft</span>
+      <span className="text-[#dc2626]">{Math.round(product.salePrice).toLocaleString('hu-HU')} Ft</span>
       <span className="text-gray-500 line-through ml-2">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
     </>
   ) : (
@@ -50,7 +50,7 @@ export function FloatingProductBox({ product, quantity, onAddToCart }: FloatingP
       </div>
       <Button 
         onClick={onAddToCart} 
-        className="whitespace-nowrap bg-black text-white hover:bg-gray-800 transition-colors duration-200 px-6 py-2 text-sm font-bold"
+        className="whitespace-nowrap bg-[#dc2626] text-white  transition-colors duration-200 px-6 py-2 text-sm font-bold"
       >
         + Kosárba
       </Button>

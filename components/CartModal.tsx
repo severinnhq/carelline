@@ -101,7 +101,7 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
                   <p className="mt-1">
                     {product.salePrice ? (
                       <>
-                        <span className="text-[#be2323] font-bold text-lg">{product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+                        <span className="text-[#dc2626] font-bold text-lg">{product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
                         <span className="text-gray-500 line-through ml-2 text-sm">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
                       </>
                     ) : (

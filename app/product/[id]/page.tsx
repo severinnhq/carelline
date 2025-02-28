@@ -17,6 +17,7 @@ import { BellIcon } from 'lucide-react'
 import { Sora } from 'next/font/google'
 import { Skeleton } from "@/components/ui/skeleton"
 
+
 const sora = Sora({ subsets: ['latin'] })
 
 interface Product {
@@ -270,7 +271,7 @@ export default function ProductPage() {
             <div className="mb-4">
   {product.salePrice ? (
     <div>
-      <span className="text-2xl font-bold text-[#be2323] mr-2">
+      <span className="text-2xl font-bold text-[#dc2626] mr-2">
         {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
       </span>
       <span className="text-lg text-gray-500 line-through">
@@ -364,7 +365,7 @@ export default function ProductPage() {
                 <div className="mb-4">
                   <Button
                     onClick={handleAddToCart}
-                    className="w-full py-6 text-xl font-bold bg-black text-white hover:bg-gray-800"
+                    className="w-full py-6 text-xl font-bold bg-[#be2323] text-white"
                   >
                     Kosárba
                   </Button>

@@ -19,39 +19,11 @@ body, html {
   font-family: var(--font-sora);
 }
 
-/* Style for h1 elements */
-h1 {
-  font-family: var(--font-sora);
-  font-size: 2.5em;
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -1.5px;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-geist);
 }
 
-/* Style for h2 elements */
-h2 {
-  font-family: var(--font-sora);
-  font-size: 2em;
-  line-height: 1.3;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
 
-/* Style for h3 elements */
-h3 {
-  font-family: var(--font-sora);
-  font-size: 1.75em;
-  line-height: 1.4;
-  font-weight: 500;
-}
-
-/* Style for h4 elements */
-h4 {
-  font-family: var(--font-sora);
-  font-size: 1.5em;
-  line-height: 1.5;
-  font-weight: 500;
-}
 
 /* Large body text */
 .body-large {

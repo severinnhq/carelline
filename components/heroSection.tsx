@@ -60,32 +60,25 @@ export default function HeroSection() {
 
   useEffect(() => {
     setIsLoaded(true)
-
     // IMPORTANT: Reset muted state whenever component mounts
     setIsMuted(true)
     if (videoRef.current) {
       videoRef.current.muted = true
     }
-
     // If the video element is already ready, show it
     if (videoRef.current && videoRef.current.readyState >= 3) {
       setIsVideoLoaded(true)
     }
-
     // Fallback timer: reveal the video container after 5 seconds even if load events haven't fired
     const timer = setTimeout(() => {
       setIsVideoLoaded(true)
     }, 5000)
-
     return () => clearTimeout(timer)
   }, [])
 
-  // When video data loads, attempt to autoplay (while muted)
-  // This function no longer automatically unmutes after a delay
   const handleVideoLoadedData = () => {
     setIsVideoLoaded(true)
     if (videoRef.current) {
-      // Ensure it's muted so autoplay is allowed
       videoRef.current.muted = true
       videoRef.current
         .play()
@@ -96,14 +89,12 @@ export default function HeroSection() {
     }
   }
 
-  // Fallback if autoplay is blocked: allow the user to click to start playback.
   const handlePlayButtonClick = () => {
     if (videoRef.current) {
       videoRef.current
         .play()
         .then(() => {
           setShowPlayButton(false)
-          // Keep it muted - user can unmute manually if desired
         })
         .catch((err) => {
           console.error('Play button click failed:', err)
@@ -111,7 +102,6 @@ export default function HeroSection() {
     }
   }
 
-  // Toggle mute state when the sound button is clicked.
   const toggleMute = () => {
     if (videoRef.current) {
       videoRef.current.muted = !videoRef.current.muted
@@ -119,7 +109,6 @@ export default function HeroSection() {
     }
   }
 
-  // Keep the video playing on page focus or visibility change.
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && videoRef.current) {
@@ -143,7 +132,6 @@ export default function HeroSection() {
     }
   }, [])
 
-  // Animation variants for Framer Motion
   const textVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: (i: number) => ({
@@ -180,7 +168,6 @@ export default function HeroSection() {
     },
   }
   
-  // Badge animation
   const badgeVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -194,7 +181,6 @@ export default function HeroSection() {
     },
   }
   
-  // Circle vibration animation
   const circleVibrateVariants = {
     animate: {
       scale: [1, 1.2, 1],
@@ -207,13 +193,10 @@ export default function HeroSection() {
     }
   }
 
-
-
-  // Choose an alternative video source if there is an error.
   const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
 
   return (
-    <section className={`relative h-screen w-full overflow-hidden bg-white ${sora.className}`}>
+    <section className={`relative h-screen w-full overflow-hidden bg-white pt-24 lg:pt-32 ${sora.className}`}>
       {/* Base Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100" />
 
@@ -246,73 +229,72 @@ export default function HeroSection() {
         </svg>
       </div>
 
-      {/* Main Content */}
-      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-16 h-full flex flex-col items-center justify-center mt-12 md:mt-0">
+      {/* Main Content - moved down by increasing top padding */}
+      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-20 h-full flex flex-col items-center justify-center mt-4">
         <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-16 lg:gap-32 w-full">
           {/* Left Column: Text & Button */}
-          <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
-            {/* Updated Badge with additional space between circle and text */}
-            <motion.div
-              initial="hidden"
-              animate={isLoaded ? 'visible' : 'hidden'}
-              variants={badgeVariants}
-              className="inline-flex items-center gap-3 px-2.5 py-0.5 rounded-full bg-white shadow-sm border border-gray-100 mb-4 mx-auto lg:mx-0"
-            >
+          <div className="w-full lg:w-2/5 z-10 flex-shrink-0 mt-16">
+            {/* Badge with MUCH more space on mobile */}
+            <div className="w-full pt-20 md:pt-24 lg:pt-0">
               <motion.div
-                animate="animate"
-                variants={circleVibrateVariants}
+                initial="hidden"
+                animate={isLoaded ? 'visible' : 'hidden'}
+                variants={badgeVariants}
+                className="inline-flex items-center gap-3 px-2.5 py-0.5 rounded-full bg-white shadow-sm border border-gray-100 mb-8 mx-auto lg:mx-0"
               >
-                {/* Custom SVG circle that's fully green instead of using the Lucide Circle component */}
-                <svg width="8" height="8" viewBox="0 0 8 8" className="text-green-500">
-                  <circle cx="4" cy="4" r="4" fill="currentColor" />
-                </svg>
+                <motion.div animate="animate" variants={circleVibrateVariants}>
+                  <svg width="8" height="8" viewBox="0 0 8 8" className="text-green-500">
+                    <circle cx="4" cy="4" r="4" fill="currentColor" />
+                  </svg>
+                </motion.div>
+                <span className="text-xs text-black tracking-wide font-medium">
+                  Jelenleg csak <span className="font-bold">11</span> van raktáron
+                </span>
               </motion.div>
-              <span className="text-xs text-black tracking-wide font-medium">
-                 Jelenleg csak <span className="font-bold">11</span> van raktáron
-              </span>
-            </motion.div>
+            </div>
             
             <motion.h1
-              className="font-bold mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-800"
+              className="font-bold mb-6 text-4xl sm:text-5xl md:text-5xl xl:text-6xl 2xl:text-6xl leading-tight text-gray-800"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={0}
               variants={textVariants}
             >
-              Legyen kéznél
-              <span className="text-[#dc2626]"> vészhelyzetben</span>
-              <br />
-   
+              <span className="block">Legyen kéznél</span>
+              <span className="text-purple-600 block" style={{ color: '#dc2626' }}>
+                vészhelyzetben
+              </span>
             </motion.h1>
             <motion.p
-              className="mb-8 text-gray-600 text-base sm:text-lg w-full max-w-xl"
+              className="mb-8 text-gray-600 text-base sm:text-lg w-full max-w-xl mx-auto lg:mx-0 text-center lg:text-left"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={1}
               variants={textVariants}
             >
-             Innovatív fulladásgátló eszközeink másodpercek alatt tisztítják meg a légutat!
+              Innovatív fulladásgátló eszközeink másodpercek alatt tisztítják meg a légutat!
             </motion.p>
             <motion.div
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={buttonVariants}
-              className="mb-12" /* Increased spacing from mb-6 to mb-12 */
+              className="mb-12 text-center lg:text-left"
             >
               <Link href="/product/67b6f90829e091cfe70668a7">
-              <button 
-  className="bg-[#dc2626] text-white font-semibold rounded-md hover:bg-red-700 transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-[1.375rem]"
-  style={{ padding: "0.75rem 1.75rem" }}
->
-  LEGYEN FELKÉSZÜLVE!
-</button>
-
+                <button 
+                  className="text-white font-semibold rounded-md transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-base sm:text-base md:text-lg" 
+                  style={{ 
+                    padding: "0.7rem 1.5rem", 
+                    backgroundColor: "#dc2626",  
+                    color: "white" 
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#dc2626"}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#dc2626"}
+                >
+                  LEGYEN FELKÉSZÜLVE!
+                </button>
               </Link>
             </motion.div>
-            
-          
-
-
           </div>
 
           {/* Right Column: Video Dashboard */}
@@ -324,17 +306,13 @@ export default function HeroSection() {
               variants={videoVariants}
             >
               <div className="relative">
-                {/* Background Accent */}
                 <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-xl transform translate-x-4 translate-y-4"></div>
-                {/* Main Video Card */}
                 <div className="relative bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
-                  {/* Card Header */}
                   <div className="h-12 bg-gray-100 border-b flex items-center px-4">
                     <div className="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
                     <div className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
                     <div className="w-3 h-3 rounded-full bg-green-400"></div>
                   </div>
-                  {/* Video Container */}
                   <div className="relative aspect-video bg-gray-50">
                     {!isVideoLoaded && (
                       <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
@@ -361,7 +339,6 @@ export default function HeroSection() {
                     >
                       Your browser does not support the video tag.
                     </video>
-                    {/* Overlay play button if autoplay was blocked */}
                     {showPlayButton && (
                       <button
                         onClick={handlePlayButtonClick}
@@ -384,14 +361,12 @@ export default function HeroSection() {
                         </svg>
                       </button>
                     )}
-                    {/* Sound Toggle Button */}
                     <button
                       onClick={toggleMute}
                       className="absolute bottom-4 right-4 z-20 bg-white p-2 rounded-full hover:bg-white/90 focus:outline-none shadow-md transition-all"
                       aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                     >
                       {isMuted ? (
-                        // Muted icon - with speaker and X
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-6 w-6 text-gray-800"
@@ -406,7 +381,6 @@ export default function HeroSection() {
                           </g>
                         </svg>
                       ) : (
-                        // Unmuted icon - with speaker and sound waves
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-6 w-6 text-gray-800"
