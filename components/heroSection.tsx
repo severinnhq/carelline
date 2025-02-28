@@ -357,7 +357,7 @@ export default function HeroSection() {
               {/* Text - Width matches the inline elements above */}
               <p className="text-gray-600 text-sm mt-1 text-center lg:text-left" style={{ width: "fit-content" }}>
   <span className="font-semibold">122</span>{" "}
-  <Link href="/regisztralt" className="underline">
+  <Link href="" className="underline">
     regisztrált
   </Link>{" "}
   életet mentettünk!
