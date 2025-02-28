@@ -206,7 +206,7 @@ export default function HeroSection() {
         </svg>
       </div>
 
-      {/* Main Content - changed to better handle mobile layo ut */}
+      {/* Main Content - changed to better handle mob ile layo ut */}
       <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-8 sm:py-12 md:py-16 flex flex-col items-center justify-center">
         <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-8 lg:gap-16 w-full">
           {/* Left Column: Text & Button */}
