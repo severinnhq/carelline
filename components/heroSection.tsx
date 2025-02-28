@@ -6,6 +6,7 @@ import Link from 'next/link'
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import Image from 'next/image';
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -280,25 +281,60 @@ export default function HeroSection() {
               variants={testimonialsVariant}
               className="flex flex-col items-center lg:items-start mb-6"
             >
-              <div className="flex items-center w-auto">
-                {/* Profile Images - Made smaller and placed inline */}
-                <div className="flex -space-x-2 mr-2">
-                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-50">
-                    <img src="/api/placeholder/24/24" alt="User 1" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-40">
-                    <img src="/api/placeholder/24/24" alt="User 2" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-30">
-                    <img src="/api/placeholder/24/24" alt="User 3" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-20">
-                    <img src="/api/placeholder/24/24" alt="User 4" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="w-6 h-6 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-10">
-                    <img src="/api/placeholder/24/24" alt="User 5" className="w-full h-full object-cover" />
-                  </div>
-                </div>
+          <div className="flex items-center w-auto">
+  {/* Profile Images - Made smaller and placed inline */}
+  <div className="flex -space-x-2 mr-2">
+    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-50">
+    <Image
+    src="/uploads/baby1.png"
+    alt="Baby 1"
+    width={32}
+    height={32}
+    quality={100}
+    className="object-cover"
+  />
+    </div>
+    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-40">
+    <Image
+    src="/uploads/baby2.png"
+    alt="Baby 1"
+    width={32}
+    height={32}
+    quality={100}
+    className="object-cover"
+  />
+    </div>
+    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-30">
+    <Image
+    src="/uploads/baby3.png"
+    alt="Baby 1"
+    width={32}
+    height={32}
+    quality={100}
+    className="object-cover"
+  />
+    </div>
+    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-20">
+    <Image
+    src="/uploads/baby4.png"
+    alt="Baby 1"
+    width={32}
+    height={32}
+    quality={100}
+    className="object-cover"
+  />
+    </div>
+    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-10">
+    <Image
+    src="/uploads/baby5.png"
+    alt="Baby 1"
+    width={32}
+    height={32}
+    quality={100}
+    className="object-cover"
+  />
+    </div>
+  </div>
                 
                 {/* Stars - Placed to the right of the images */}
                 <div className="flex">
@@ -320,8 +356,12 @@ export default function HeroSection() {
               
               {/* Text - Width matches the inline elements above */}
               <p className="text-gray-600 text-sm mt-1 text-center lg:text-left" style={{ width: "fit-content" }}>
-                <span className="font-semibold">122</span> regisztrált életet mentettünk!
-              </p>
+  <span className="font-semibold">122</span>{" "}
+  <Link href="/regisztralt" className="underline">
+    regisztrált
+  </Link>{" "}
+  életet mentettünk!
+</p>
             </motion.div>
           </div>
 
