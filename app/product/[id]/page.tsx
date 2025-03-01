@@ -375,7 +375,7 @@ export default function ProductPage() {
         onRemoveItem={removeFromCart}
         onUpdateQuantity={updateQuantity}
       />
-      <ShippingFeatures />
+
       <RecommendedProducts />
     </div>
   )

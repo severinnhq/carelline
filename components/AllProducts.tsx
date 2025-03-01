@@ -134,7 +134,7 @@ export default function ProductList() {
             salePrice: product.salePrice ? Number(product.salePrice) || 0 : undefined,
             categories: Array.isArray(product.categories) ? product.categories : [product.categories].filter(Boolean)
           }))
-          .filter(product => product.categories.includes('featured'))
+          .filter(product => product.categories.includes('all'))
         setProducts(featuredProducts)
       } else {
         console.error('Failed to fetch products')
@@ -393,11 +393,12 @@ export default function ProductList() {
     <>
       <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
       <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[4rem] md:mt-[8rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
+    
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-[2rem] md:mb-[4rem]">
   <h1 className="text-3xl sm:text-[2.5rem] font-extrabold text-start uppercase tracking-wider mb-2 lg:mb-0">
-    JOBB BIZTOSRA MENNI
+  Összes termékünk
   </h1>
-  
+    {/* 
   <a href="/products" className="view-all-link group flex items-center transition-all duration-300 ease-in-out lg:ml-auto">
     <span className="view-all-text relative mr-1">Összes megtekintése</span>
     <div className="view-all-circle flex items-center justify-center rounded-full bg-[#e5e5e5] w-6 h-6 transition-all duration-300 ease-in-out group-hover:bg-[#dc2626]">
@@ -406,8 +407,9 @@ export default function ProductList() {
       </svg>
     </div>
   </a>
+  */} 
 </div>
-        
+  
         {isLoading && (
           <div className="text-center mb-6">
             <p className="text-lg text-gray-600">Loading products...</p>

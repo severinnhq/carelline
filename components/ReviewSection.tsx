@@ -185,41 +185,11 @@ const ReviewSection = () => {
       <div ref={topRef} className={`container mx-auto px-4 py-0 ${sora.className}`}>
         <div id="review-section" className="relative w-full">
           <div className="text-center">
-            <h2 className="flex items-center justify-center relative font-normal logo-container">
-              <div className="flex items-center justify-center w-full relative">
-                <span
-                  className="absolute whitespace-nowrap font-light left-text"
-                  style={{
-                    right: 'calc(50% + clamp(3rem,10vw,5rem) + 0.25rem)',
-                    fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-                    transition: 'right 0.3s ease-in-out'
-                  }}
-                >
-                  A
-                </span>
-                <div className="relative w-[clamp(10rem,32vw,16rem)] h-[clamp(2.5rem,8vw,4rem)]">
-                  <Image
-                    src="/blacklogo.png"
-                    alt="Logo"
-                    fill
-                    className="object-contain"
-                    priority
-                  />
-                </div>
-                <span
-                  className="absolute whitespace-nowrap font-light right-text"
-                  style={{
-                    left: 'calc(50% + clamp(3rem,10vw,5rem) + 0.25rem)',
-                    fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-                    transition: 'left 0.3s ease-in-out'
-                  }}
-                >
-                  effekt
-                </span>
-              </div>
-            </h2>
+          <h1 className="text-3xl sm:text-[2.5rem] font-extrabold text-start uppercase tracking-wider mb-2 lg:mb-0">
+             MÁSOKON SEGíTETT
+          </h1>
           </div>
-          <div className="bg-white rounded-2xl p-0 mt-[3rem] md:mt-[4rem] relative overflow-hidden">
+          <div className="bg-white rounded-2xl p-0 mt-[4rem] md:mt-[4rem] relative overflow-hidden">
             {/* Mobile layout */}
             <div className="sm:hidden relative overflow-hidden">
               <div className={`grid grid-cols-10 gap-2 auto-rows-[minmax(80px,auto)] transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isExpanded ? 'h-[1400px]' : 'h-[400px]'}`}>

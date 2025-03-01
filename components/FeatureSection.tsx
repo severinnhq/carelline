@@ -28,7 +28,7 @@ const FeatureSection = () => {
   ];
 
   return (
-    <div id="feature-section" className="py-24 sm:py-24 md:py-32 lg:py-48"> {/* Extremely increased padding values */}
+    <div id="feature-section" className="py-[10rem] sm:py-[10rem] md:py-[10rem] lg:py-[10rem] "> {/* Extremely increased padding values */}
       <section className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center">
           {/* Left side: Image area with a slight scale-down effect */}
