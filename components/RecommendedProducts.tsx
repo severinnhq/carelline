@@ -139,7 +139,7 @@ export default function RecommendedProducts() {
     const containerWidth = containerRef.current.offsetWidth;
     if (containerWidth >= 1024) return 3; // lg breakpoint
     if (containerWidth >= 768) return 2; // md breakpoint
-    return 1; // sm breakpoint
+    return 2; // sm breakpoint - changed from 1 to 2 for mobile
   }, []);
 
   const startChainReaction = useCallback((startIndex: number) => {
@@ -205,6 +205,11 @@ export default function RecommendedProducts() {
     }
   }, [activeEmailInput])
 
+  // Format price to HUF with spaces as thousand separators and no decimal places
+  const formatPriceToHUF = (price: number) => {
+    return Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  }
+
   const renderProductCard = (product: Product, index: number) => (
     <div 
       key={product._id}
@@ -213,16 +218,16 @@ export default function RecommendedProducts() {
       className={`rounded-lg overflow-hidden bg-white relative group border-0 transition-all duration-500 ease-in-out cursor-pointer ${sora.className}`}
       style={{
         opacity: animatingProducts.includes(product._id) ? 1 : 0,
-        transform: animatingProducts.includes(product._id) ? 'translateY(0)' : 'translateY(32px)',
-        transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
+        transform: animatingProducts.includes(product._id) ? 'translateY(0)' : 'translateY(8px)',
+        transition: 'opacity 0.2s ease-out, transform 0.2s ease-out',
       }}
       onClick={() => handleProductClick(product._id)}
     >
       <div className="relative aspect-square overflow-hidden">
         {product.salePrice && (
-        <div className="absolute top-2 left-2 bg-[#dc2626] text-white text-xs font-bold px-3 py-1.5 rounded-lg z-20">
-        -{Math.round(((product.price - product.salePrice) / product.price) * 100)}%
-      </div>
+          <div className="absolute top-2 left-2 bg-[#dc2626] text-white text-xs font-bold px-3 py-1.5 rounded-lg z-20">
+            -{Math.round(((product.price - product.salePrice) / product.price) * 100)}%
+          </div>
         )}
         <div className={`absolute inset-0 transition-opacity duration-300 ease-out md:group-hover:opacity-0 ${product.sizes.length === 0 ? 'opacity-50' : ''}`}>
           <Image
@@ -248,38 +253,38 @@ export default function RecommendedProducts() {
               <Button
                 variant="secondary"
                 size="sm"
-                className="bg-white text-black hover:bg-gray-100 shadow-[0_0_10px_rgba(0,0,0,0.3)] group"
+                className="bg-white text-black hover:bg-gray-100 shadow-[0_0_10px_rgba(0,0,0,0.3)] group text-xs sm:text-sm"
                 onClick={(e) => handleNotifyClick(e, product._id)}
               >
-                <BellIcon className="h-4 w-4 mr-1 animate-ring" />
-                Értesítést kérek
+                <BellIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1 animate-ring" />
+                Notify Me
               </Button>
             </div>
             {activeEmailInput === product._id && (
               <div 
-                className="absolute top-12 right-2 z-20 bg-white rounded-lg p-3 shadow-[0_0_10px_rgba(0,0,0,0.3)] w-64"
+                className="absolute top-12 right-2 z-20 bg-white rounded-lg p-2 sm:p-3 shadow-[0_0_10px_rgba(0,0,0,0.3)] w-56 sm:w-64 max-w-[calc(100%-1rem)]"
                 onClick={(e) => e.stopPropagation()}
               >
                 <form 
                   onSubmit={(e) => handleEmailSubmit(e, product._id, product.name)} 
                   className="flex flex-col space-y-2" 
                 >
-                  <p className="text-sm font-semibold">{product.name}</p>
-                  <div className="flex items-center space-x-2">
+                  <p className="text-xs sm:text-sm font-semibold">{product.name}</p>
+                  <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:items-center sm:space-x-2">
                     <Input
                       type="email"
                       name="email"
-                      placeholder="Enter your email"
-                      className="text-sm flex-grow"
+                      placeholder="Email"
+                      className="text-xs sm:text-sm flex-grow email-input"
                       required
                     />
-                    <Button type="submit" size="sm" className="whitespace-nowrap bg-black text-white hover:bg-gray-800">
+                    <Button type="submit" size="sm" className="whitespace-nowrap bg-black text-white hover:bg-gray-800 text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-3 w-full sm:w-auto">
                       Notify
                     </Button>
                   </div>
                   {notifyMessages[product._id] && (
                     <div 
-                      className={`mt-2 p-2 rounded-md text-sm font-medium flex justify-between items-center ${
+                      className={`mt-2 p-1 sm:p-2 rounded-md text-xs sm:text-sm font-medium flex justify-between items-center ${
                         notifyMessages[product._id].type === 'success' 
                           ? 'bg-green-100 text-green-800' 
                           : 'bg-red-100 text-red-800'
@@ -308,58 +313,44 @@ export default function RecommendedProducts() {
         )}
         {product.sizes.length > 0 && (
           <>
-            {/* Desktop cart button - commented out
-<div className="absolute bottom-4 right-4 transform translate-y-1/4 transition-all duration-300 ease-out md:group-hover:translate-y-0 opacity-0 md:group-hover:opacity-100 hidden md:block">
-  <Button
-    onClick={(e) => {
-      e.stopPropagation()
-      handleAddToCart(product)
-    }}
-    className="bg-[#dc2626] text-white hover:bg-[#dc2626] text-sm py-2 px-4 w-full"
-  >
-    <span className="font-bold ">+ Kosárba</span>
-  </Button>
-</div>
-*/}
-          <div className="absolute bottom-4 right-4 md:hidden">
-  <Button
-    onClick={(e) => {
-      e.stopPropagation()
-      handleAddToCart(product)
-    }}
-    className="bg-white text-black hover:bg-gray-100 p-1.5 border border-gray-300 w-8 h-8 flex items-center justify-center"
-  >
-    <ShoppingCart size={16} />
-  </Button>
-</div>
+            <div className="absolute bottom-4 right-4 md:hidden">
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleAddToCart(product)
+                }}
+                className="bg-white text-black hover:bg-gray-100 p-1.5 border border-gray-300 w-8 h-8 flex items-center justify-center"
+              >
+                <ShoppingCart size={16} />
+              </Button>
+            </div>
           </>
         )}
       </div>
-      <div className="p-4">
-        <h2 className="text-xl font-semibold text-black">{product.name}</h2>
-       
+      <div className="p-3 sm:p-4">
+        <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-black">{product.name}</h2>
         <div className="mt-2 flex items-center justify-between">
-  <div>
-    {product.sizes.length === 0 ? (
-      <span className="text-lg text-black">
-        Elfogyott
-      </span>
-    ) : product.salePrice ? (
-      <>
-        <span className="text-lg font-medium text-[#dc2626]">
-          {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
-        </span>
-        <span className="text-sm text-gray-500 line-through ml-2">
-          {Math.round(product.price).toLocaleString('hu-HU')} Ft
-        </span>
-      </>
-    ) : (
-      <span className="text-lg font-medium text-[#6b7280]">
-        {Math.round(product.price).toLocaleString('hu-HU')} Ft
-      </span>
-    )}
-  </div>
-</div>
+          <div className="product-price">
+            {product.sizes.length === 0 ? (
+              <span className="text-sm sm:text-base lg:text-lg text-black">
+                Sold Out
+              </span>
+            ) : product.salePrice ? (
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <span className="text-base sm:text-lg lg:text-xl font-medium text-[#dc2626]">
+                  {formatPriceToHUF(product.salePrice)} Ft
+                </span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through sm:ml-2">
+                  {formatPriceToHUF(product.price)} Ft
+                </span>
+              </div>
+            ) : (
+              <span className="text-base sm:text-lg lg:text-xl font-normal text-[#6b7280]">
+                {formatPriceToHUF(product.price)} Ft
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -367,20 +358,20 @@ export default function RecommendedProducts() {
   const renderSkeletonCard = () => (
     <div className="rounded-lg overflow-hidden bg-white relative group border-0 transition-all duration-500 ease-in-out">
       <div className="relative aspect-square overflow-hidden">
-        <Skeleton className="absolute inset-0" />
+        <Skeleton className="absolute inset-0 bg-gray-200 animate-pulse" />
       </div>
-      <div className="p-4">
-        <Skeleton className="h-6 w-3/4 mb-2" />
-        <Skeleton className="h-4 w-1/4" />
+      <div className="p-3 sm:p-4">
+        <Skeleton className="h-6 w-3/4 mb-2 bg-gray-200 animate-pulse" />
+        <Skeleton className="h-4 w-1/4 bg-gray-200 animate-pulse" />
       </div>
     </div>
   )
 
   return (
     <>
-      <div className={`container mx-auto p-4 py-24 ${sora.className}`} ref={containerRef}>
-        <h2 className="text-3xl sm:text-[2.5rem] font-extrabold mb-20">Ezeket is ajánljuk</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className={`container mx-auto p-4 py-16 sm:py-24 ${sora.className}`} ref={containerRef}>
+        <h2 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-extrabold mb-8 sm:mb-16">Ezeket is ajánljuk</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {isLoading
             ? Array(3).fill(null).map((_, index) => <div key={index}>{renderSkeletonCard()}</div>)
             : products.map((product, index) => renderProductCard(product, index))}
@@ -420,7 +411,7 @@ export default function RecommendedProducts() {
         @keyframes chainReaction {
           0% {
             opacity: 0;
-            transform: translateY(32px);
+            transform: translateY(8px);
           }
           100% {
             opacity: 1;
@@ -429,28 +420,50 @@ export default function RecommendedProducts() {
         }
 
         .animate-chainReaction {
-          animation: chainReaction 0.5s ease-out forwards;
+          animation: chainReaction 0.2s ease-out forwards;
         }
-             @media (max-width: 400px) {
-    /* Price container adjustments */
-    .product-price .text-base {  /* Sale price */
-      font-size: 14px !important;
-    }
-    
-    .product-price .text-sm {    /* Original price */
-      font-size: 12px !important;
-    }
 
-    /* Reduce margin between prices */
-    .product-price .ml-2 {
-      margin-left: 0.25rem !important; /* ml-1 */
-    }
+        @media (max-width: 500px) {
+          .email-input {
+            width: 100%;
+            padding: 3px 6px;
+            font-size: 12px;
+            height: 32px;
+            
+            &::placeholder {
+              content: "Email";
+              font-size: 12px;
+            }
+          }
 
-    /* For non-sale prices */
-    .product-price .text-base:not(.text-[#dc2626]) {
-      font-size: 14px !important;
-    }
-  }
+          .email-input + button {
+            width: 100%;
+            padding: 3px 8px !important;
+            height: 32px !important;
+            font-size: 12px !important;
+          }
+        }
+
+        @media (max-width: 400px) {
+          /* Price container adjustments */
+          .product-price .text-base {  /* Sale price */
+            font-size: 14px !important;
+          }
+          
+          .product-price .text-sm {    /* Original price */
+            font-size: 12px !important;
+          }
+
+          /* Reduce margin between prices */
+          .product-price .ml-2 {
+            margin-left: 0.25rem !important; /* ml-1 */
+          }
+
+          /* For non-sale prices */
+          .product-price .text-base:not(.text-[#dc2626]) {
+            font-size: 14px !important;
+          }
+        }
       `}</style>
     </>
   )
