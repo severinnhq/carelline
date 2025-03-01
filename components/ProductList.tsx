@@ -325,28 +325,30 @@ export default function ProductList() {
         )}
         {product.sizes.length > 0 && (
           <>
-            <div className="absolute bottom-4 right-4 transform translate-y-1/4 transition-all duration-300 ease-out md:group-hover:translate-y-0 opacity-0 md:group-hover:opacity-100 hidden md:block">
-              <Button 
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleAddToCart(product)
-                }}
-                className="bg-[#dc2626] text-white hover:bg-[#dc2626] text-sm py-2 px-4 w-full"
-              >
-                <span className="font-bold ">+ Kosárba</span>
-              </Button>
-            </div>
+           {/* Desktop cart button - commented out
+<div className="absolute bottom-4 right-4 transform translate-y-1/4 transition-all duration-300 ease-out md:group-hover:translate-y-0 opacity-0 md:group-hover:opacity-100 hidden md:block">
+  <Button
+    onClick={(e) => {
+      e.stopPropagation()
+      handleAddToCart(product)
+    }}
+    className="bg-[#dc2626] text-white hover:bg-[#dc2626] text-sm py-2 px-4 w-full"
+  >
+    <span className="font-bold ">+ Kosárba</span>
+  </Button>
+</div>
+*/}
             <div className="absolute bottom-4 right-4 md:hidden">
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleAddToCart(product)
-                }}
-                className="bg-white text-black hover:bg-gray-100 p-2 rounded-full w-10 h-10 flex items-center justify-center"
-              >
-                <ShoppingCart size={20} />
-              </Button>
-            </div>
+  <Button
+    onClick={(e) => {
+      e.stopPropagation()
+      handleAddToCart(product)
+    }}
+    className="bg-white text-black hover:bg-gray-100 p-2 border border-gray-300 w-10 h-10 flex items-center justify-center"
+  >
+    <ShoppingCart size={20} />
+  </Button>
+</div>
           </>
         )}
       </div>
@@ -360,18 +362,18 @@ export default function ProductList() {
               </span>
             ) : 
             product.salePrice ? (
-              <>
+              <div className="flex flex-col sm:flex-row sm:items-center">
                 <span className="text-base sm:text-lg lg:text-xl font-medium text-[#dc2626]">
-  {formatPriceToHUF(product.salePrice)} HUF
-</span>
-                <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through ml-2">
-                  {formatPriceToHUF(product.price)} HUF
+                  {formatPriceToHUF(product.salePrice)} Ft
                 </span>
-              </>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through sm:ml-2">
+                  {formatPriceToHUF(product.price)} Ft
+                </span>
+              </div>
             ) : (
               <span className="text-base sm:text-lg lg:text-xl font-normal text-[#6b7280]">
-  {formatPriceToHUF(product.price)} HUF
-</span>
+                {formatPriceToHUF(product.price)} Ft
+              </span>
             )}
           </div>
         </div>

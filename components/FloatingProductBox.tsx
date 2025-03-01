@@ -33,24 +33,24 @@ export function FloatingProductBox({ product, quantity, onAddToCart }: FloatingP
         height={60}
         className="rounded-md object-cover"
       />
-      <div className="flex-grow">
+      <div className="flex-grow space-y-1">
         <h3 className="font-semibold text-sm">{product.name}</h3>
 
         <p className="text-sm text-gray-600">Mennyiség: {quantity}</p>
         <p className="text-sm font-bold">
-  {product.salePrice ? (
-    <>
-      <span className="text-[#dc2626]">{Math.round(product.salePrice).toLocaleString('hu-HU')} Ft</span>
-      <span className="text-gray-500 line-through ml-2">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
-    </>
-  ) : (
-    <span>{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
-  )}
-</p>
+          {product.salePrice ? (
+            <>
+              <span className="text-[#dc2626]">{Math.round(product.salePrice).toLocaleString('hu-HU')} Ft</span>
+              <span className="text-gray-500 line-through ml-2">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
+            </>
+          ) : (
+            <span>{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
+          )}
+        </p>
       </div>
       <Button 
         onClick={onAddToCart} 
-        className="whitespace-nowrap bg-[#dc2626] text-white  transition-colors duration-200 px-6 py-2 text-sm font-bold"
+        className="whitespace-nowrap bg-[#dc2626] text-white transition-colors duration-200 px-6 py-2 text-sm font-bold"
       >
         + Kosárba
       </Button>
