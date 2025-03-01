@@ -185,7 +185,7 @@ const ReviewSection = () => {
       <div ref={topRef} className={`container mx-auto px-4 py-0 ${sora.className}`}>
         <div id="review-section" className="relative w-full">
           <div className="text-center">
-          <h1 className="text-3xl sm:text-[2.5rem] font-extrabold text-start uppercase tracking-wider mb-2 lg:mb-0">
+          <h1 className="text-3xl sm:text-[2.5rem] font-extrabold text-start uppercase tracking-wider mb-0 lg:mb-0">
              MÁSOKON SEGíTETT
           </h1>
           </div>

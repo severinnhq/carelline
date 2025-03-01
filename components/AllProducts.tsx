@@ -395,7 +395,7 @@ export default function ProductList() {
       <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[4rem] md:mt-[8rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
     
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-[2rem] md:mb-[4rem]">
-  <h1 className="text-3xl sm:text-[2.5rem] font-extrabold text-start uppercase tracking-wider mb-2 lg:mb-0">
+  <h1 className="text-3xl sm:text-[2.5rem] font-extrabold text-start uppercase tracking-wider mb-2 mt-10 lg:mb-0">
   Összes termékünk
   </h1>
     {/* 

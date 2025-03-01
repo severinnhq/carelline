@@ -27,6 +27,7 @@ interface Product {
   galleryImages: string[]
 }
 
+
 export default function ProductList() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -357,19 +358,20 @@ export default function ProductList() {
               <span className="text-sm sm:text-base lg:text-lg text-black">
                 Sold Out
               </span>
-            ) : product.salePrice ? (
+            ) : 
+            product.salePrice ? (
               <>
-                <span className="text-base sm:text-lg lg:text-xl font-bold text-[#dc2626]">
-                  {formatPriceToHUF(product.salePrice)} HUF
-                </span>
+                <span className="text-base sm:text-lg lg:text-xl font-medium text-[#dc2626]">
+  {formatPriceToHUF(product.salePrice)} HUF
+</span>
                 <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through ml-2">
                   {formatPriceToHUF(product.price)} HUF
                 </span>
               </>
             ) : (
-              <span className="text-base sm:text-lg lg:text-xl font-semibold text-black">
-                {formatPriceToHUF(product.price)} HUF
-              </span>
+              <span className="text-base sm:text-lg lg:text-xl font-normal text-[#6b7280]">
+  {formatPriceToHUF(product.price)} HUF
+</span>
             )}
           </div>
         </div>
@@ -527,6 +529,27 @@ export default function ProductList() {
             font-size: 11px !important;
           }
         }
+
+        @media (max-width: 400px) {
+    /* Price container adjustments */
+    .product-price .text-base {  /* Sale price */
+      font-size: 14px !important;
+    }
+    
+    .product-price .text-sm {    /* Original price */
+      font-size: 12px !important;
+    }
+
+    /* Reduce margin between prices */
+    .product-price .ml-2 {
+      margin-left: 0.25rem !important; /* ml-1 */
+    }
+
+    /* For non-sale prices */
+    .product-price .text-base:not(.text-[#dc2626]) {
+      font-size: 14px !important;
+    }
+  }
       `}</style>
     </>
   )
