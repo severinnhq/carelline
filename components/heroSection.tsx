@@ -186,10 +186,55 @@ export default function HeroSection() {
 
   return (
     <section className={`relative min-h-screen w-full overflow-hidden bg-white pt-24 lg:pt-32 ${sora.className}`}>
-      <style jsx>{`
+      <style jsx global>{`
         @media (max-width: 500px) {
           .hero-heading {
-            font-size: 2rem;
+            font-size: 2.4rem;
+          }
+        }
+           @media (max-width: 375px) {
+          .hero-heading {
+            font-size: 2.2rem;
+          }
+        }
+              @media (max-width: 330px) {
+          .hero-heading {
+            font-size: 2.1rem;
+          }
+        }
+
+
+
+          @media (max-width: 400px) {
+          .subtitle-text {
+            font-size: .95rem !important;
+          }
+        }
+            @media (max-width: 375px) {
+          .subtitle-text {
+            font-size: .88rem !important;
+          }
+        }
+        
+        @media (max-width: 350px) {
+          .subtitle-text {
+            font-size: 0.84rem !important;
+          }
+        }
+           @media (max-width: 340px) {
+          .subtitle-text {
+            font-size: 0.82rem !important;
+          }
+        }
+               @media (max-width: 330px) {
+          .subtitle-text {
+            font-size: 0.80rem !important;
+          }
+        }
+                @media (max-width: 320px) {
+          .subtitle-text {
+          width:15rem;
+            font-size: 0.79rem !important;
           }
         }
       `}</style>
@@ -226,30 +271,31 @@ export default function HeroSection() {
         </svg>
       </div>
 
-      {/* Main Content - changed to better handle mob ile layo ut */}
+      {/* Main Content */}
       <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-8 sm:py-12 md:py-16 flex flex-col items-center justify-center">
         <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-8 lg:gap-16 w-full">
           {/* Left Column: Text & Button */}
-          <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
-          <motion.h1
-            className="hero-heading font-extrabold text-black mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-5xl xl:text-6xl leading-tight mt-4 sm:mt-8 lg:mt-0 tracking-tight w-11/12 sm:w-full mx-auto lg:mx-0"
-            initial="hidden"
-            animate={isLoaded ? 'visible' : 'hidden'}
-            custom={0}
-            variants={textVariants}
-          >
-            <span className="block">Legyen kéznél</span>
-            <span className="text-purple-600 block" style={{ color: '#dc2626' }}>
-              vészhelyzetben
-            </span>
-          </motion.h1>
-          <motion.p
-            className="mb-6 sm:mb-8 text-gray-600 text-base sm:text-lg w-10/12 sm:w-8/12 max-w-lg mx-auto lg:mx-0 text-center lg:text-left"
-            initial="hidden"
-            animate={isLoaded ? 'visible' : 'hidden'}
-            custom={1}
-            variants={textVariants}
-          >
+          <div className="w-full lg:w-2/5 z-10 flex-shrink-0 lg:mt-10">
+            <motion.h1
+              className="hero-heading font-extrabold text-black mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-5xl xl:text-6xl leading-tight mt-4 sm:mt-8 lg:mt-0 tracking-tight w-11/12 sm:w-full mx-auto lg:mx-0"
+              initial="hidden"
+              animate={isLoaded ? 'visible' : 'hidden'}
+              custom={0}
+              variants={textVariants}
+            >
+              <span className="block">Legyen kéznél</span>
+              <span className="text-purple-600 block" style={{ color: '#dc2626' }}>
+                vészhelyzetben
+              </span>
+            </motion.h1>
+            <motion.p
+              style={{ fontSize: "1rem" }}
+              className="subtitle-text mb-6 sm:mb-8 text-gray-600 text-sm sm:text-base md:text-lg w-10/12 sm:w-8/12 max-w-lg mx-auto lg:mx-0 text-center lg:text-left"
+              initial="hidden"
+              animate={isLoaded ? 'visible' : 'hidden'}
+              custom={1}
+              variants={textVariants}
+            >
               Fulladásgátló eszközeink pillanatok alatt tisztítják meg a légutat!
             </motion.p>
             <motion.div
@@ -258,6 +304,7 @@ export default function HeroSection() {
               variants={buttonVariants}
               className="mb-6 sm:mb-8 text-center lg:text-left"
             >
+              
               <Link href="/product/67c1cce79beb94961403e8f1">
                 <button 
                   className="text-white font-semibold rounded-md transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-base sm:text-lg" 
@@ -274,78 +321,78 @@ export default function HeroSection() {
               </Link>
             </motion.div>
             
-            {/* Testimonials Section - Redesigned to have images and stars inline */}
+            {/* Testimonials Section */}
             <motion.div
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={testimonialsVariant}
               className="flex flex-col items-center lg:items-start mb-6"
             >
-          <div className="flex -space-x-1 sm:-space-x-2 mr-2">
-  {/* Profile Images - Made smaller and placed inline */}
-  <div className="flex -space-x-2 mr-2">
-    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-50">
-    <Image
-    src="/uploads/baby1.png"
-    alt="Baby 1"
-    width={32}
-    height={32}
-    quality={100}
-    className="object-cover"
-  />
-    </div>
-    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-40">
-    <Image
-    src="/uploads/baby2.png"
-    alt="Baby 1"
-    width={32}
-    height={32}
-    quality={100}
-    className="object-cover"
-  />
-    </div>
-    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-30">
-    <Image
-    src="/uploads/baby3.png"
-    alt="Baby 1"
-    width={32}
-    height={32}
-    quality={100}
-    className="object-cover"
-  />
-    </div>
-    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-20">
-    <Image
-    src="/uploads/baby4.png"
-    alt="Baby 1"
-    width={32}
-    height={32}
-    quality={100}
-    className="object-cover"
-  />
-    </div>
-    <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-10">
-    <Image
-    src="/uploads/baby5.png"
-    alt="Baby 1"
-    width={32}
-    height={32}
-    quality={100}
-    className="object-cover"
-  />
-    </div>
-  </div>
+              <div className="flex -space-x-1 sm:-space-x-2 mr-2">
+                {/* Profile Images */}
+                <div className="flex -space-x-2 mr-2">
+                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-50">
+                    <Image
+                      src="/uploads/baby1.png"
+                      alt="Baby 1"
+                      width={32}
+                      height={32}
+                      quality={100}
+                      className="object-cover object-center"
+                    />
+                  </div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-40">
+                    <Image
+                      src="/uploads/baby2.png"
+                      alt="Baby 2"
+                      width={32}
+                      height={32}
+                      quality={100}
+                      className="object-cover object-center"
+                    />
+                  </div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-30">
+                    <Image
+                      src="/uploads/baby3.png"
+                      alt="Baby 3"
+                      width={32}
+                      height={32}
+                      quality={100}
+                      className="object-cover object-center"
+                    />
+                  </div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-20">
+                    <Image
+                      src="/uploads/baby4.png"
+                      alt="Baby 4"
+                      width={32}
+                      height={32}
+                      quality={100}
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-10">
+                    <Image
+                      src="/uploads/baby5.png"
+                      alt="Baby 5"
+                      width={32}
+                      height={32}
+                      quality={100}
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
                 
-                {/* Stars - Placed to the right of the images */}
+                {/* Stars */}
                 <div className="flex items-center pl-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg 
-                          key={star} 
-                          xmlns="http://www.w3.org/2000/svg" 
-                          className="h-5 w-5 text-yellow-400" 
-                          viewBox="0 0 20 20" 
-                          fill="currentColor"
-                        >
+                      key={star} 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      className="h-5 w-5 text-yellow-400" 
+                      viewBox="0 0 20 20" 
+                      fill="currentColor"
+                    >
                       <path 
                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" 
                       />
@@ -354,18 +401,17 @@ export default function HeroSection() {
                 </div>
               </div>
               
-              {/* Text - Width matches the inline elements above */}
               <p className="text-gray-600 text-sm mt-1 text-center lg:text-left" style={{ width: "fit-content" }}>
-  <span className="font-semibold">122</span>{" "}
-  <Link href="" className="underline">
-    regisztrált
-  </Link>{" "}
-  életet mentettünk!
-</p>
+                <span className="font-semibold">122</span>{" "}
+                <Link href="" className="underline">
+                  regisztrált
+                </Link>{" "}
+                életet mentettünk!
+              </p>
             </motion.div>
           </div>
 
-          {/* Right Column: Video Dashboard - Fixed for mobile view */}
+          {/* Right Column: Video Dashboard */}
           <div className="w-full lg:w-3/5 z-10 flex justify-center">
             <motion.div
               className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl relative"
