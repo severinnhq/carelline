@@ -9,13 +9,11 @@ import { useCart } from '@/lib/CartContext'
 import { WhiteHeader } from '@/components/WhiteHeader'
 import Sidebar from '@/components/Sidebar'
 import { AnimatePresence } from 'framer-motion'
-import { Plus } from 'lucide-react'
+import { Plus, Truck, RefreshCcw, ShieldCheck, BellIcon } from 'lucide-react'
 import { FloatingProductBox } from '@/components/FloatingProductBox'
 import RecommendedProducts from '@/components/RecommendedProducts'
-import { BellIcon } from 'lucide-react'
 import { Sora } from 'next/font/google'
 import { Skeleton } from "@/components/ui/skeleton"
-
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -128,7 +126,6 @@ export default function ProductPage() {
       return newItems
     })
   }
-
   if (!product) {
     return (
       <div className={`${sora.className} min-h-screen flex flex-col`}>
@@ -163,6 +160,36 @@ export default function ProductPage() {
   const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   const isProductAvailable = product.sizes.length > 0
 
+  const shippingFeaturesContent = (
+    <div className="border-t border-gray-200 pt-4 mt-6">
+      <div className="grid grid-cols-3 gap-2">
+        <div className="flex items-center gap-2">
+          <Truck className="h-6 w-6 text-black shrink-0" />
+          <div>
+            <h3 className="text-sm font-medium">Ingyenes szállítás</h3>
+            <p className="text-xs text-gray-500">30 000FT felett.</p>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <RefreshCcw className="h-6 w-6 text-black shrink-0" />
+          <div>
+            <h3 className="text-sm font-medium">14 napos visszaküldés</h3>
+            <p className="text-xs text-gray-500">Az átvételtől számítva.</p>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="h-6 w-6 text-black shrink-0" />
+          <div>
+            <h3 className="text-sm font-medium">Biztonságos fizetés</h3>
+            <p className="text-xs text-gray-500">100%-os védelem.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
   const faqs = [
     {
       question: "Leírás",
@@ -171,16 +198,21 @@ export default function ProductPage() {
     {
       question: "Fizetés & Szállítás",
       answer: (
-        <>
-          <h5 className="font-medium text-black mb-2">Fizetési lehetőségek:</h5>
-          <p className="mb-4">
-          Minden nagyobb hitelkártyát elfogadunk biztonságos fizetési rendszerünkön keresztül.
-          </p>
-          <h5 className="font-medium text-black mb-2">Szállítási információk:</h5>
-          <p>
-          A normál szállítás általában 6-10 munkanapot vesz igénybe. Az expressz viszont csak 3-5nap.
-          </p>
-        </>
+        <div className="space-y-4">
+          <div>
+            <h5 className="font-medium text-black mb-2">Fizetési lehetőségek:</h5>
+            <p>
+              Minden nagyobb hitelkártyát elfogadunk biztonságos fizetési rendszerünkön keresztül.
+            </p>
+          </div>
+          
+          <div>
+            <h5 className="font-medium text-black mb-2">Szállítási információk:</h5>
+            <p>
+              A normál szállítás általában 6-10 munkanapot vesz igénybe. Az expressz viszont csak 3-5nap.
+            </p>
+          </div>
+        </div>
       )
     }
   ]
@@ -225,7 +257,7 @@ export default function ProductPage() {
               ))}
             </div>
           </div>
-          <div className="lg:w-2/5">
+          <div className="lg:w-2/5 pt-10">
             <h1 className="text-5xl font-bold mb-2">{product.name}</h1>
             <div className="mb-4">
               {product.salePrice ? (
@@ -345,7 +377,11 @@ export default function ProductPage() {
                     <Plus className={`h-5 w-5 transition-transform duration-200 ${expandedItems.has(index) ? 'rotate-45' : ''}`} />
                   </button>
                   <div
-                    className={`px-8 transition-all duration-300 ease-in-out ${expandedItems.has(index) ? 'max-h-80 opacity-100 py-3' : 'max-h-0 opacity-0 py-0'}`}
+                    className={`px-8 transition-all duration-300 ease-in-out overflow-hidden ${
+                      expandedItems.has(index) 
+                        ? 'max-h-[500px] opacity-100 py-4' 
+                        : 'max-h-0 opacity-0 py-0'
+                    }`}
                   >
                     <div className="text-gray-600 text-base leading-relaxed">
                       {typeof faq.answer === 'string' ? faq.answer : faq.answer}
@@ -354,6 +390,9 @@ export default function ProductPage() {
                 </div>
               ))}
             </div>
+            
+            {/* Shipping features moved here, just below the collapsible sections */}
+            {shippingFeaturesContent}
           </div>
         </div>
       </div>

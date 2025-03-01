@@ -346,7 +346,7 @@ export default function RecommendedProducts() {
       </span>
     ) : product.salePrice ? (
       <>
-        <span className="text-lg font-bold text-[#dc2626]">
+        <span className="text-lg font-medium text-[#dc2626]">
           {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
         </span>
         <span className="text-sm text-gray-500 line-through ml-2">
@@ -354,7 +354,7 @@ export default function RecommendedProducts() {
         </span>
       </>
     ) : (
-      <span className="text-lg font-bold text-black">
+      <span className="text-lg font-medium text-[#6b7280]">
         {Math.round(product.price).toLocaleString('hu-HU')} Ft
       </span>
     )}
@@ -431,6 +431,26 @@ export default function RecommendedProducts() {
         .animate-chainReaction {
           animation: chainReaction 0.5s ease-out forwards;
         }
+             @media (max-width: 400px) {
+    /* Price container adjustments */
+    .product-price .text-base {  /* Sale price */
+      font-size: 14px !important;
+    }
+    
+    .product-price .text-sm {    /* Original price */
+      font-size: 12px !important;
+    }
+
+    /* Reduce margin between prices */
+    .product-price .ml-2 {
+      margin-left: 0.25rem !important; /* ml-1 */
+    }
+
+    /* For non-sale prices */
+    .product-price .text-base:not(.text-[#dc2626]) {
+      font-size: 14px !important;
+    }
+  }
       `}</style>
     </>
   )
