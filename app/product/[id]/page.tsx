@@ -161,34 +161,25 @@ export default function ProductPage() {
   const isProductAvailable = product.sizes.length > 0
 
   const shippingFeaturesContent = (
-    <div className="border-t border-gray-200 pt-4 mt-6">
-      <div className="grid grid-cols-3 gap-2">
+    <div className="border-t border-gray-200 pt-8 mt-6">
+      <div className="grid grid-cols-2 gap-2">
         <div className="flex items-center gap-2">
           <Truck className="h-6 w-6 text-black shrink-0" />
           <div>
-            <h3 className="text-sm font-medium">Ingyenes szállítás</h3>
-            <p className="text-xs text-gray-500">30 000FT felett.</p>
+            <h3 className="text-medium font-medium">Utánvét lehetősége</h3>
           </div>
         </div>
         
         <div className="flex items-center gap-2">
           <RefreshCcw className="h-6 w-6 text-black shrink-0" />
           <div>
-            <h3 className="text-sm font-medium">14 napos visszaküldés</h3>
-            <p className="text-xs text-gray-500">Az átvételtől számítva.</p>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="h-6 w-6 text-black shrink-0" />
-          <div>
-            <h3 className="text-sm font-medium">Biztonságos fizetés</h3>
-            <p className="text-xs text-gray-500">100%-os védelem.</p>
+            <h3 className="text-medium font-medium">14 nap visszaküldés</h3>
           </div>
         </div>
       </div>
     </div>
   )
+  
 
   const faqs = [
     {
