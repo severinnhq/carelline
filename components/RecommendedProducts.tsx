@@ -321,15 +321,15 @@ export default function RecommendedProducts() {
   </Button>
 </div>
 */}
-           <div className="absolute bottom-4 right-4 md:hidden">
+          <div className="absolute bottom-4 right-4 md:hidden">
   <Button
     onClick={(e) => {
       e.stopPropagation()
       handleAddToCart(product)
     }}
-    className="bg-white text-black hover:bg-gray-100 p-2 border border-gray-300 w-10 h-10 flex items-center justify-center"
+    className="bg-white text-black hover:bg-gray-100 p-1.5 border border-gray-300 w-8 h-8 flex items-center justify-center"
   >
-    <ShoppingCart size={20} />
+    <ShoppingCart size={16} />
   </Button>
 </div>
           </>
