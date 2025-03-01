@@ -9,7 +9,7 @@ import { useCart } from '@/lib/CartContext'
 import { WhiteHeader } from '@/components/WhiteHeader'
 import Sidebar from '@/components/Sidebar'
 import { AnimatePresence } from 'framer-motion'
-import { Plus, Truck, RefreshCcw, ShieldCheck, BellIcon } from 'lucide-react'
+import { Plus, Truck, RefreshCcw, BellIcon } from 'lucide-react'
 import { FloatingProductBox } from '@/components/FloatingProductBox'
 import RecommendedProducts from '@/components/RecommendedProducts'
 import { Sora } from 'next/font/google'
@@ -166,7 +166,7 @@ export default function ProductPage() {
         <div className="flex items-center gap-2">
           <Truck className="h-6 w-6 text-black shrink-0" />
           <div>
-            <h3 className="text-medium font-medium">Utánvét lehetősége</h3>
+            <h3 className="text-medium font-medium">Utánvét lehetőségek</h3>
           </div>
         </div>
         
