@@ -15,6 +15,8 @@ interface Product {
   categories: string[]
   sizes: string[]
   galleryImages: string[]
+  inventoryStatus: 'raktáron' | 'rendelésre' | 'elfogyott'
+  stockQuantity: number
 }
 
 export default function AdminPage() {
@@ -107,11 +109,21 @@ export default function AdminPage() {
                   <h3 className="text-xl font-semibold">{product.name}</h3>
                   <p className="text-gray-600">{product.description}</p>
                   <p className="mt-2">Price: ${product.price.toFixed(2)}</p>
-                  {product.salePrice && (
-                    <p className="text-red-600">Sale Price: ${product.salePrice.toFixed(2)}</p>
-                  )}
-                  <p>Categories: {product.categories.join(', ')}</p>
-                  <p>Sizes: {product.sizes.join(', ')}</p>
+{product.salePrice && (
+  <p className="text-red-600">Sale Price: ${product.salePrice.toFixed(2)}</p>
+)}
+<p>Categories: {product.categories.join(', ')}</p>
+<p>Sizes: {product.sizes.join(', ')}</p>
+{/* Add this: */}
+<p className="mt-1">
+  Status: <span className={`font-medium ${
+    product.inventoryStatus === 'raktáron' ? 'text-green-600' : 
+    product.inventoryStatus === 'rendelésre' ? 'text-amber-600' : 'text-red-600'
+  }`}>
+    {product.inventoryStatus}
+    {product.inventoryStatus === 'raktáron' && ` (${product.stockQuantity} db)`}
+  </span>
+</p>
                   <Button onClick={() => handleEditClick(product)} className="mt-2">
                     Edit Product
                   </Button>

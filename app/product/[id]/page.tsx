@@ -9,7 +9,7 @@ import { useCart } from '@/lib/CartContext'
 import { WhiteHeader } from '@/components/WhiteHeader'
 import Sidebar from '@/components/Sidebar'
 import { AnimatePresence } from 'framer-motion'
-import { Plus, Truck, RefreshCcw, BellIcon } from 'lucide-react'
+import { Plus, Truck, RefreshCcw, BellIcon, Store } from 'lucide-react'
 import { FloatingProductBox } from '@/components/FloatingProductBox'
 import RecommendedProducts from '@/components/RecommendedProducts'
 import { Sora } from 'next/font/google'
@@ -27,6 +27,8 @@ interface Product {
   category: string
   sizes: string[]
   galleryImages: string[]
+  inventoryStatus: 'raktáron' | 'rendelésre' | 'elfogyott'
+  stockQuantity: number
 }
 
 export default function ProductPage() {
@@ -158,7 +160,7 @@ export default function ProductPage() {
   }
 
   const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
-  const isProductAvailable = product.sizes.length > 0
+  const isProductAvailable = product.sizes.length > 0 && product.inventoryStatus !== 'elfogyott'
 
   const shippingFeaturesContent = (
     <div className="border-t border-gray-200 pt-8 mt-6">
@@ -166,7 +168,7 @@ export default function ProductPage() {
         <div className="flex items-center gap-2">
           <Truck className="h-6 w-6 text-black shrink-0" />
           <div>
-            <h3 className="text-medium font-medium">Utánvét lehetőségek</h3>
+            <h3 className="text-medium font-medium">Utánvét lehetősége</h3>
           </div>
         </div>
         
@@ -180,6 +182,34 @@ export default function ProductPage() {
     </div>
   )
   
+  const availabilityDisplay = (
+    <div className="mb-6 mt-4">
+      <div className="flex items-center gap-2 mb-2">
+        <Store className="h-5 w-5 text-black" />
+        <span className="font-medium text-lg">Elérhetőség:</span>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-md p-3 inline-block">
+        {product.inventoryStatus === 'raktáron' ? (
+          <span>
+            <span className="font-medium text-black">Raktár - </span>
+            {product.stockQuantity <= 30 ? (
+              <span className="font-medium text-[#15c470]">
+                Elérhető, Utolsó darabok (<span className="font-medium">{product.stockQuantity} db)</span>
+              </span>
+            ) : (
+              <span className="font-medium text-[#15c470]">
+                Elérhető (<span className="font-medium">{product.stockQuantity} db)</span>
+              </span>
+            )}
+          </span>
+        ) : product.inventoryStatus === 'rendelésre' ? (
+          <span className="font-medium text-amber-700">Rendelésre</span>
+        ) : (
+          <span className="font-medium text-[#dc2626]">Elfogyott</span>
+        )}
+      </div>
+    </div>
+  )
 
   const faqs = [
     {
@@ -249,14 +279,14 @@ export default function ProductPage() {
             </div>
           </div>
           <div className="lg:w-2/5 pt-10">
-            <h1 className="text-5xl font-bold mb-2">{product.name}</h1>
+            <h1 className="text-[2.5rem] font-bold mb-2">{product.name}</h1>
             <div className="mb-4">
               {product.salePrice ? (
                 <div>
-                  <span className="text-2xl font-bold text-[#dc2626] mr-2">
+                  <span className="text-2xl font-medium text-[#dc2626] mr-2">
                     {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
                   </span>
-                  <span className="text-lg text-gray-500 line-through">
+                  <span className="text-lg text-gray-500 font-medium line-through">
                     {Math.round(product.price).toLocaleString('hu-HU')} Ft
                   </span>
                 </div>
@@ -264,6 +294,7 @@ export default function ProductPage() {
                 <span className="text-2xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
               )}
             </div>
+            
             <hr className="border-t border-gray-300 my-4 w-1/2" />
             {isProductAvailable ? (
               <>
@@ -314,11 +345,13 @@ export default function ProductPage() {
                 <div className="mb-4">
                   <Button
                     onClick={handleAddToCart}
-                    className="w-full py-6 text-xl font-bold bg-[#be2323] text-white"
+                    className="w-full py-6 text-xl font-bold bg-[#dc2626] text-white"
                   >
                     Kosárba
                   </Button>
                 </div>
+                {/* Availability display moved below Kosárba button */}
+                {availabilityDisplay}
               </>
             ) : (
               <div className="mb-4">
@@ -354,7 +387,9 @@ export default function ProductPage() {
                     )}
                   </div>
                 )}
-                <p className="text-[#be2323] font-semibold mt-4">A termék jelenleg nem elérhető.</p>
+                <p className="text-[#dc2626] font-semibold mt-4">A termék jelenleg nem elérhető.</p>
+                {/* Add availability display for out of stock items as well */}
+                {availabilityDisplay}
               </div>
             )}
             <div className="mt-6 space-y-4">

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface Product {
   _id?: string
@@ -14,6 +15,8 @@ interface Product {
   categories: string[]
   sizes: string[]
   galleryImages: string[]
+  inventoryStatus: 'raktáron' | 'rendelésre' | 'elfogyott'
+  stockQuantity: number
 }
 
 interface ProductFormProps {
@@ -34,6 +37,8 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
     categories: initialProduct?.categories || [],
     sizes: initialProduct?.sizes || [],
     galleryImages: initialProduct?.galleryImages || [],
+    inventoryStatus: initialProduct?.inventoryStatus || 'elfogyott',
+    stockQuantity: initialProduct?.stockQuantity || 0,
   })
   const [newGalleryImage, setNewGalleryImage] = useState('')
   const [newCategory, setNewCategory] = useState('')
@@ -42,7 +47,14 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
     const { name, value } = e.target
     setProduct(prev => ({
       ...prev,
-      [name]: name === 'price' || name === 'salePrice' ? Number(value) || 0 : value,
+      [name]: name === 'price' || name === 'salePrice' || name === 'stockQuantity' ? Number(value) || 0 : value,
+    }))
+  }
+
+  const handleInventoryStatusChange = (value: 'raktáron' | 'rendelésre' | 'elfogyott') => {
+    setProduct(prev => ({
+      ...prev,
+      inventoryStatus: value
     }))
   }
 
@@ -203,6 +215,39 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           ))}
         </div>
       </div>
+      
+      {/* Add inventory status and stock quantity fields */}
+      <div>
+        <Label htmlFor="inventoryStatus">Inventory Status</Label>
+        <Select 
+          value={product.inventoryStatus} 
+          onValueChange={(value: 'raktáron' | 'rendelésre' | 'elfogyott') => handleInventoryStatusChange(value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="raktáron">Raktáron</SelectItem>
+            <SelectItem value="rendelésre">Rendelésre</SelectItem>
+            <SelectItem value="elfogyott">Elfogyott</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      
+      <div>
+        <Label htmlFor="stockQuantity">Stock Quantity</Label>
+        <Input
+          type="number"
+          id="stockQuantity"
+          name="stockQuantity"
+          value={product.stockQuantity}
+          onChange={handleChange}
+          required
+          min="0"
+          step="1"
+        />
+      </div>
+      
       <div className="flex justify-end gap-2">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
@@ -216,4 +261,3 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
     </form>
   )
 }
-
