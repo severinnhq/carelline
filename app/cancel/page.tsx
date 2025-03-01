@@ -11,10 +11,10 @@ export default function CancelPage() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 flex items-center justify-center p-4"
+      className="min-h-screen bg-white flex items-center justify-center p-4"
     >
       <Card className="w-full max-w-md shadow-xl rounded-2xl overflow-hidden border-0">
-        <CardHeader className="bg-green-50/50 p-8">
+        <CardHeader className="bg-white p-8">
           <motion.div
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}

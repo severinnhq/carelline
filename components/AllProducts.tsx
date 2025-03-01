@@ -352,7 +352,7 @@ export default function ProductList() {
         )}
       </div>
       <div className="p-3 sm:p-4 md:p-5 lg:p-6">
-        <h2 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-semibold text-black">{product.name}</h2>
+        <h2 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-black">{product.name}</h2>
         <div className="mt-2 flex items-center justify-between">
           <div>
             {product.sizes.length === 0 ? (
@@ -361,7 +361,7 @@ export default function ProductList() {
               </span>
             ) :product.salePrice ? (
                 <div className="flex flex-col sm:flex-row sm:items-center">
-                  <span className="text-base sm:text-lg lg:text-xl font-medium text-[#dc2626]">
+                  <span className="text-base sm:text-lg lg:text-xl font-bold text-[#dc2626]">
                     {formatPriceToHUF(product.salePrice)} Ft
                   </span>
                   <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through sm:ml-2">
@@ -369,7 +369,7 @@ export default function ProductList() {
                   </span>
                 </div>
               ) : (
-                <span className="text-base sm:text-lg lg:text-xl font-normal text-[#6b7280]">
+                <span className="text-base sm:text-lg lg:text-xl font-normal text-black">
                   {formatPriceToHUF(product.price)} Ft
                 </span>
               )}
