@@ -26,7 +26,8 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
   const phraseIndexRef = useRef<number>(0);
   const usedIndicesRef = useRef<Set<number>>(new Set([0]));
   const isMountedRef = useRef<boolean>(true);
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+  // Use a more limited character set to reduce visual noise on mobile
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   const clearAllTimers = useCallback(() => {
     if (initialTimeoutRef.current) {
@@ -64,19 +65,37 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
     const startTime = Date.now();
     phraseIndexRef.current = nextIndex;
 
-    const updateScramble = () => {
+    // Check if we're on a mobile device for lower animation framerates
+    const isMobile = window.innerWidth < 768;
+    const frameDuration = isMobile ? 50 : 16; // Use lower framerate on mobile (20fps vs 60fps)
+
+    let lastFrameTime = 0;
+    
+    const updateScramble = (timestamp: number) => {
       if (!isMountedRef.current) return;
+      
+      // Skip frames on mobile to improve performance
+      if (isMobile && timestamp - lastFrameTime < frameDuration) {
+        frameRef.current = requestAnimationFrame(updateScramble);
+        return;
+      }
+      
+      lastFrameTime = timestamp;
+      
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / scrambleDuration, 1);
       let result = "";
       const targetLength = targetPhrase.length;
       const finalizedChars = Math.floor(progress * targetLength);
+      
       for (let i = 0; i < targetLength; i++) {
         result += (i < finalizedChars) 
           ? targetPhrase[i]
           : chars.charAt(Math.floor(Math.random() * chars.length));
       }
+      
       setDisplayText(result);
+      
       if (progress < 1 && isMountedRef.current) {
         frameRef.current = requestAnimationFrame(updateScramble);
       } else if (isMountedRef.current) {
@@ -84,7 +103,8 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
         setIsScrambling(false);
       }
     };
-    updateScramble();
+    
+    frameRef.current = requestAnimationFrame(updateScramble);
   }, [isScrambling, phrases, scrambleDuration, getNextPhraseIndex]);
 
   useEffect(() => {
@@ -94,21 +114,51 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
     usedIndicesRef.current = new Set([0]);
     setIsScrambling(false);
     clearAllTimers();
+    
+    // Longer initial delay for mobile to ensure components are fully loaded
+    const initialDelay = window.innerWidth < 768 ? 3000 : 2000;
+    
     initialTimeoutRef.current = setTimeout(() => {
       if (isMountedRef.current) {
         startScrambleEffect();
         intervalRef.current = setInterval(() => {
-          if (isMountedRef.current) {
+          if (isMountedRef.current && !isScrambling) {
             startScrambleEffect();
           }
         }, interval);
       }
-    }, 2000);
+    }, initialDelay);
+    
     return () => {
       isMountedRef.current = false;
       clearAllTimers();
     };
-  }, [interval, phrases, startScrambleEffect, clearAllTimers]);
+  }, [interval, phrases, startScrambleEffect, clearAllTimers, isScrambling]);
+
+  // Handle visibility changes (when user switches tabs or app goes to background)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Page is hidden, pause animations
+        if (frameRef.current) {
+          cancelAnimationFrame(frameRef.current);
+          frameRef.current = null;
+        }
+      } else if (isMountedRef.current && !isScrambling) {
+        // Page is visible again, restart cycle
+        clearAllTimers();
+        startScrambleEffect();
+        intervalRef.current = setInterval(() => {
+          if (isMountedRef.current && !isScrambling) {
+            startScrambleEffect();
+          }
+        }, interval);
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [clearAllTimers, interval, isScrambling, startScrambleEffect]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -121,8 +171,19 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
         setIsScrambling(false);
       }
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    
+    // Use a debounced version of resize to avoid too many calls
+    let resizeTimer: NodeJS.Timeout;
+    const debouncedResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(handleResize, 250);
+    };
+    
+    window.addEventListener('resize', debouncedResize);
+    return () => {
+      clearTimeout(resizeTimer);
+      window.removeEventListener('resize', debouncedResize);
+    };
   }, [isScrambling, phrases]);
 
   return (
