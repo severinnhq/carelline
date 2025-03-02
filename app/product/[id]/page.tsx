@@ -33,6 +33,8 @@ interface Product {
 }
 
 export default function ProductPage() {
+
+const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [product, setProduct] = useState<Product | null>(null)
   const [selectedSize, setSelectedSize] = useState<string>('')
   const [quantity, setQuantity] = useState(1)
@@ -224,26 +226,59 @@ export default function ProductPage() {
 
   const shippingFeaturesContent = (
     <div className="border-t border-gray-200 pt-6 mt-4 w-full md:w-11/12">
-      <div className="grid grid-cols-3 gap-4">
-      <div className="flex flex-col items-center text-center">
+      <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4">
+        <div className="flex flex-col items-center text-center">
           <ShieldCheck className="h-7 w-7 text-black mb-2" />
           <h3 className="text-sm font-bold mb-1">Biztonságos fizetés</h3>
           <p className="text-xs text-gray-600">Kártyás fizetés vagy utánvét</p>
         </div>
         <div className="flex flex-col items-center text-center">
-          <Truck className="h-7 w-7 text-black mb-2" />
-          
+          <Truck className="h-7 w-7 text-black mb-2" />        
           <h3 className="text-sm font-bold mb-1">Ingyenes szállítás</h3>
           <p className="text-xs text-gray-600">30 000 Ft felett ingyenes kiszállítás</p>
-        </div>
-        
+        </div>      
         <div className="flex flex-col items-center text-center">
           <RefreshCcw className="h-7 w-7 text-black mb-2" />
           <h3 className="text-sm font-bold mb-1">14 nap visszaküldés</h3>
           <p className="text-xs text-gray-600">A csomag átvételétől számítva</p>
+        </div>      
+      </div>
+      
+      {/* Mobile view (single feature with dots) */}
+      <div className="sm:hidden">
+        {currentFeatureIndex === 0 && (
+          <div className="flex flex-col items-center text-center">
+            <ShieldCheck className="h-10 w-10 text-black mb-3" />
+            <h3 className="text-base font-bold mb-1">Biztonságos fizetés</h3>
+            <p className="text-sm text-gray-600">Kártyás fizetés vagy utánvét</p>
+          </div>
+        )}
+        {currentFeatureIndex === 1 && (
+          <div className="flex flex-col items-center text-center">
+            <Truck className="h-10 w-10 text-black mb-3" />        
+            <h3 className="text-base font-bold mb-1">Ingyenes szállítás</h3>
+            <p className="text-sm text-gray-600">30 000 Ft felett ingyenes kiszállítás</p>
+          </div>
+        )}
+        {currentFeatureIndex === 2 && (
+          <div className="flex flex-col items-center text-center">
+            <RefreshCcw className="h-10 w-10 text-black mb-3" />
+            <h3 className="text-base font-bold mb-1">14 nap visszaküldés</h3>
+            <p className="text-sm text-gray-600">A csomag átvételétől számítva</p>
+          </div>
+        )}
+        
+        {/* Navigation dots */}
+        <div className="flex justify-center mt-4 space-x-2">
+          {[0, 1, 2].map((index) => (
+            <button 
+              key={index}
+              onClick={() => setCurrentFeatureIndex(index)}
+              className={`h-2 w-2 rounded-full ${index === currentFeatureIndex ? 'bg-black' : 'bg-gray-300'}`}
+              aria-label={`View feature ${index + 1}`}
+            />
+          ))}
         </div>
-        
-        
       </div>
     </div>
   )
@@ -351,18 +386,21 @@ export default function ProductPage() {
             <div className="mb-0">
               <div className="flex flex-col w-11/12">
                 <div className="flex items-center justify-between">
-                  {product.salePrice ? (
-                    <div>
-                      <span className="text-xl font-bold text-[#dc2626] mr-2">
-                        {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
-                      </span>
-                      <span className="text-base text-gray-500 font-medium line-through">
-                        {Math.round(product.price).toLocaleString('hu-HU')} Ft
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="text-xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
-                  )}
+                {product.salePrice ? (
+  <div className="flex items-center">
+    <span className="text-xl font-bold text-[#dc2626] mr-2">
+      {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
+    </span>
+    <span className="text-base text-gray-500 font-medium line-through">
+      {Math.round(product.price).toLocaleString('hu-HU')} Ft
+    </span>
+    <div className="ml-2 bg-[#dc2626] font-bold text-white text-xs px-1.5 py-0.5 rounded">
+      AKCIÓ {Math.round(product.price - product.salePrice).toLocaleString('hu-HU')} Ft
+    </div>
+  </div>
+) : (
+  <span className="text-xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
+)}
                 </div>
                 
                 <hr className="border-t border-gray-300 my-3 w-full" />
