@@ -14,6 +14,7 @@ import { FloatingProductBox } from '@/components/FloatingProductBox'
 import RecommendedProducts from '@/components/RecommendedProducts'
 import { Sora } from 'next/font/google'
 import { Skeleton } from "@/components/ui/skeleton"
+import MatrixButton from '@/components/MatrixButton'; // You'll need to save the component above to this path
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -65,13 +66,12 @@ export default function ProductPage() {
       fetchProduct()
     }
   }, [id])
-
   useEffect(() => {
     // Get random viewers count from localStorage or generate new one
     const getViewersCount = () => {
       const now = new Date().getTime();
       const storedData = localStorage.getItem(`product_viewers_${id}`);
-      
+  
       if (storedData) {
         const { count, timestamp } = JSON.parse(storedData);
         // Check if 5 minutes (300000ms) have passed
@@ -79,19 +79,23 @@ export default function ProductPage() {
           return count;
         }
       }
-      
-      // Generate new random count between 1 and 10 (never more)
-      const newCount = Math.floor(Math.random() * 10) + 1;
-      localStorage.setItem(`product_viewers_${id}`, JSON.stringify({
-        count: newCount,
-        timestamp: now
-      }));
-      
+  
+      // Generate new random count between 3 and 11,
+      // so that displayed viewers (count - 1) is between 2 and 10.
+      const newCount = Math.floor(Math.random() * 9) + 3;
+      localStorage.setItem(
+        `product_viewers_${id}`,
+        JSON.stringify({
+          count: newCount,
+          timestamp: now
+        })
+      );
+  
       return newCount;
     };
-    
+  
     setCurrentViewers(getViewersCount());
-    
+  
     // Set up a timer to check for expiration (every minute)
     const interval = setInterval(() => {
       const storedData = localStorage.getItem(`product_viewers_${id}`);
@@ -103,9 +107,15 @@ export default function ProductPage() {
         }
       }
     }, 60000);
-    
+  
     return () => clearInterval(interval);
   }, [id]);
+  
+  // Calculate the displayed viewers count and select the correct suffix
+  const displayedViewers = currentViewers > 0 ? currentViewers - 1 : 0;
+  const viewerSuffix = [3, 6, 8].includes(displayedViewers)
+    ? '-an nézik önön kívül'
+    : '-en nézik önön kívül';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -213,7 +223,7 @@ export default function ProductPage() {
   const isProductAvailable = product.sizes.length > 0 && product.inventoryStatus !== 'elfogyott'
 
   const shippingFeaturesContent = (
-    <div className="border-t border-gray-200 pt-6 mt-4">
+    <div className="border-t border-gray-200 pt-6 mt-4 w-full md:w-11/12">
       <div className="grid grid-cols-3 gap-4">
       <div className="flex flex-col items-center text-center">
           <ShieldCheck className="h-7 w-7 text-black mb-2" />
@@ -337,7 +347,7 @@ export default function ProductPage() {
               Carelline
             </div>
             
-            <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
+            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
             <div className="mb-0">
               <div className="flex flex-col w-11/12">
                 <div className="flex items-center justify-between">
@@ -435,17 +445,21 @@ export default function ProductPage() {
 </div>
 </div>
 </div>
-                <div className="mb-3 mt-8">
-                  <Button
-                    onClick={handleAddToCart}
-                    className="w-11/12 block py-4 text-base font-bold bg-[#dc2626] text-white flex items-center justify-center"
-                  >
-                    Kosárba
-                  </Button>
-                </div>
+<div className="w-full md:w-11/12">
+<MatrixButton
+  phrases={[
+    "Kosárba teszem",
+    "Rendelje meg mielőtt elfogy",
+    `${displayedViewers} ${viewerSuffix}`,
+    `Siessen! Már csak ${product.stockQuantity} darab van`,
+  ]}
+  onClick={handleAddToCart}
+  className="w-full block py-4 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
+/>
+</div>
               </>
             ) : (
-              <div className="mb-3">
+              <div className="mb-3 w-11/12">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -481,18 +495,18 @@ export default function ProductPage() {
                 <p className="text-[#dc2626] font-semibold mt-3 text-sm">A termék jelenleg nem elérhető.</p>
               </div>
             )}
-            <div className="mt-4 space-y-2 w-11/12">
+            <div className="mt-4 space-y-2 w-full md:w-11/12">
               {faqs.map((faq, index) => (
                 <div key={index} className="bg-white rounded-lg overflow-hidden border border-gray-200">
                   <button
                     onClick={() => toggleItem(index)}
-                    className="w-full px-6 py-2 flex justify-between items-center text-left"
+                    className="w-full px-6 py-2 flex justify-between items-center text-left md:px-6"
                   >
                     <span className="font-medium text-base">{faq.question}</span>
                     <Plus className={`h-4 w-4 transition-transform duration-200 ${expandedItems.has(index) ? 'rotate-45' : ''}`} />
                   </button>
                   <div
-                    className={`px-6 transition-all duration-300 ease-in-out overflow-hidden ${
+                    className={`px-6 transition-all duration-300 ease-in-out overflow-hidden md:px-6 ${
                       expandedItems.has(index)
                         ? 'max-h-[500px] opacity-100 py-3'
                         : 'max-h-0 opacity-0 py-0'
