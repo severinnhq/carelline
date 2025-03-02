@@ -363,7 +363,7 @@ export default function ProductList() {
             ) : 
             product.salePrice ? (
               <div className="flex flex-col sm:flex-row sm:items-center">
-                <span className="text-base sm:text-lg lg:text-xl font-bold text-[#dc2626]">
+                <span className="text-base sm:text-lg lg:text-xl font-semibold text-[#dc2626]">
                   {formatPriceToHUF(product.salePrice)} Ft
                 </span>
                 <span className="text-sm sm:text-base lg:text-lg text-gray-500 line-through sm:ml-2">
@@ -371,7 +371,7 @@ export default function ProductList() {
                 </span>
               </div>
             ) : (
-              <span className="text-base sm:text-lg lg:text-xl font-normal text-black">
+              <span className="text-base sm:text-lg lg:text-xl font-semibold text-black">
                 {formatPriceToHUF(product.price)} Ft
               </span>
             )}

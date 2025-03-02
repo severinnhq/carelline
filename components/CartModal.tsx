@@ -97,11 +97,11 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
                   className="rounded object-cover mr-4"
                 />
                 <div>
-                  <h3 className="text-base font-semibold">{product.name}</h3>
+                  <h3 className="text-base font-bold">{product.name}</h3>
                   <p className="mt-1">
                     {product.salePrice ? (
                       <>
-                        <span className="text-[#dc2626] font-bold text-lg">{product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+                        <span className="text-[#dc2626] font-semibold text-lg">{product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
                         <span className="text-gray-500 line-through ml-2 text-sm">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
                       </>
                     ) : (
@@ -113,7 +113,7 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
              
             
               <Button 
-                className="w-full bg-black text-white hover:bg-gray-800 transition-colors duration-200" 
+                className="w-full bg-[#dc2626] text-white  transition-colors duration-200" 
                 disabled={!selectedSize && !product.sizes.includes('One Size')}
                 onClick={handleAddToCart}
               >

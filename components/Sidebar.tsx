@@ -170,27 +170,27 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                             </Link>
 
                             <div className="ml-4 flex-1 flex flex-col">
-                              <div>
-                                <div className="flex justify-between text-base font-medium text-gray-900">
-                                  <h3 className="text-base font-semibold">
-                                    <Link
-                                      href={`/product/${item.product._id}`}
-                                      onClick={(e) => {
-                                        e.stopPropagation()
-                                        onClose()
-                                      }}
-                                      className="hover:underline"
-                                    >
-                                      {item.product.name}
-                                    </Link>
-                                  </h3>
-                                  <p className="ml-4 text-sm whitespace-nowrap">
-  {((item.product.salePrice || item.product.price) * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
-</p>
-                                </div>
-                             
-                              </div>
-                              <div className="flex-1 flex items-end justify-between text-sm">
+  <div>
+    <div className="flex justify-between text-base font-medium text-gray-900">
+      <h3 className="text-base font-bold"> 
+        <Link
+          href={`/product/${item.product._id}`}
+          onClick={(e) => {
+            e.stopPropagation() 
+            onClose()
+          }}
+          className="hover:underline"
+        >
+          {item.product.name}
+        </Link>
+      </h3>
+      <p className="ml-4 font-semibold text-sm whitespace-nowrap">
+        {((item.product.salePrice || item.product.price) * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+      </p>
+    </div>
+    <p className="text-sm text-gray-500 mb-1">Carelline</p>
+  </div>
+  <div className="flex justify-between text-sm mt-1">
                                 <div className="flex items-center">
                                   <input
                                     type="number"
@@ -198,7 +198,7 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                                     value={item.quantity}
                                     onChange={(e) => onUpdateQuantity(index, Math.max(1, parseInt(e.target.value) || 1))}
                                     onClick={(e) => e.currentTarget.select()}
-                                    className="w-16 p-1 text-center border rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+       className="w-16 p-1 text-center border border-gray-300 rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     aria-label={`Quantity for ${item.product.name}`}
                                   />
                                 </div>
