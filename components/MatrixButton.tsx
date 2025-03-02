@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 interface MatrixButtonProps {
   phrases?: string[];
   interval?: number;
-  scrambleDuration?: number;
+  scrambleDuration?: number; // Keeping in interface since it's part of the public API
   onClick?: () => void;
   className?: string;
 }
@@ -14,7 +14,7 @@ interface MatrixButtonProps {
 const MatrixButton: React.FC<MatrixButtonProps> = ({ 
   phrases = ["Kosárba teszem", "Rendelje meg mielőtt elfogy"],
   interval = 3000,
-  scrambleDuration = 1000,
+  // Removed unused scrambleDuration parameter while preserving it in the interface
   onClick,
   className = ""
 }) => {
@@ -29,7 +29,6 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
   const phraseIndexRef = useRef<number>(0);
   const usedIndicesRef = useRef<Set<number>>(new Set([0]));
   const isMountedRef = useRef<boolean>(true);
-  // Removed the unused chars variable
 
   const clearAllTimers = useCallback(() => {
     if (initialTimeoutRef.current) {
@@ -46,17 +45,7 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
     }
   }, []);
 
-  const getNextPhraseIndex = useCallback(() => {
-    if (usedIndicesRef.current.size >= phrases.length) {
-      usedIndicesRef.current = new Set();
-    }
-    let nextIndex = (phraseIndexRef.current + 1) % phrases.length;
-    while (usedIndicesRef.current.has(nextIndex)) {
-      nextIndex = (nextIndex + 1) % phrases.length;
-    }
-    usedIndicesRef.current.add(nextIndex);
-    return nextIndex;
-  }, [phrases.length]);
+  // Removed the unused getNextPhraseIndex function
 
   const startScrambleEffect = useCallback(() => {
     // Scramble effect logic is commented out - will not execute
@@ -91,7 +80,7 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
     };
     updateScramble();
     */
-  }, []); // Removed unnecessary dependencies
+  }, []); 
 
   useEffect(() => {
     isMountedRef.current = true;
