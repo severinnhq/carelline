@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Button } from "@/components/ui/button"
 
 interface MatrixButtonProps {
@@ -13,58 +13,22 @@ interface MatrixButtonProps {
 
 const MatrixButton: React.FC<MatrixButtonProps> = ({ 
   phrases = ["Kosárba teszem", "Rendelje meg mielőtt elfogy"],
-  interval = 3000, // Time between scramble effects (ms) after the initial 2 sec delay
-  scrambleDuration = 1000, // How long the scrambling effect lasts (ms)
+  interval = 3000,
+  scrambleDuration = 1000,
   onClick,
   className = ""
 }) => {
-  // Display the first phrase immediately
-  const [displayText, setDisplayText] = useState(phrases[0])
-  const [isScrambling, setIsScrambling] = useState(false)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
-  const initialTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const frameRef = useRef<number | null>(null)
-  const phraseIndexRef = useRef<number>(0)
-  const usedIndicesRef = useRef<Set<number>>(new Set([0])) // Start with first phrase marked as used
-  const isMountedRef = useRef<boolean>(true)
-  
-  // Characters to use for scrambling effect
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+"
-  
-  useEffect(() => {
-    isMountedRef.current = true;
-    
-    // Reset state when component mounts or when phrases change
-    setDisplayText(phrases[0]);
-    phraseIndexRef.current = 0;
-    usedIndicesRef.current = new Set([0]);
-    setIsScrambling(false);
-    
-    // Clear any existing timers
-    clearAllTimers();
-    
-    // Wait 2 seconds before starting the scramble effect for the first time.
-    initialTimeoutRef.current = setTimeout(() => {
-      if (isMountedRef.current) {
-        startScrambleEffect();
-        // Then schedule subsequent scramble effects every `interval` milliseconds.
-        intervalRef.current = setInterval(() => {
-          if (isMountedRef.current) {
-            startScrambleEffect();
-          }
-        }, interval);
-      }
-    }, 2000);
-    
-    // Cleanup function
-    return () => {
-      isMountedRef.current = false;
-      clearAllTimers();
-    };
-  }, [interval, scrambleDuration, phrases]);
-  
-  // Function to clear all timers
-  const clearAllTimers = () => {
+  const [displayText, setDisplayText] = useState(phrases[0]);
+  const [isScrambling, setIsScrambling] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const initialTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const frameRef = useRef<number | null>(null);
+  const phraseIndexRef = useRef<number>(0);
+  const usedIndicesRef = useRef<Set<number>>(new Set([0]));
+  const isMountedRef = useRef<boolean>(true);
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+
+  const clearAllTimers = useCallback(() => {
     if (initialTimeoutRef.current) {
       clearTimeout(initialTimeoutRef.current);
       initialTimeoutRef.current = null;
@@ -77,10 +41,9 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
       cancelAnimationFrame(frameRef.current);
       frameRef.current = null;
     }
-  };
-  
-  // Chooses the next phrase index without immediate repetition.
-  const getNextPhraseIndex = () => {
+  }, []);
+
+  const getNextPhraseIndex = useCallback(() => {
     if (usedIndicesRef.current.size >= phrases.length) {
       usedIndicesRef.current = new Set();
     }
@@ -90,75 +53,85 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
     }
     usedIndicesRef.current.add(nextIndex);
     return nextIndex;
-  };
-  
-  // Starts the scramble effect transitioning to the next phrase.
-  const startScrambleEffect = () => {
+  }, [phrases.length]);
+
+  const startScrambleEffect = useCallback(() => {
     if (isScrambling || !isMountedRef.current) return;
-    
+
     setIsScrambling(true);
     const nextIndex = getNextPhraseIndex();
     const targetPhrase = phrases[nextIndex];
     const startTime = Date.now();
     phraseIndexRef.current = nextIndex;
-    
+
     const updateScramble = () => {
       if (!isMountedRef.current) return;
-      
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / scrambleDuration, 1);
-      
       let result = "";
       const targetLength = targetPhrase.length;
       const finalizedChars = Math.floor(progress * targetLength);
-      
       for (let i = 0; i < targetLength; i++) {
         result += (i < finalizedChars) 
           ? targetPhrase[i]
           : chars.charAt(Math.floor(Math.random() * chars.length));
       }
-      
       setDisplayText(result);
-      
       if (progress < 1 && isMountedRef.current) {
         frameRef.current = requestAnimationFrame(updateScramble);
       } else if (isMountedRef.current) {
-        // Once done, finalize the text and reset scrambling.
         setDisplayText(targetPhrase);
         setIsScrambling(false);
       }
     };
-    
     updateScramble();
-  };
-  
-  // Handle window resize
+  }, [isScrambling, phrases, scrambleDuration, getNextPhraseIndex]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    setDisplayText(phrases[0]);
+    phraseIndexRef.current = 0;
+    usedIndicesRef.current = new Set([0]);
+    setIsScrambling(false);
+    clearAllTimers();
+    initialTimeoutRef.current = setTimeout(() => {
+      if (isMountedRef.current) {
+        startScrambleEffect();
+        intervalRef.current = setInterval(() => {
+          if (isMountedRef.current) {
+            startScrambleEffect();
+          }
+        }, interval);
+      }
+    }, 2000);
+    return () => {
+      isMountedRef.current = false;
+      clearAllTimers();
+    };
+  }, [interval, phrases, startScrambleEffect, clearAllTimers]);
+
   useEffect(() => {
     const handleResize = () => {
-      // If in the middle of scrambling when resize happens, reset to current phrase
       if (isScrambling && isMountedRef.current) {
         if (frameRef.current) {
           cancelAnimationFrame(frameRef.current);
           frameRef.current = null;
         }
-        
-        const currentPhrase = phrases[phraseIndexRef.current];
-        setDisplayText(currentPhrase);
+        setDisplayText(phrases[phraseIndexRef.current]);
         setIsScrambling(false);
       }
     };
-    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [isScrambling, phrases]);
-  
+
   return (
     <Button onClick={onClick} className={className}>
-  <span className="text-lg max-[370px]:text-sm font-bold whitespace-nowrap overflow-hidden text-ellipsis">
-    {displayText}
-  </span>
-</Button>
+      <span className="text-lg max-[370px]:text-sm font-bold whitespace-nowrap overflow-hidden text-ellipsis">
+        {displayText}
+      </span>
+    </Button>
   );
-};  
+};
 
 export default MatrixButton;
