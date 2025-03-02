@@ -29,6 +29,7 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
   const phraseIndexRef = useRef<number>(0);
   const usedIndicesRef = useRef<Set<number>>(new Set([0]));
   const isMountedRef = useRef<boolean>(true);
+  // Removed the unused chars variable
 
   const clearAllTimers = useCallback(() => {
     if (initialTimeoutRef.current) {
@@ -59,7 +60,38 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
 
   const startScrambleEffect = useCallback(() => {
     // Scramble effect logic is commented out - will not execute
-  }, []);
+    /*
+    if (isScrambling || !isMountedRef.current) return;
+
+    setIsScrambling(true);
+    const nextIndex = getNextPhraseIndex();
+    const targetPhrase = phrases[nextIndex];
+    const startTime = Date.now();
+    phraseIndexRef.current = nextIndex;
+
+    const updateScramble = () => {
+      if (!isMountedRef.current) return;
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / scrambleDuration, 1);
+      let result = "";
+      const targetLength = targetPhrase.length;
+      const finalizedChars = Math.floor(progress * targetLength);
+      for (let i = 0; i < targetLength; i++) {
+        result += (i < finalizedChars) 
+          ? targetPhrase[i]
+          : chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      setDisplayText(result);
+      if (progress < 1 && isMountedRef.current) {
+        frameRef.current = requestAnimationFrame(updateScramble);
+      } else if (isMountedRef.current) {
+        setDisplayText(targetPhrase);
+        setIsScrambling(false);
+      }
+    };
+    updateScramble();
+    */
+  }, []); // Removed unnecessary dependencies
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -69,14 +101,29 @@ const MatrixButton: React.FC<MatrixButtonProps> = ({
     setIsScrambling(false);
     clearAllTimers();
     
+    // Commented out the timer initialization that would start the scrambling effect
+    /*
+    initialTimeoutRef.current = setTimeout(() => {
+      if (isMountedRef.current) {
+        startScrambleEffect();
+        intervalRef.current = setInterval(() => {
+          if (isMountedRef.current) {
+            startScrambleEffect();
+          }
+        }, interval);
+      }
+    }, 2000);
+    */
+    
     return () => {
       isMountedRef.current = false;
       clearAllTimers();
     };
-  }, [phrases, clearAllTimers]);
+  }, [interval, phrases, startScrambleEffect, clearAllTimers]);
 
   useEffect(() => {
     const handleResize = () => {
+      // Resize handler is kept but simplified since we don't need to handle scrambling anymore
       if (isScrambling && isMountedRef.current) {
         if (frameRef.current) {
           cancelAnimationFrame(frameRef.current);
