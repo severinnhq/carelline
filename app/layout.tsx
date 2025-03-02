@@ -4,6 +4,7 @@ import localFont from 'next/font/local'
 import { CountdownProvider } from '@/lib/CountdownContext'
 import { LayoutWrapper } from '@/components/LayoutWrapper'
 import { Analytics } from '@vercel/analytics/react'
+import Script from 'next/script'
 import './globals.css'
 
 // Initialize the Sora font for body text
@@ -53,13 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${sora.variable} ${geist.variable} font-sans`}>
       <head>
-        <link
-          rel="preload"
-          href="/fonts/good-times.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        <link rel="preload" href="/fonts/good-times.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         {/* Favicon Links */}
         <link rel="icon" type="image/png" href="/favicon16.png" sizes="16x16" />
         <link rel="icon" type="image/png" href="/favicon32.png" sizes="32x32" />
@@ -67,30 +62,27 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/favicon96.png" sizes="96x96" />
         <link rel="icon" type="image/png" href="/favicon128.png" sizes="128x128" />
         <link rel="icon" type="image/png" href="/favicon192.png" sizes="192x192" />
-
-        {/* Meta Pixel Code */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
-              t.src=v;s=b.getElementsByTagName(e)[0];
-              s.parentNode.insertBefore(t,s)}(window, document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '9200175736698365');
-              fbq('track', 'PageView');
-            `,
-          }}
+        
+        {/* Google Analytics Measurement Tag */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=G-J473T9YXMD`}
+          strategy="afterInteractive"
         />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-J473T9YXMD');
+          `}
+        </Script>
       </head>
       <body className="font-sora">
         <CountdownProvider>
           <LayoutWrapper>{children}</LayoutWrapper>
         </CountdownProvider>
         <Analytics />
+        
         {/* Meta Pixel Noscript */}
         <noscript>
           <img
