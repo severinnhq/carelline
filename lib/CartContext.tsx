@@ -1,5 +1,3 @@
-'use client'
-
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
 interface Product {
@@ -75,7 +73,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, clearCart }}>
+    <CartContext.Provider value={{ 
+      cartItems, 
+      addToCart, 
+      removeFromCart, 
+      updateQuantity, 
+      clearCart 
+    }}>
       {children}
     </CartContext.Provider>
   )

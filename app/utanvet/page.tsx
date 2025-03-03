@@ -11,6 +11,7 @@ import { AlertCircle, Check, ShoppingBag, ArrowLeft } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useCart } from '@/lib/CartContext'
 
 interface CartItem {
   product: {
@@ -69,7 +70,7 @@ const initialFormData: FormData = {
 }
 
 const UtanvetPage = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const { cartItems, clearCart } = useCart()
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -77,18 +78,10 @@ const UtanvetPage = () => {
   const router = useRouter()
 
   useEffect(() => {
-    const storedCartItems = localStorage.getItem('cartItems')
-    if (storedCartItems) {
-      try {
-        setCartItems(JSON.parse(storedCartItems))
-      } catch (e) {
-        console.error('Failed to parse cart items from localStorage', e)
-        router.push('/')
-      }
-    } else {
+    if (cartItems.length === 0) {
       router.push('/')
     }
-  }, [router])
+  }, [cartItems, router])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -114,18 +107,15 @@ const UtanvetPage = () => {
       0
     )
     
-    // Apply shipping cost based on selection and threshold
     const freeShippingThreshold = 30000
     const isStandardShippingFree = subtotal >= freeShippingThreshold
     const standardShippingCost = isStandardShippingFree ? 0 : 1490
     const expressShippingCost = 2990
     
-    // Get the correct shipping cost based on selection
     const shippingCost = formData.shippingType === 'standard' 
       ? standardShippingCost 
       : expressShippingCost
     
-    // For cash on delivery, there's typically an additional fee
     const cashOnDeliveryFee = 590
     
     const total = subtotal + shippingCost + cashOnDeliveryFee
@@ -142,39 +132,34 @@ const UtanvetPage = () => {
   }
 
   const validateForm = () => {
-    // Basic validation
     const requiredFields = [
       'firstName', 'lastName', 'email', 'phone', 'address', 'city', 'postalCode'
     ]
     
     for (const field of requiredFields) {
       if (!formData[field as keyof FormData]) {
-        setError(`Kérjük, töltse ki a(z) ${field} mezőt`)
+        setError(`Kérjük töltse ki a csillaggal jelölt mezőket!`)
         return false
       }
     }
     
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
       setError('Kérjük, adjon meg egy érvényes email címet')
       return false
     }
     
-    // Phone validation
     const phoneRegex = /^[0-9+\-\s]{6,15}$/
     if (!phoneRegex.test(formData.phone)) {
       setError('Kérjük, adjon meg egy érvényes telefonszámot')
       return false
     }
     
-    // Postal code validation for Hungary
     if (formData.country === 'HU' && !/^\d{4}$/.test(formData.postalCode)) {
       setError('Kérjük, adjon meg egy érvényes irányítószámot (4 számjegy)')
       return false
     }
     
-    // If not same as billing, validate billing fields
     if (!formData.sameAsBilling) {
       const requiredBillingFields = [
         'billingFirstName', 'billingLastName', 'billingAddress', 'billingCity', 'billingPostalCode'
@@ -187,7 +172,6 @@ const UtanvetPage = () => {
         }
       }
       
-      // Postal code validation for Hungary
       if (formData.billingCountry === 'HU' && !/^\d{4}$/.test(formData.billingPostalCode)) {
         setError('Kérjük, adjon meg egy érvényes számlázási irányítószámot (4 számjegy)')
         return false
@@ -215,7 +199,6 @@ const UtanvetPage = () => {
     try {
       const { total, cashOnDeliveryFee, isStandardShippingFree } = calculateTotal()
       
-      // Prepare billing details based on sameAsBilling checkbox
       const billingDetails = formData.sameAsBilling
         ? {
             name: `${formData.firstName} ${formData.lastName}`,
@@ -242,7 +225,6 @@ const UtanvetPage = () => {
             phone: formData.phone
           }
       
-      // Prepare shipping details
       const shippingDetails = {
         name: `${formData.firstName} ${formData.lastName}`,
         address: {
@@ -255,7 +237,6 @@ const UtanvetPage = () => {
         phone: formData.phone
       }
       
-      // Format order items in the same way as in the Stripe checkout
       const compactCartItems = cartItems.map(item => ({
         n: item.product.name,
         s: item.size,
@@ -263,12 +244,10 @@ const UtanvetPage = () => {
         p: item.product.salePrice || item.product.price
       }))
       
-      // Get formatted shipping type name for db storage
       let shippingTypeName = formData.shippingType === 'standard'
         ? (isStandardShippingFree ? 'Free Standard Shipping' : 'Standard Shipping')
         : 'Express Shipping'
       
-      // Submit order
       const response = await fetch('/api/utanvet-checkout', {
         method: 'POST',
         headers: {
@@ -292,11 +271,8 @@ const UtanvetPage = () => {
         throw new Error(errorData.error || 'Sikertelen rendelés, kérjük próbálja újra.')
       }
       
-      // Clear cart and show success
-      localStorage.removeItem('cartItems')
+      clearCart()
       setSuccess(true)
-      
-      // Reset form
       setFormData(initialFormData)
       
     } catch (err) {
@@ -338,12 +314,11 @@ const UtanvetPage = () => {
   return (
     <div className="max-w-7xl mx-auto pt-[4rem] pb-[8rem] px-4">
       <Link href="/#products" className="inline-flex items-center text-sm font-medium mb-6 hover:underline">
-  <ArrowLeft className="mr-2 h-4 w-4" />
-  Vissza a vásárláshoz
-</Link>
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Vissza a vásárláshoz
+      </Link>
       
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Order Form */}
         <div className="md:col-span-7">
           <h1 className="text-2xl font-bold mb-6">Készpénzes fizetés</h1>
           
@@ -582,7 +557,6 @@ const UtanvetPage = () => {
           </form>
         </div>
         
-        {/* Order Summary */}
         <div className="md:col-span-5">
           <Card>
             <CardHeader>
@@ -624,7 +598,6 @@ const UtanvetPage = () => {
                     </div>
                   ))}
                   
-                  {/* Shipping Option Section */}
                   <div className="border-t border-gray-200 pt-4">
                     <h3 className="text-base font-semibold mb-3">Szállítás</h3>
                     <div className="space-y-3">
@@ -693,23 +666,22 @@ const UtanvetPage = () => {
                     </div>
                     
                     <div className="mt-4 w-full">
-  <Button 
-    type="submit"
-    onClick={handleSubmit}
-    disabled={isLoading}
-    className="bg-[#dc2626] hover:bg-[#b91c1c] text-white w-full"
-  >
-    {isLoading ? 'Feldolgozás...' : 'Rendelés leadása'}
-  </Button>
-</div>
+                      <Button 
+                        type="submit"
+                        onClick={handleSubmit}
+                        disabled={isLoading}
+                        className="bg-[#dc2626] hover:bg-[#b91c1c] text-white w-full"
+                      >
+                        {isLoading ? 'Feldolgozás...' : 'Rendelés leadása'}
+                      </Button>
+                    </div>
                   </div>
                   
                   <div className="border-t border-gray-200 pt-4">
                     <div className="rounded-md bg-blue-50 p-4">
                       <div className="flex">
                         <div className="ml-3">
-       
-                          <div className=" text-sm text-blue-700">
+                          <div className="text-sm text-blue-700">
                             <p>
                               Az utánvétes fizetés esetén a termék árát és a szállítási költséget a futárnak kell fizetnie a csomag átvételekor. Kérjük, készítsen elő elegendő készpénzt.
                             </p>

@@ -251,10 +251,10 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                     </Button>
                     <Button 
                       onClick={handleUtanvetCheckout} 
-                      className="w-full border border-black text-white bg-[#dc2626] hover:bg-[#b91c1c]"
+                      className="w-full border  text-white bg-[#dc2626] hover:bg-[#b91c1c]"
                       variant="outline"
                     >
-                      Utánvét (Készpénzes fizetés)
+                      Utánvét
                     </Button>
                     <Button onClick={onClose} variant="outline" className="w-full border-black text-black hover:bg-gray-100">
                       Vásárlás folytatása
