@@ -8,13 +8,13 @@ import { Input } from "@/components/ui/input"
 import { useCart } from '@/lib/CartContext'
 import { WhiteHeader } from '@/components/WhiteHeader'
 import Sidebar from '@/components/Sidebar'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion' // <-- Added motion import here
 import { Plus, Truck, RefreshCcw, BellIcon, ShieldCheck, Eye } from 'lucide-react'
 import { FloatingProductBox } from '@/components/FloatingProductBox'
 import RecommendedProducts from '@/components/RecommendedProducts'
 import { Sora } from 'next/font/google'
 import { Skeleton } from "@/components/ui/skeleton"
-import MatrixButton from '@/components/MatrixButton'; // You'll need to save the component above to this path
+import MatrixButton from '@/components/MatrixButton';
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -225,46 +225,72 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const isProductAvailable = product.sizes.length > 0 && product.inventoryStatus !== 'elfogyott'
 
   const shippingFeaturesContent = (
-    <div className="border-t border-gray-200 pt-6 mt-4 w-full md:w-11/12">
+    <div className="border-t border-gray-200 pt-6 mt-4 w-full">
+      {/* Desktop view */}
       <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4">
         <div className="flex flex-col items-center text-center">
-          <ShieldCheck className="h-7 w-7 text-black mb-2" />
+          <ShieldCheck className="h-10 w-10 text-black mb-2" />
           <h3 className="text-sm font-bold mb-1">Biztonságos fizetés</h3>
-          <p className="text-xs text-gray-600">Kártyás fizetés vagy utánvét</p>
+          <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
+            Kártyás fizetés vagy utánvét
+          </p>
         </div>
         <div className="flex flex-col items-center text-center">
-          <Truck className="h-7 w-7 text-black mb-2" />        
+          <Truck className="h-10 w-10 text-black mb-2" />        
           <h3 className="text-sm font-bold mb-1">Ingyenes szállítás</h3>
-          <p className="text-xs text-gray-600">30 000 Ft felett ingyenes kiszállítás</p>
+          <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
+            30 000 Ft felett ingyenes kiszállítás
+          </p>
         </div>      
         <div className="flex flex-col items-center text-center">
-          <RefreshCcw className="h-7 w-7 text-black mb-2" />
+          <RefreshCcw className="h-10 w-10 text-black mb-2" />
           <h3 className="text-sm font-bold mb-1">14 nap visszaküldés</h3>
-          <p className="text-xs text-gray-600">A csomag átvételétől számítva</p>
+          <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
+            A csomag átvételétől számítva
+          </p>
         </div>      
       </div>
       
-      {/* Mobile view (single feature with dots) */}
-      <div className="sm:hidden">
+      {/* Mobile view (draggable/swipeable) */}
+      <motion.div 
+        className="sm:hidden"
+        drag="x"
+        dragElastic={0.2}
+        onDragEnd={(event, info) => {
+          const threshold = 50;
+          if (info.offset.x < -threshold && currentFeatureIndex < 2) {
+            setCurrentFeatureIndex(currentFeatureIndex + 1);
+          } else if (info.offset.x > threshold && currentFeatureIndex > 0) {
+            setCurrentFeatureIndex(currentFeatureIndex - 1);
+          }
+        }}
+        animate={{ x: 0 }} // Ensures the content snaps back into place after dragging
+      >
         {currentFeatureIndex === 0 && (
           <div className="flex flex-col items-center text-center">
             <ShieldCheck className="h-10 w-10 text-black mb-3" />
             <h3 className="text-base font-bold mb-1">Biztonságos fizetés</h3>
-            <p className="text-sm text-gray-600">Kártyás fizetés vagy utánvét</p>
+            <p className="text-sm text-gray-600 max-w-[150px] mx-auto">
+              Kártyás fizetés vagy utánvét
+            </p>
           </div>
         )}
         {currentFeatureIndex === 1 && (
           <div className="flex flex-col items-center text-center">
             <Truck className="h-10 w-10 text-black mb-3" />        
             <h3 className="text-base font-bold mb-1">Ingyenes szállítás</h3>
-            <p className="text-sm text-gray-600">30 000 Ft felett ingyenes kiszállítás</p>
+            <p className="text-sm text-gray-600 max-w-[150px] mx-auto">
+              30 000 Ft felett ingyenes kiszállítás
+            </p>
           </div>
         )}
         {currentFeatureIndex === 2 && (
           <div className="flex flex-col items-center text-center">
             <RefreshCcw className="h-10 w-10 text-black mb-3" />
             <h3 className="text-base font-bold mb-1">14 nap visszaküldés</h3>
-            <p className="text-sm text-gray-600">A csomag átvételétől számítva</p>
+            <p className="text-sm text-gray-600 max-w-[150px] mx-auto">
+              A csomag átvételétől számítva
+            </p>
           </div>
         )}
         
@@ -279,9 +305,9 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
             />
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
-  )
+  );
 
   const faqs = [
     {
@@ -321,7 +347,7 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
       } else {
         statusText = `Raktáron - ${quantity} db elérhető`;
       }
-      statusColor = 'text-[#15c470]'; // Always green for available products
+      statusColor = 'text-[#007c01]'; // Always green for available products
     } else {
       statusText = 'Elfogyott';
       statusColor = 'text-[#dc2626]';
@@ -339,9 +365,10 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   return (
     <div className={sora.className}>
       <WhiteHeader onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
-      <div className="container mx-auto px-4 py-24" ref={productRef}>
+      <div className="max-w-screen-2xl mx-auto px-4 py-24" ref={productRef}>
         <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-3/5">
+          {/* Left column - Images */}
+          <div className="lg:w-3/5 flex-shrink-0">
             <div className="mb-6">
               <Image
                 src={`/uploads/${selectedImage}`}
@@ -376,36 +403,40 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
               ))}
             </div>
           </div>
-          <div className="lg:w-2/5 pt-6">
+          
+          {/* Right column - Product info */}
+          <div className="lg:w-2/5 lg:min-w-[400px] pt-6">
             {/* Fixed Carelline text */}
-            <div className="text-sm font-medium text-gray-500 mb-2">
+            <div className="text-sm font-medium text-gray-500 mb-0">
               Carelline
             </div>
             
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+            <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
             <div className="mb-0">
-              <div className="flex flex-col w-11/12">
-                <div className="flex items-center justify-between">
-                {product.salePrice ? (
-  <div className="flex items-center">
-    <span className="text-xl font-bold text-[#dc2626] mr-2">
-      {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
-    </span>
-    <span className="text-base text-gray-500 font-medium line-through">
-      {Math.round(product.price).toLocaleString('hu-HU')} Ft
-    </span>
-    <div className="ml-2 bg-[#dc2626] font-bold text-white text-xs px-1.5 py-0.5 rounded">
-      AKCIÓ {Math.round(product.price - product.salePrice).toLocaleString('hu-HU')} Ft
-    </div>
-  </div>
-) : (
-  <span className="text-xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
-)}
-                </div>
-                
-                <hr className="border-t border-gray-300 my-3 w-full" />
-              </div>
+  <div className="flex flex-col w-full">
+    <div className="flex flex-col sm:flex-row sm:items-center">
+      {product.salePrice ? (
+        <>
+          <div className="flex flex-wrap items-center mb-1 sm:mb-0">
+            <span className="text-xl font-bold text-[#dc2626] mr-2">
+              {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
+            </span>
+            <div className="bg-[#dc2626] font-bold text-white text-xs px-1.5 py-0.5 rounded whitespace-nowrap sm:order-last sm:ml-3">
+              AKCIÓ {Math.round(product.price - product.salePrice).toLocaleString('hu-HU')} Ft
             </div>
+            <span className="text-base text-gray-500 font-medium line-through w-full sm:w-auto mt-1 sm:mt-0 sm:mr-0">
+              {Math.round(product.price).toLocaleString('hu-HU')} Ft
+            </span>
+          </div>
+        </>
+      ) : (
+        <span className="text-xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
+      )}
+    </div>
+    
+    <hr className="border-t border-gray-300 my-3 w-full" />
+  </div>
+</div>
             
             {isProductAvailable ? (
               <>
@@ -429,75 +460,74 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
                   </div>
                 </div>
                 <div className="mb-6">
-  
-                <div className="flex flex-col">
-  {/* Viewers count with reduced space and adjusted margins */}
-  <div className="mt-0 mb-4 flex items-center font-bold text-gray-500 text-sm">
-    <Eye className="h-4 w-4 mr-1 text-gray-500 " />
-    <span>{currentViewers} ember nézi jelenleg</span>
-  </div>
+                  <div className="flex flex-col">
+                    {/* Viewers count with reduced space and adjusted margins */}
+                    <div className="mt-0 mb-4 flex items-center font-bold text-gray-500 text-sm">
+                      <Eye className="h-4 w-4 mr-1 text-gray-500 " />
+                      <span>{currentViewers} ember nézi jelenleg</span>
+                    </div>
 
-  <div className="flex flex-col xl:flex-row items-start">
-  {/* Availability section - now first in mobile view */}
-  <div className="mb-4 xl:mb-0 xl:order-2">
-    <div className="mb-2">
-      <span className="font-medium text-base">Elérhetőség:</span>
-    </div>
-    <StyledAvailabilityStatus
-      status={product.inventoryStatus}
-      quantity={product.stockQuantity}
-    />
-  </div>
-  
-  {/* Quantity section */}
-  <div className="mr-0 xl:mr-20 xl:order-1">
-    <div className="mb-2">
-      <span className="font-medium text-base">Mennyiség:</span>
-    </div>
-    <div className="flex items-center">
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => handleQuantityChange(quantity - 1)}
-        className="h-8 w-8 text-sm"
-      >
-        -
-      </Button>
-      <span className="mx-3 text-base font-medium">{quantity}</span>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => handleQuantityChange(quantity + 1)}
-        className={`h-8 w-8 text-sm ${
-          quantity >= product.stockQuantity ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
-        disabled={quantity >= product.stockQuantity}
-      >
-        +
-      </Button>
-    </div>
-    {quantity >= product.stockQuantity && (
-      <p className="text-xs text-[#dc2626] mt-1">Jelenleg nincs több raktáron</p>
-    )}
-  </div>
-</div>
-</div>
-</div>
-<div className="w-full md:w-11/12">
-<MatrixButton
-  phrases={[
-    "Kosárba teszem",
-    "Rendelje meg mielőtt elfogy",
-    `${displayedViewers} ${viewerSuffix}`,
-    `Siessen! Már csak ${product.stockQuantity} darab van`,
-  ]}
-  onClick={handleAddToCart}
-  className="w-full block py-4 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
-/>
-</div>
+                    <div className="flex flex-col xl:flex-row items-start">
+                      {/* Availability section - now first in mobile view */}
+                      <div className="mb-4 xl:mb-0 xl:order-2">
+                        <div className="mb-2">
+                          <span className="font-medium text-base">Elérhetőség:</span>
+                        </div>
+                        <StyledAvailabilityStatus
+                          status={product.inventoryStatus}
+                          quantity={product.stockQuantity}
+                        />
+                      </div>
+                      
+                      {/* Quantity section */}
+                      <div className="mr-0 xl:mr-20 xl:order-1">
+                        <div className="mb-2">
+                          <span className="font-medium text-base">Mennyiség:</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleQuantityChange(quantity - 1)}
+                            className="h-8 w-8 text-sm"
+                          >
+                            -
+                          </Button>
+                          <span className="mx-3 text-base font-medium">{quantity}</span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => handleQuantityChange(quantity + 1)}
+                            className={`h-8 w-8 text-sm ${
+                              quantity >= product.stockQuantity ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            disabled={quantity >= product.stockQuantity}
+                          >
+                            +
+                          </Button>
+                        </div>
+                        {quantity >= product.stockQuantity && (
+                          <p className="text-xs text-[#dc2626] mt-1">Jelenleg nincs több raktáron</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full">
+                  <MatrixButton
+                    phrases={[
+                      "Kosárba teszem",
+                      "Rendelje meg mielőtt elfogy",
+                      `${displayedViewers} ${viewerSuffix}`,
+                      `Siessen! Már csak ${product.stockQuantity} darab van`,
+                    ]}
+                    onClick={handleAddToCart}
+                    className="w-full block py-4 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
+                  />
+                </div>
               </>
             ) : (
-              <div className="mb-3 w-11/12">
+              <div className="mb-3 w-full">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -533,7 +563,7 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
                 <p className="text-[#dc2626] font-semibold mt-3 text-sm">A termék jelenleg nem elérhető.</p>
               </div>
             )}
-            <div className="mt-4 space-y-2 w-full md:w-11/12">
+            <div className="mt-4 space-y-2 w-full">
               {faqs.map((faq, index) => (
                 <div key={index} className="bg-white rounded-lg overflow-hidden border border-gray-200">
                   <button
