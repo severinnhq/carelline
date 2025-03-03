@@ -96,8 +96,8 @@ async function sendPushNotification(order: Order) {
     const someMockPushTokens = ['ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]'];
     
     // Create the notification messages
-    let messages = [];
-    for (let pushToken of someMockPushTokens) {
+    const messages = [];
+    for (const pushToken of someMockPushTokens) {
       // Validate the token
       if (!Expo.isExpoPushToken(pushToken)) {
         console.error(`Push token ${pushToken} is not a valid Expo push token`);
@@ -115,8 +115,8 @@ async function sendPushNotification(order: Order) {
     }
     
     // Send the messages using the Expo SDK
-    let chunks = expoInstance.chunkPushNotifications(messages);
-    for (let chunk of chunks) {
+    const chunks = expoInstance.chunkPushNotifications(messages);
+    for (const chunk of chunks) {
       await expoInstance.sendPushNotificationsAsync(chunk);
     }
     
