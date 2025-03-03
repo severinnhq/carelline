@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { useCart } from '@/lib/CartContext'
 import { WhiteHeader } from '@/components/WhiteHeader'
 import Sidebar from '@/components/Sidebar'
-import { AnimatePresence, motion } from 'framer-motion' // <-- Added motion import here
+import { AnimatePresence, motion } from 'framer-motion'
 import { Plus, Truck, RefreshCcw, BellIcon, ShieldCheck, Eye } from 'lucide-react'
 import { FloatingProductBox } from '@/components/FloatingProductBox'
 import RecommendedProducts from '@/components/RecommendedProducts'
@@ -365,8 +365,8 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   return (
     <div className={sora.className}>
       <WhiteHeader onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
-      <div className="max-w-screen-2xl mx-auto px-4 py-24" ref={productRef}>
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-6 py-24" ref={productRef}>
+      <div className="flex flex-col lg:flex-row gap-8">
           {/* Left column - Images */}
           <div className="lg:w-3/5 flex-shrink-0">
             <div className="mb-6">
@@ -405,191 +405,193 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
           </div>
           
           {/* Right column - Product info */}
-          <div className="lg:w-2/5 lg:min-w-[400px] pt-6">
-            {/* Fixed Carelline text */}
-            <div className="text-sm font-medium text-gray-500 mb-0">
-              Carelline
-            </div>
-            
-            <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
-            <div className="mb-0">
-  <div className="flex flex-col w-full">
-    <div className="flex flex-col sm:flex-row sm:items-center">
-      {product.salePrice ? (
-        <>
-          <div className="flex flex-wrap items-center mb-1 sm:mb-0">
-            <span className="text-xl font-bold text-[#dc2626] mr-2">
-              {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
-            </span>
-            <div className="bg-[#dc2626] font-bold text-white text-xs px-1.5 py-0.5 rounded whitespace-nowrap sm:order-last sm:ml-3">
-              AKCIÓ {Math.round(product.price - product.salePrice).toLocaleString('hu-HU')} Ft
-            </div>
-            <span className="text-base text-gray-500 font-medium line-through w-full sm:w-auto mt-1 sm:mt-0 sm:mr-0">
-              {Math.round(product.price).toLocaleString('hu-HU')} Ft
-            </span>
-          </div>
-        </>
-      ) : (
-        <span className="text-xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
-      )}
-    </div>
-    
-    <hr className="border-t border-gray-300 my-3 w-full" />
-  </div>
-</div>
-            
-            {isProductAvailable ? (
-              <>
-                <div className="mb-3">
-                  <div className="flex flex-wrap gap-2">
-                    {product.sizes.includes('One Size') ? (
-                      <></>
-                    ) : (
-                      availableSizes.map((size) => (
-                        <Button
-                          key={size}
-                          variant={selectedSize === size ? 'outline' : 'ghost'}
-                          onClick={() => handleSizeSelect(size)}
-                          className={`border text-sm py-1 ${selectedSize === size ? 'border-black border-2 text-black' : 'border-gray-300 text-gray-700'} ${!product.sizes.includes(size) && 'opacity-50 cursor-not-allowed'}`}
-                          disabled={!product.sizes.includes(size)}
-                        >
-                          {size}
-                        </Button>
-                      ))
-                    )}
-                  </div>
-                </div>
-                <div className="mb-6">
-                  <div className="flex flex-col">
-                    {/* Viewers count with reduced space and adjusted margins */}
-                    <div className="mt-0 mb-4 flex items-center font-bold text-gray-500 text-sm">
-                      <Eye className="h-4 w-4 mr-1 text-gray-500 " />
-                      <span>{currentViewers} ember nézi jelenleg</span>
-                    </div>
-
-                    <div className="flex flex-col xl:flex-row items-start">
-                      {/* Availability section - now first in mobile view */}
-                      <div className="mb-4 xl:mb-0 xl:order-2">
-                        <div className="mb-2">
-                          <span className="font-medium text-base">Elérhetőség:</span>
-                        </div>
-                        <StyledAvailabilityStatus
-                          status={product.inventoryStatus}
-                          quantity={product.stockQuantity}
-                        />
-                      </div>
-                      
-                      {/* Quantity section */}
-                      <div className="mr-0 xl:mr-20 xl:order-1">
-                        <div className="mb-2">
-                          <span className="font-medium text-base">Mennyiség:</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleQuantityChange(quantity - 1)}
-                            className="h-8 w-8 text-sm"
-                          >
-                            -
-                          </Button>
-                          <span className="mx-3 text-base font-medium">{quantity}</span>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleQuantityChange(quantity + 1)}
-                            className={`h-8 w-8 text-sm ${
-                              quantity >= product.stockQuantity ? 'opacity-50 cursor-not-allowed' : ''
-                            }`}
-                            disabled={quantity >= product.stockQuantity}
-                          >
-                            +
-                          </Button>
-                        </div>
-                        {quantity >= product.stockQuantity && (
-                          <p className="text-xs text-[#dc2626] mt-1">Jelenleg nincs több raktáron</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full">
-                  <MatrixButton
-                    phrases={[
-                      "Kosárba teszem",
-                      "Rendelje meg mielőtt elfogy",
-                      `${displayedViewers} ${viewerSuffix}`,
-                      `Siessen! Már csak ${product.stockQuantity} darab van`,
-                    ]}
-                    onClick={handleAddToCart}
-                    className="w-full block py-4 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
-                  />
-                </div>
-              </>
-            ) : (
-              <div className="mb-3 w-full">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="bg-white text-black hover:bg-gray-100 shadow-[0_0_10px_rgba(0,0,0,0.3)] group"
-                  onClick={() => setActiveEmailInput(true)}
-                >
-                  <BellIcon className="h-4 w-4 mr-1 animate-ring" />
-                  Notify Me
-                </Button>
-                {activeEmailInput && (
-                  <div className="mt-3">
-                    <form onSubmit={handleEmailSubmit} className="flex flex-col space-y-2">
-                      <Input
-                        type="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        className="text-sm flex-grow"
-                        required
-                      />
-                      <Button type="submit" size="sm" className="whitespace-nowrap bg-black text-white hover:bg-gray-800">
-                        Notify
-                      </Button>
-                    </form>
-                    {notifyMessage && (
-                      <div
-                        className={`mt-2 p-2 rounded-md text-sm font-medium ${notifyMessage.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-                      >
-                        {notifyMessage.content}
-                      </div>
-                    )}
-                  </div>
-                )}
-                <p className="text-[#dc2626] font-semibold mt-3 text-sm">A termék jelenleg nem elérhető.</p>
+          <div className="lg:w-2/5 w-full max-w-full overflow-x-hidden">
+            <div className="px-0 lg:px-4 w-full">
+              {/* Fixed Carelline text */}
+              <div className="text-sm font-medium text-gray-500 mb-0">
+                Carelline
               </div>
-            )}
-            <div className="mt-4 space-y-2 w-full">
-              {faqs.map((faq, index) => (
-                <div key={index} className="bg-white rounded-lg overflow-hidden border border-gray-200">
-                  <button
-                    onClick={() => toggleItem(index)}
-                    className="w-full px-6 py-2 flex justify-between items-center text-left md:px-6"
-                  >
-                    <span className="font-medium text-base">{faq.question}</span>
-                    <Plus className={`h-4 w-4 transition-transform duration-200 ${expandedItems.has(index) ? 'rotate-45' : ''}`} />
-                  </button>
-                  <div
-                    className={`px-6 transition-all duration-300 ease-in-out overflow-hidden md:px-6 ${
-                      expandedItems.has(index)
-                        ? 'max-h-[500px] opacity-100 py-3'
-                        : 'max-h-0 opacity-0 py-0'
-                    }`}
-                  >
-                    <div className="text-gray-600 text-sm leading-relaxed">
-                      {typeof faq.answer === 'string' ? faq.answer : faq.answer}
+              
+              <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
+              <div className="mb-0">
+                <div className="flex flex-col w-full">
+                  <div className="flex flex-col sm:flex-row sm:items-center">
+                    {product.salePrice ? (
+                      <>
+                        <div className="flex flex-wrap items-center mb-1 sm:mb-0">
+                          <span className="text-xl font-bold text-[#dc2626] mr-2">
+                            {Math.round(product.salePrice).toLocaleString('hu-HU')} Ft
+                          </span>
+                          <div className="bg-[#dc2626] font-bold text-white text-xs px-1.5 py-0.5 rounded whitespace-nowrap sm:order-last sm:ml-3">
+                            AKCIÓ {Math.round(product.price - product.salePrice).toLocaleString('hu-HU')} Ft
+                          </div>
+                          <span className="text-base text-gray-500 font-medium line-through w-full sm:w-auto mt-1 sm:mt-0 sm:mr-0">
+                            {Math.round(product.price).toLocaleString('hu-HU')} Ft
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <span className="text-xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
+                    )}
+                  </div>
+                  
+                  <hr className="border-t border-gray-300 my-3 w-full" />
+                </div>
+              </div>
+              
+              {isProductAvailable ? (
+                <>
+                  <div className="mb-3">
+                    <div className="flex flex-wrap gap-2">
+                      {product.sizes.includes('One Size') ? (
+                        <></>
+                      ) : (
+                        availableSizes.map((size) => (
+                          <Button
+                            key={size}
+                            variant={selectedSize === size ? 'outline' : 'ghost'}
+                            onClick={() => handleSizeSelect(size)}
+                            className={`border text-sm py-1 ${selectedSize === size ? 'border-black border-2 text-black' : 'border-gray-300 text-gray-700'} ${!product.sizes.includes(size) && 'opacity-50 cursor-not-allowed'}`}
+                            disabled={!product.sizes.includes(size)}
+                          >
+                            {size}
+                          </Button>
+                        ))
+                      )}
                     </div>
                   </div>
+                  <div className="mb-6">
+                    <div className="flex flex-col">
+                      {/* Viewers count with reduced space and adjusted margins */}
+                      <div className="mt-0 mb-4 flex items-center font-bold text-gray-500 text-sm">
+                        <Eye className="h-4 w-4 mr-1 text-gray-500 " />
+                        <span>{currentViewers} ember nézi jelenleg</span>
+                      </div>
+
+                      <div className="flex flex-col xl:flex-row items-start">
+                        {/* Availability section - now first in mobile view */}
+                        <div className="mb-4 xl:mb-0 xl:order-2">
+                          <div className="mb-2">
+                            <span className="font-medium text-base">Elérhetőség:</span>
+                          </div>
+                          <StyledAvailabilityStatus
+                            status={product.inventoryStatus}
+                            quantity={product.stockQuantity}
+                          />
+                        </div>
+                        
+                        {/* Quantity section */}
+                        <div className="mr-0 xl:mr-20 xl:order-1">
+                          <div className="mb-2">
+                            <span className="font-medium text-base">Mennyiség:</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleQuantityChange(quantity - 1)}
+                              className="h-8 w-8 text-sm"
+                            >
+                              -
+                            </Button>
+                            <span className="mx-3 text-base font-medium">{quantity}</span>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleQuantityChange(quantity + 1)}
+                              className={`h-8 w-8 text-sm ${
+                                quantity >= product.stockQuantity ? 'opacity-50 cursor-not-allowed' : ''
+                              }`}
+                              disabled={quantity >= product.stockQuantity}
+                            >
+                              +
+                            </Button>
+                          </div>
+                          {quantity >= product.stockQuantity && (
+                            <p className="text-xs text-[#dc2626] mt-1">Jelenleg nincs több raktáron</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full">
+                    <MatrixButton
+                      phrases={[
+                        "Kosárba teszem",
+                        "Rendelje meg mielőtt elfogy",
+                        `${displayedViewers} ${viewerSuffix}`,
+                        `Siessen! Már csak ${product.stockQuantity} darab van`,
+                      ]}
+                      onClick={handleAddToCart}
+                      className="w-full block py-4 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="mb-3 w-full">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="bg-white text-black hover:bg-gray-100 shadow-[0_0_10px_rgba(0,0,0,0.3)] group"
+                    onClick={() => setActiveEmailInput(true)}
+                  >
+                    <BellIcon className="h-4 w-4 mr-1 animate-ring" />
+                    Notify Me
+                  </Button>
+                  {activeEmailInput && (
+                    <div className="mt-3">
+                      <form onSubmit={handleEmailSubmit} className="flex flex-col space-y-2">
+                        <Input
+                          type="email"
+                          name="email"
+                          placeholder="Enter your email"
+                          className="text-sm flex-grow"
+                          required
+                        />
+                        <Button type="submit" size="sm" className="whitespace-nowrap bg-black text-white hover:bg-gray-800">
+                          Notify
+                        </Button>
+                      </form>
+                      {notifyMessage && (
+                        <div
+                          className={`mt-2 p-2 rounded-md text-sm font-medium ${notifyMessage.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                        >
+                          {notifyMessage.content}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <p className="text-[#dc2626] font-semibold mt-3 text-sm">A termék jelenleg nem elérhető.</p>
                 </div>
-              ))}
+              )}
+              <div className="mt-4 space-y-2 w-full">
+                {faqs.map((faq, index) => (
+                  <div key={index} className="bg-white rounded-lg overflow-hidden border border-gray-200 w-full">
+                    <button
+                      onClick={() => toggleItem(index)}
+                      className="w-full px-4 py-2 flex justify-between items-center text-left"
+                    >
+                      <span className="font-medium text-base">{faq.question}</span>
+                      <Plus className={`h-4 w-4 transition-transform duration-200 ${expandedItems.has(index) ? 'rotate-45' : ''}`} />
+                    </button>
+                    <div
+                      className={`px-4 transition-all duration-300 ease-in-out overflow-hidden ${
+                        expandedItems.has(index)
+                          ? 'max-h-[500px] opacity-100 py-3'
+                          : 'max-h-0 opacity-0 py-0'
+                      }`}
+                    >
+                      <div className="text-gray-600 text-sm leading-relaxed">
+                        {typeof faq.answer === 'string' ? faq.answer : faq.answer}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Shipping features moved here, just below the collapsible sections */}
+              {shippingFeaturesContent}
             </div>
-            
-            {/* Shipping features moved here, just below the collapsible sections */}
-            {shippingFeaturesContent}
           </div>
         </div>
       </div>
