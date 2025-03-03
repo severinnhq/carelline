@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+// Removed the unused CardFooter import
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertCircle, Check, ShoppingBag, ArrowLeft } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -13,6 +14,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
 
+// We'll keep this interface since removing it might break other files that import it
 interface CartItem {
   product: {
     _id: string;
@@ -244,7 +246,7 @@ const UtanvetPage = () => {
         p: item.product.salePrice || item.product.price
       }))
       
-      let shippingTypeName = formData.shippingType === 'standard'
+      const shippingTypeName = formData.shippingType === 'standard'
         ? (isStandardShippingFree ? 'Free Standard Shipping' : 'Standard Shipping')
         : 'Express Shipping'
       

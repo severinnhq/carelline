@@ -62,7 +62,9 @@ interface Order {
 const mongoUri = process.env.MONGODB_URI!;
 
 let cachedClient: MongoClient | null = null;
-const expo = new Expo();
+// Create Expo instance but don't assign to unused variable
+const expo = new Expo(); // This line can be removed entirely, but I'm keeping it as a comment
+// since we're using it in sendPushNotification function
 
 async function connectToDatabase() {
   if (cachedClient) {
