@@ -89,13 +89,38 @@ function generateOrderNumber(): string {
 
 async function sendPushNotification(order: Order) {
   try {
-    // Using the expoInstance to demonstrate it's being used
-    // Removed the incorrect property check as per the instructions
-    // Just log for now, actual implementation would connect to an admin notification system
     console.log(`Push notification system ready for order ${order.orderNumber}`);
+    
+    // In a real implementation, you would fetch push tokens from your database
+    // This is a simplified example
+    const someMockPushTokens = ['ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]'];
+    
+    // Create the notification messages
+    let messages = [];
+    for (let pushToken of someMockPushTokens) {
+      // Validate the token
+      if (!Expo.isExpoPushToken(pushToken)) {
+        console.error(`Push token ${pushToken} is not a valid Expo push token`);
+        continue;
+      }
+      
+      // Create a message
+      messages.push({
+        to: pushToken,
+        sound: 'default',
+        title: 'New Order Received',
+        body: `Order #${order.orderNumber} has been placed for ${order.currency} ${order.amount}`,
+        data: { orderNumber: order.orderNumber },
+      });
+    }
+    
+    // Send the messages using the Expo SDK
+    let chunks = expoInstance.chunkPushNotifications(messages);
+    for (let chunk of chunks) {
+      await expoInstance.sendPushNotificationsAsync(chunk);
+    }
+    
     console.log(`Push notification sent for order ${order.orderNumber}`);
-    // In a real implementation, you would fetch push tokens and send notifications
-    // to admin apps when new orders come in
     return true;
   } catch (error) {
     console.error('Error sending push notification:', error);
