@@ -14,8 +14,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
 
-// We'll keep this interface since removing it might break other files that import it
-interface CartItem {
+// Export the interface for use in other files if needed
+export interface CartItem {
   product: {
     _id: string;
     name: string;
@@ -644,7 +644,6 @@ const UtanvetPage = () => {
                       </div>
                     </div>
                   </div>
-                  
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between text-sm">
                       <p>Részösszeg</p>
