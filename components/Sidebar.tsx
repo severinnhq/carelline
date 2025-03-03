@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useCheckout } from '@/lib/useCheckout'
 import { Sora } from 'next/font/google'
 
@@ -65,6 +66,7 @@ const ShippingProgressBar: React.FC<ShippingProgressBarProps> = ({ currentAmount
 
 const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveItem, onUpdateQuantity }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   const { handleCheckout } = useCheckout();
 
   useEffect(() => {
@@ -83,6 +85,13 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
     setIsLoading(true);
     await handleCheckout();
     setIsLoading(false);
+  };
+
+  const handleUtanvetCheckout = () => {
+    // Store cart items in localStorage to access them on the utanvet page
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    router.push('/utanvet');
+    onClose();
   };
 
   const cartTotal = cartItems.reduce((total, item) => total + (item.product.salePrice || item.product.price) * item.quantity, 0);
@@ -203,14 +212,14 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                                   />
                                 </div>
                                 <div className="flex">
-                                  <button
-                                    onClick={() => onRemoveItem(index)}
-                                    className="text-[13px] font-normal text-black hover:text-gray-800 relative group"
-                                    aria-label={`Remove ${item.product.name} from cart`}
-                                  >
-                                    Eltávolít
-                                    <span className="absolute bottom-0 left-0 w-full h-[0.5px] bg-black transform origin-left transition-transform duration-300 ease-out group-hover:scale-x-0"></span>
-                                  </button>
+                                <button
+  onClick={() => onRemoveItem(index)}
+  className="text-[13px] font-normal text-black hover:text-gray-800 relative group leading-none pb-0"
+  aria-label={`Remove ${item.product.name} from cart`}
+>
+  Eltávolít
+  <span className="absolute bottom-0 left-0 w-full h-[0.5px] bg-black transform origin-left transition-transform duration-300 ease-out group-hover:scale-x-0"></span>
+</button>
                                 </div>
                               </div>
                             </div>
@@ -239,6 +248,13 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                   <div className="mt-6 space-y-4">
                     <Button onClick={processCheckout} disabled={isLoading} className="w-full bg-black text-white hover:bg-gray-800">
                       {isLoading ? 'Feldolgozás...' : 'Pénztár'}
+                    </Button>
+                    <Button 
+                      onClick={handleUtanvetCheckout} 
+                      className="w-full border border-black text-white bg-[#dc2626] hover:bg-[#b91c1c]"
+                      variant="outline"
+                    >
+                      Utánvét (Készpénzes fizetés)
                     </Button>
                     <Button onClick={onClose} variant="outline" className="w-full border-black text-black hover:bg-gray-100">
                       Vásárlás folytatása

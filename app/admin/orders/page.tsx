@@ -63,6 +63,8 @@ interface Order {
   stripeDetails?: StripeDetails
   createdAt?: Date | string
   fulfilled?: boolean
+  paymentMethod?: string
+  notes?: string
 }
 
 async function getOrders(): Promise<Order[]> {
@@ -119,12 +121,26 @@ function AddressDisplay({ address, name }: { address: Address; name: string }) {
       <p>{name}</p>
       <p>{address.line1}</p>
       {address.line2 && <p>{address.line2}</p>}
-      <p>{address.city}, {address.state} {address.postal_code}</p>
+      <p>{address.city}, {address.state || <span className="text-gray-500 italic">Megye not set</span>} {address.postal_code}</p>
       <p>{address.country}</p>
     </>
   )
 }
 
+function getCardBackgroundClass(order: Order): string {
+  const isUtanvet = order.paymentMethod === 'cash_on_delivery';
+  const isExpress = order.shippingType?.toLowerCase().includes('express');
+  
+  if (isUtanvet && isExpress) {
+    return 'bg-gradient-to-r from-yellow-50 to-blue-50';
+  } else if (isUtanvet) {
+    return 'bg-blue-50';
+  } else if (isExpress) {
+    return 'bg-yellow-50';
+  }
+  
+  return '';
+}
 
 export default async function AdminOrders() {
   const orders = await getOrders()
@@ -144,13 +160,20 @@ export default async function AdminOrders() {
       <div className="space-y-6">
         {orders.map((order) => (
           <Card key={order._id.toString()} 
-                className={order.shippingType?.toLowerCase().includes('express') ? 'bg-yellow-50' : ''}>
+                className={getCardBackgroundClass(order)}>
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
                 <span>Order ID: {order.sessionId}</span>
-                <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>
-                  {order.status}
-                </Badge>
+                <div className="flex gap-2">
+                  {order.paymentMethod === 'cash_on_delivery' && (
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+                      Utanvet (COD)
+                    </Badge>
+                  )}
+                  <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>
+                    {order.status}
+                  </Badge>
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -161,6 +184,8 @@ export default async function AdminOrders() {
                     <p>Amount: {order.amount ? order.amount.toFixed(2) : 'N/A'} {order.currency?.toUpperCase() || 'N/A'}</p>
                     <p>Created: {formatCreatedDate(order.createdAt)}</p>
                     <p>Shipping Type: {order.shippingType || 'N/A'}</p>
+                    <p>Payment Method: {order.paymentMethod === 'cash_on_delivery' ? 'Cash on Delivery' : 'Credit Card'}</p>
+                    <p>Megye: {order.shippingDetails?.address.state || <span className="text-gray-500 italic">Not set</span>}</p>
                   </div>
                   <div className="flex-shrink-0 ml-4">
                     <OrderFulfillmentCheckbox 
@@ -206,11 +231,19 @@ export default async function AdminOrders() {
                   <div>
                     <h3 className="font-semibold mb-2">Billing Details</h3>
                     {order.billingDetails ? (
-                      areAddressesSame(order.shippingDetails, order.billingDetails) ? (
-                        <p>Same as shipping</p>
-                      ) : (
-                        <AddressDisplay address={order.billingDetails.address} name={order.billingDetails.name} />
-                      )
+                      <>
+                        {areAddressesSame(order.shippingDetails, order.billingDetails) ? (
+                          <p>Same as shipping</p>
+                        ) : (
+                          <AddressDisplay address={order.billingDetails.address} name={order.billingDetails.name} />
+                        )}
+                        {order.notes && (
+                          <div className="mt-4 p-3 bg-gray-50 rounded-md">
+                            <h4 className="font-medium text-sm mb-1">Order Notes:</h4>
+                            <p className="text-sm">{order.notes}</p>
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <p>No billing details available for this order.</p>
                     )}
@@ -236,4 +269,3 @@ export default async function AdminOrders() {
     </div>
   )
 }
-
