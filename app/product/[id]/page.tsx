@@ -261,7 +261,7 @@ export default function ProductPage() {
 
   // Desktop view for shipping features
   const desktopShippingFeatures = (
-    <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4 border-t border-gray-200 pt-6 mt-4">
+    <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4 pt-6 mt-4 ">
       <div className="flex flex-col items-center text-center">
         <ShieldCheck className="h-10 w-10 text-black mb-2" />
         <h3 className="text-sm font-bold mb-1">Biztonságos fizetés</h3>
@@ -454,7 +454,7 @@ export default function ProductPage() {
                       <span className="text-xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
                     )}
                   </div>
-                  <hr className="border-t border-gray-300 my-3 w-full" />
+                  <hr className="border-t border-gray-300 my-3 w-[85%] max-lg:w-full " />
                 </div>
               </div>
               
@@ -524,7 +524,7 @@ export default function ProductPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full">
+                  <div className="w-[85%] max-lg:w-full">
                     <MatrixButton
                       phrases={[
                         "Kosárba teszem",
@@ -576,7 +576,7 @@ export default function ProductPage() {
               )}
               <div className="mt-4 space-y-2 w-full">
                 {faqs.map((faq, index) => (
-                  <div key={index} className="bg-white rounded-lg overflow-hidden border border-gray-200 w-full">
+                  <div key={index} className="bg-white rounded-lg overflow-hidden border border-gray-200 w-[85%] max-lg:w-full ">
                     <button
                       onClick={() => toggleItem(index)}
                       className="w-full px-4 py-2 flex justify-between items-center text-left"
