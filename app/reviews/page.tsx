@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
-import { useCountdown } from '@/lib/CountdownContext';
+import React, { useState, useRef } from 'react';
+
 import { Header } from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import CartModal from '@/components/CartModal';
+
 import { useCart } from '@/lib/CartContext';
 import { CloudUpload, Trash2, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
