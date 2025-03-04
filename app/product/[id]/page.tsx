@@ -33,8 +33,8 @@ interface Product {
 }
 
 export default function ProductPage() {
-
-const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
+  // State declarations
+  const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [product, setProduct] = useState<Product | null>(null)
   const [selectedSize, setSelectedSize] = useState<string>('')
   const [quantity, setQuantity] = useState(1)
@@ -49,6 +49,30 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [notifyMessage, setNotifyMessage] = useState<{ type: 'success' | 'error', content: string } | null>(null)
   const [currentViewers, setCurrentViewers] = useState<number>(0)
 
+  // For mobile shipping slider container width
+  const shippingContainerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  // Define shipping features for both desktop and mobile
+  const shippingFeatures = [
+    {
+      icon: <ShieldCheck className="h-10 w-10 text-black mb-3" />,
+      title: "Biztonságos fizetés",
+      description: "Kártyás fizetés vagy utánvét",
+    },
+    {
+      icon: <Truck className="h-10 w-10 text-black mb-3" />,
+      title: "Ingyenes szállítás",
+      description: "30 000 Ft felett ingyenes kiszállítás",
+    },
+    {
+      icon: <RefreshCcw className="h-10 w-10 text-black mb-3" />,
+      title: "14 nap visszaküldés",
+      description: "A csomag átvételétől számítva",
+    },
+  ];
+
+  // Fetch the product
   useEffect(() => {
     async function fetchProduct() {
       const response = await fetch(`/api/products/${id}`)
@@ -68,22 +92,20 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
       fetchProduct()
     }
   }, [id])
+
+  // Update viewers count
   useEffect(() => {
-    // Get random viewers count from localStorage or generate new one
     const getViewersCount = () => {
       const now = new Date().getTime();
       const storedData = localStorage.getItem(`product_viewers_${id}`);
   
       if (storedData) {
         const { count, timestamp } = JSON.parse(storedData);
-        // Check if 5 minutes (300000ms) have passed
         if (now - timestamp < 300000) {
           return count;
         }
       }
   
-      // Generate new random count between 3 and 11,
-      // so that displayed viewers (count - 1) is between 2 and 10.
       const newCount = Math.floor(Math.random() * 9) + 3;
       localStorage.setItem(
         `product_viewers_${id}`,
@@ -98,7 +120,6 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   
     setCurrentViewers(getViewersCount());
   
-    // Set up a timer to check for expiration (every minute)
     const interval = setInterval(() => {
       const storedData = localStorage.getItem(`product_viewers_${id}`);
       if (storedData) {
@@ -113,12 +134,12 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
     return () => clearInterval(interval);
   }, [id]);
   
-  // Calculate the displayed viewers count and select the correct suffix
   const displayedViewers = currentViewers > 0 ? currentViewers - 1 : 0;
   const viewerSuffix = [3, 6, 8].includes(displayedViewers)
     ? '-an nézik önön kívül'
     : '-en nézik önön kívül';
 
+  // Show floating box based on scroll position
   useEffect(() => {
     const handleScroll = () => {
       if (productRef.current) {
@@ -136,6 +157,20 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
     }
   }, [])
 
+  // Update container width for mobile slider on mount and on resize
+  useEffect(() => {
+    if (shippingContainerRef.current) {
+      setContainerWidth(shippingContainerRef.current.offsetWidth);
+    }
+    const handleResize = () => {
+      if (shippingContainerRef.current) {
+        setContainerWidth(shippingContainerRef.current.offsetWidth);
+      }
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleAddToCart = () => {
     if (product && selectedSize) {
       addToCart(product, selectedSize, quantity)
@@ -149,7 +184,6 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
 
   const handleQuantityChange = (newQuantity: number) => {
     if (product && newQuantity >= 1) {
-      // Ensure quantity doesn't exceed available stock
       const maxQuantity = product.stockQuantity || 1;
       setQuantity(Math.min(newQuantity, maxQuantity));
     }
@@ -190,6 +224,7 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
       return newItems
     })
   }
+
   if (!product) {
     return (
       <div className={`${sora.className} min-h-screen flex flex-col`}>
@@ -224,91 +259,105 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   const isProductAvailable = product.sizes.length > 0 && product.inventoryStatus !== 'elfogyott'
 
-  const shippingFeaturesContent = (
-    <div className="border-t border-gray-200 pt-6 mt-4 w-full">
-      {/* Desktop view */}
-      <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4">
-        <div className="flex flex-col items-center text-center">
-          <ShieldCheck className="h-10 w-10 text-black mb-2" />
-          <h3 className="text-sm font-bold mb-1">Biztonságos fizetés</h3>
-          <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
-            Kártyás fizetés vagy utánvét
-          </p>
-        </div>
-        <div className="flex flex-col items-center text-center">
-          <Truck className="h-10 w-10 text-black mb-2" />        
-          <h3 className="text-sm font-bold mb-1">Ingyenes szállítás</h3>
-          <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
-            30 000 Ft felett ingyenes kiszállítás
-          </p>
-        </div>      
-        <div className="flex flex-col items-center text-center">
-          <RefreshCcw className="h-10 w-10 text-black mb-2" />
-          <h3 className="text-sm font-bold mb-1">14 nap visszaküldés</h3>
-          <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
-            A csomag átvételétől számítva
-          </p>
-        </div>      
+  // Desktop view for shipping features
+  const desktopShippingFeatures = (
+    <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4 border-t border-gray-200 pt-6 mt-4">
+      <div className="flex flex-col items-center text-center">
+        <ShieldCheck className="h-10 w-10 text-black mb-2" />
+        <h3 className="text-sm font-bold mb-1">Biztonságos fizetés</h3>
+        <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
+          Kártyás fizetés vagy utánvét
+        </p>
       </div>
-      
-      {/* Mobile view (draggable/swipeable) */}
-      <motion.div 
-        className="sm:hidden"
+      <div className="flex flex-col items-center text-center">
+        <Truck className="h-10 w-10 text-black mb-2" />        
+        <h3 className="text-sm font-bold mb-1">Ingyenes szállítás</h3>
+        <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
+          30 000 Ft felett ingyenes kiszállítás
+        </p>
+      </div>      
+      <div className="flex flex-col items-center text-center">
+        <RefreshCcw className="h-10 w-10 text-black mb-2" />
+        <h3 className="text-sm font-bold mb-1">14 nap visszaküldés</h3>
+        <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
+          A csomag átvételétől számítva
+        </p>
+      </div>      
+    </div>
+  );
+
+  // Mobile view for shipping features using a draggable slider
+  const mobileShippingFeatures = (
+    <div
+      className="sm:hidden overflow-hidden border-t border-gray-200 pt-6 mt-4 w-full"
+      ref={shippingContainerRef}
+    >
+      <motion.div
         drag="x"
         dragElastic={0.2}
+        dragConstraints={{ left: -((shippingFeatures.length - 1) * containerWidth), right: 0 }}
+        animate={{ x: -currentFeatureIndex * containerWidth }}
+        transition={{ duration: 0.15 }}
         onDragEnd={(event, info) => {
           const threshold = 50;
-          if (info.offset.x < -threshold && currentFeatureIndex < 2) {
+          if (info.offset.x < -threshold && currentFeatureIndex < shippingFeatures.length - 1) {
             setCurrentFeatureIndex(currentFeatureIndex + 1);
           } else if (info.offset.x > threshold && currentFeatureIndex > 0) {
             setCurrentFeatureIndex(currentFeatureIndex - 1);
           }
         }}
-        animate={{ x: 0 }} // Ensures the content snaps back into place after dragging
+        className="flex"
       >
-        {currentFeatureIndex === 0 && (
-          <div className="flex flex-col items-center text-center">
-            <ShieldCheck className="h-10 w-10 text-black mb-3" />
-            <h3 className="text-base font-bold mb-1">Biztonságos fizetés</h3>
-            <p className="text-sm text-gray-600 max-w-[150px] mx-auto">
-              Kártyás fizetés vagy utánvét
-            </p>
+        {shippingFeatures.map((feature, index) => (
+          <div
+            key={index}
+            className="flex-shrink-0 w-full flex flex-col items-center justify-center text-center"
+          >
+            {feature.icon}
+            <h3 className="text-base font-bold mb-1">{feature.title}</h3>
+            <p className="text-sm text-gray-600 max-w-[150px] mx-auto">{feature.description}</p>
           </div>
-        )}
-        {currentFeatureIndex === 1 && (
-          <div className="flex flex-col items-center text-center">
-            <Truck className="h-10 w-10 text-black mb-3" />        
-            <h3 className="text-base font-bold mb-1">Ingyenes szállítás</h3>
-            <p className="text-sm text-gray-600 max-w-[150px] mx-auto">
-              30 000 Ft felett ingyenes kiszállítás
-            </p>
-          </div>
-        )}
-        {currentFeatureIndex === 2 && (
-          <div className="flex flex-col items-center text-center">
-            <RefreshCcw className="h-10 w-10 text-black mb-3" />
-            <h3 className="text-base font-bold mb-1">14 nap visszaküldés</h3>
-            <p className="text-sm text-gray-600 max-w-[150px] mx-auto">
-              A csomag átvételétől számítva
-            </p>
-          </div>
-        )}
-        
-        {/* Navigation dots */}
-        <div className="flex justify-center mt-4 space-x-2">
-          {[0, 1, 2].map((index) => (
-            <button 
-              key={index}
-              onClick={() => setCurrentFeatureIndex(index)}
-              className={`h-2 w-2 rounded-full ${index === currentFeatureIndex ? 'bg-black' : 'bg-gray-300'}`}
-              aria-label={`View feature ${index + 1}`}
-            />
-          ))}
-        </div>
+        ))}
       </motion.div>
+      {/* Navigation dots */}
+      <div className="flex justify-center mt-4 space-x-2">
+        {shippingFeatures.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentFeatureIndex(index)}
+            className={`h-2 w-2 rounded-full ${index === currentFeatureIndex ? 'bg-black' : 'bg-gray-300'}`}
+            aria-label={`View feature ${index + 1}`}
+          />
+        ))}
+      </div>
     </div>
   );
 
+  // Availability status component
+  const StyledAvailabilityStatus = ({ status, quantity }: { status: string, quantity?: number }) => {
+    let statusText = '';
+    let statusColor = '';
+    
+    if (status === 'raktáron' || status === 'rendelésre') {
+      statusText = quantity && quantity <= 30 
+        ? `Raktáron - Csak ${quantity} db elérhető`
+        : `Raktáron - ${quantity} db elérhető`;
+      statusColor = 'text-[#007c01]';
+    } else {
+      statusText = 'Elfogyott';
+      statusColor = 'text-[#dc2626]';
+    }
+    
+    return (
+      <div className="inline-block bg-white border border-gray-200 rounded-md py-1 px-3 shadow-lg">
+        <span className={`font-medium text-sm ${statusColor}`}>
+          {statusText}
+        </span>
+      </div>
+    );
+  };
+
+  // FAQ sections
   const faqs = [
     {
       question: "Leírás",
@@ -324,7 +373,6 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
               Minden nagyobb hitelkártyát elfogadunk biztonságos fizetési rendszerünkön keresztül.
             </p>
           </div>
-          
           <div>
             <h5 className="font-medium text-black mb-1 text-sm">Szállítási információk:</h5>
             <p className="text-sm">
@@ -336,37 +384,11 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
     }
   ]
 
-  // Modified availability display component - always green when available
-  const StyledAvailabilityStatus = ({ status, quantity }: { status: string, quantity?: number }) => {
-    let statusText = '';
-    let statusColor = '';
-    
-    if (status === 'raktáron' || status === 'rendelésre') {
-      if (quantity && quantity <= 30) {
-        statusText = `Raktáron - Csak ${quantity} db elérhető`;
-      } else {
-        statusText = `Raktáron - ${quantity} db elérhető`;
-      }
-      statusColor = 'text-[#007c01]'; // Always green for available products
-    } else {
-      statusText = 'Elfogyott';
-      statusColor = 'text-[#dc2626]';
-    }
-    
-    return (
-      <div className="inline-block bg-white border border-gray-200 rounded-md py-1 px-3 shadow-lg">
-        <span className={`font-medium text-sm ${statusColor}`}>
-          {statusText}
-        </span>
-      </div>
-    );
-  };
-
   return (
     <div className={sora.className}>
       <WhiteHeader onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
       <div className="max-w-screen-2xl mx-auto px-4 md:px-6 py-24" ref={productRef}>
-      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Left column - Images */}
           <div className="lg:w-3/5 flex-shrink-0">
             <div className="mb-6">
@@ -407,11 +429,9 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
           {/* Right column - Product info */}
           <div className="lg:w-2/5 w-full max-w-full overflow-x-hidden">
             <div className="px-0 lg:px-4 w-full">
-              {/* Fixed Carelline text */}
               <div className="text-sm font-medium text-gray-500 mb-0">
                 Carelline
               </div>
-              
               <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
               <div className="mb-0">
                 <div className="flex flex-col w-full">
@@ -434,7 +454,6 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
                       <span className="text-xl font-bold">{Math.round(product.price).toLocaleString('hu-HU')} Ft</span>
                     )}
                   </div>
-                  
                   <hr className="border-t border-gray-300 my-3 w-full" />
                 </div>
               </div>
@@ -443,9 +462,7 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
                 <>
                   <div className="mb-3">
                     <div className="flex flex-wrap gap-2">
-                      {product.sizes.includes('One Size') ? (
-                        <></>
-                      ) : (
+                      {product.sizes.includes('One Size') ? null : (
                         availableSizes.map((size) => (
                           <Button
                             key={size}
@@ -462,14 +479,11 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
                   </div>
                   <div className="mb-6">
                     <div className="flex flex-col">
-                      {/* Viewers count with reduced space and adjusted margins */}
                       <div className="mt-0 mb-4 flex items-center font-bold text-gray-500 text-sm">
-                        <Eye className="h-4 w-4 mr-1 text-gray-500 " />
+                        <Eye className="h-4 w-4 mr-1 text-gray-500" />
                         <span>{currentViewers} ember nézi jelenleg</span>
                       </div>
-
                       <div className="flex flex-col xl:flex-row items-start">
-                        {/* Availability section - now first in mobile view */}
                         <div className="mb-4 xl:mb-0 xl:order-2">
                           <div className="mb-2">
                             <span className="font-medium text-base">Elérhetőség:</span>
@@ -479,8 +493,6 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
                             quantity={product.stockQuantity}
                           />
                         </div>
-                        
-                        {/* Quantity section */}
                         <div className="mr-0 xl:mr-20 xl:order-1">
                           <div className="mb-2">
                             <span className="font-medium text-base">Mennyiség:</span>
@@ -499,9 +511,7 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
                               variant="outline"
                               size="icon"
                               onClick={() => handleQuantityChange(quantity + 1)}
-                              className={`h-8 w-8 text-sm ${
-                                quantity >= product.stockQuantity ? 'opacity-50 cursor-not-allowed' : ''
-                              }`}
+                              className={`h-8 w-8 text-sm ${quantity >= product.stockQuantity ? 'opacity-50 cursor-not-allowed' : ''}`}
                               disabled={quantity >= product.stockQuantity}
                             >
                               +
@@ -582,15 +592,16 @@ const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
                       }`}
                     >
                       <div className="text-gray-600 text-sm leading-relaxed">
-                        {typeof faq.answer === 'string' ? faq.answer : faq.answer}
+                        {faq.answer}
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
               
-              {/* Shipping features moved here, just below the collapsible sections */}
-              {shippingFeaturesContent}
+              {/* Shipping features: Desktop and Mobile */}
+              {desktopShippingFeatures}
+              {mobileShippingFeatures}
             </div>
           </div>
         </div>
