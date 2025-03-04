@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-// Removed the unused CardFooter import
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertCircle, Check, ShoppingBag, ArrowLeft } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -14,7 +13,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
 
-// Export the interface for use in other files if needed
 export interface CartItem {
   product: {
     _id: string;
@@ -80,10 +78,10 @@ const UtanvetPage = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (cartItems.length === 0) {
+    if (cartItems.length === 0 && !success) {
       router.push('/')
     }
-  }, [cartItems, router])
+  }, [cartItems, router, success])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -285,36 +283,45 @@ const UtanvetPage = () => {
     }
   }
 
-  if (success) {
-    return (
-      <div className="max-w-4xl mx-auto py-12 px-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-center text-2xl">Köszönjük a rendelését!</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            <div className="mb-6">
-              <div className="w-16 h-16 bg-green-100 rounded-full mx-auto flex items-center justify-center">
-                <Check className="h-8 w-8 text-green-600" />
-              </div>
-            </div>
-            <p className="mb-4">A rendelését sikeresen rögzítettük. Hamarosan e-mailben értesítjük a szállítás részleteiről.</p>
-            <p className="text-sm text-gray-500 mb-6">
-              Az utánvétes fizetést a futárnál kell teljesítenie a csomag átvételekor.
-            </p>
-            <Button asChild>
-              <Link href="/">Vissza a főoldalra</Link>
+  const SuccessModal = () => (
+    <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+      <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full shadow-xl text-white">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 bg-green-100/20 rounded-full mx-auto flex items-center justify-center">
+            <Check className="h-8 w-8 text-green-400" />
+          </div>
+          <h2 className="text-2xl font-bold">Köszönjük a rendelését!</h2>
+          <p className="text-gray-200">
+            A rendelését sikeresen rögzítettük. Hamarosan e-mailben értesítjük a szállítás részleteiről.
+          </p>
+          <p className="text-sm text-gray-300">
+            Az utánvétes fizetést a futárnál kell teljesítenie a csomag átvételekor.
+          </p>
+          <div className="flex gap-4 mt-6">
+            <Button
+              onClick={() => setSuccess(false)}
+              className="flex-1 bg-gray-700 hover:bg-gray-600 text-white"
+            >
+              Rendelés részletei
             </Button>
-          </CardContent>
-        </Card>
+            <Button 
+              asChild
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+            >
+              <Link href="/">Főoldal</Link>
+            </Button>
+          </div>
+        </div>
       </div>
-    )
-  }
+    </div>
+  )
 
   const { subtotal, standardShippingCost, expressShippingCost, isStandardShippingFree, shippingCost, cashOnDeliveryFee, total } = calculateTotal()
 
   return (
-    <div className="max-w-7xl mx-auto pt-[4rem] pb-[8rem] px-4">
+    <div className="max-w-7xl mx-auto pt-[4rem] pb-[8rem] px-4 relative">
+      {success && <SuccessModal />}
+
       <Link href="/#products" className="inline-flex items-center text-sm font-medium mb-6 hover:underline">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Vissza a vásárláshoz
