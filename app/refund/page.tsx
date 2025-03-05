@@ -66,9 +66,8 @@ const RefundPolicy = () => {
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>A jóváhagyott visszatérítéseket 3-5 munkanapon belül feldolgozzuk</li>
-            <li>A visszatérítés az eredeti fizetési módra történik</li>
+            <li>A visszatérítés online történik</li>
             <li>E-mailben értesítést kap, amikor a visszatérítést feldolgoztuk</li>
-            <li>A banki feldolgozási idők változhatnak</li>
           </ul>
         </section>
 

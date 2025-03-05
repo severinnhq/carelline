@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { AlertCircle, Check, ShoppingBag, ArrowLeft } from 'lucide-react'
+import { AlertCircle, Check, ShoppingBag, ArrowLeft, Info } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -595,7 +595,9 @@ const UtanvetPage = () => {
                           <div className="flex justify-between text-base font-medium text-gray-900">
                             <h3>{item.product.name}</h3>
                             <p className="ml-4">
-                              {((item.product.salePrice || item.product.price) * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+                              {((item.product.salePrice || item.product.price) * item.quantity)
+                                .toFixed(0)
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
                             </p>
                           </div>
                           <p className="mt-0 text-sm text-gray-500">Carelline</p>
@@ -628,7 +630,8 @@ const UtanvetPage = () => {
                           </label>
                         </div>
                         <p className="text-sm font-medium text-gray-900">
-                          {isStandardShippingFree ? "Ingyenes" : `${standardShippingCost.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft`}
+                          {isStandardShippingFree ? "Ingyenes" : `${standardShippingCost.toFixed(0)
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft`}
                         </p>
                       </div>
                       <div className="flex items-center justify-between">
@@ -646,7 +649,8 @@ const UtanvetPage = () => {
                           </label>
                         </div>
                         <p className="text-sm font-medium text-gray-900">
-                          {expressShippingCost.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+                          {expressShippingCost.toFixed(0)
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
                         </p>
                       </div>
                     </div>
@@ -654,23 +658,27 @@ const UtanvetPage = () => {
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between text-sm">
                       <p>Részösszeg</p>
-                      <p>{subtotal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</p>
+                      <p>{subtotal.toFixed(0)
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</p>
                     </div>
                     <div className="flex justify-between text-sm mt-2">
                       <p>Szállítási díj</p>
                       <p>
                         {shippingCost === 0 
                           ? "Ingyenes" 
-                          : `${shippingCost.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft`}
+                          : `${shippingCost.toFixed(0)
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft`}
                       </p>
                     </div>
                     <div className="flex justify-between text-sm mt-2">
                       <p>Utánvét díja</p>
-                      <p>{cashOnDeliveryFee.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</p>
+                      <p>{cashOnDeliveryFee.toFixed(0)
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</p>
                     </div>
                     <div className="flex justify-between text-base font-medium mt-4">
                       <p>Összesen</p>
-                      <p>{total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</p>
+                      <p>{total.toFixed(0)
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</p>
                     </div>
                     
                     <div className="mt-4 w-full">
@@ -683,11 +691,16 @@ const UtanvetPage = () => {
                         {isLoading ? 'Feldolgozás...' : 'Rendelés leadása'}
                       </Button>
                     </div>
+                    
+                    <div className="mt-2 text-xs text-gray-600">
+                      A "Rendelés Leadása" gomb megnyomásával elfogadom az ÁSZF-t és tudomásul veszem a fizetési kötelezettségemet.
+                    </div>
                   </div>
                   
                   <div className="border-t border-gray-200 pt-4">
                     <div className="rounded-md bg-blue-50 p-4">
-                      <div className="flex">
+                      <div className="flex items-center">
+                        <Info className="h-10 w-10 text-blue-700" />
                         <div className="ml-3">
                           <div className="text-sm text-blue-700">
                             <p>

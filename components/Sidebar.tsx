@@ -46,8 +46,8 @@ const ShippingProgressBar: React.FC<ShippingProgressBarProps> = ({ currentAmount
       <div className="mb-2">
         {remainingAmount > 0 ? (
           <p className="text-sm text-gray-900">
-    Még <span className="font-semibold">{remainingAmount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span> hiányzik az ingyenes szállításhoz.
-        </p>
+            Még <span className="font-semibold">{remainingAmount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")}</span> Ft hiányzik az ingyenes szállításhoz.
+          </p>
         ) : (
           <p className="text-sm text-gray-900 font-semibold">
             Ingyenes szállítás!
@@ -65,7 +65,8 @@ const ShippingProgressBar: React.FC<ShippingProgressBarProps> = ({ currentAmount
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveItem, onUpdateQuantity }) => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
+  const [isUtanvetLoading, setIsUtanvetLoading] = useState(false)
   const router = useRouter()
   const { handleCheckout } = useCheckout();
 
@@ -82,19 +83,25 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
   }, [isOpen])
 
   const processCheckout = async () => {
-    setIsLoading(true);
+    setIsCheckoutLoading(true);
     await handleCheckout();
-    setIsLoading(false);
+    setIsCheckoutLoading(false);
   };
 
-  const handleUtanvetCheckout = () => {
+  const handleUtanvetCheckout = async () => {
+    setIsUtanvetLoading(true);
     // Store cart items in localStorage to access them on the utanvet page
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    // Wait a short time so the button displays "Feldolgozás..." before redirecting
+    await new Promise(resolve => setTimeout(resolve, 500));
     router.push('/utanvet');
     onClose();
   };
 
-  const cartTotal = cartItems.reduce((total, item) => total + (item.product.salePrice || item.product.price) * item.quantity, 0);
+  const cartTotal = cartItems.reduce(
+    (total, item) => total + (item.product.salePrice || item.product.price) * item.quantity,
+    0
+  );
 
   return (
     <div 
@@ -179,47 +186,54 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                             </Link>
 
                             <div className="ml-4 flex-1 flex flex-col">
-  <div>
-    <div className="flex justify-between text-base font-medium text-gray-900">
-      <h3 className="text-base font-bold"> 
-        <Link
-          href={`/product/${item.product._id}`}
-          onClick={(e) => {
-            e.stopPropagation() 
-            onClose()
-          }}
-          className="hover:underline"
-        >
-          {item.product.name}
-        </Link>
-      </h3>
-      <p className="ml-4 font-semibold text-sm whitespace-nowrap">
-        {((item.product.salePrice || item.product.price) * item.quantity).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
-      </p>
-    </div>
-    <p className="text-sm text-gray-500 mb-1">Carelline</p>
-  </div>
-  <div className="flex justify-between text-sm mt-1">
+                              <div>
+                                <div className="flex justify-between text-base font-medium text-gray-900">
+                                  <h3 className="text-base font-bold"> 
+                                    <Link
+                                      href={`/product/${item.product._id}`}
+                                      onClick={(e) => {
+                                        e.stopPropagation() 
+                                        onClose()
+                                      }}
+                                      className="hover:underline"
+                                    >
+                                      {item.product.name}
+                                    </Link>
+                                  </h3>
+                                  <p className="ml-4 font-semibold text-sm whitespace-nowrap">
+                                    {((item.product.salePrice || item.product.price) * item.quantity)
+                                      .toFixed(0)
+                                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+                                  </p>
+                                </div>
+                                <p className="text-sm text-gray-500 mb-1">Carelline</p>
+                              </div>
+                              <div className="flex justify-between text-sm mt-1">
                                 <div className="flex items-center">
                                   <input
                                     type="number"
                                     min="1"
                                     value={item.quantity}
-                                    onChange={(e) => onUpdateQuantity(index, Math.max(1, parseInt(e.target.value) || 1))}
+                                    onChange={(e) =>
+                                      onUpdateQuantity(
+                                        index,
+                                        Math.max(1, parseInt(e.target.value) || 1)
+                                      )
+                                    }
                                     onClick={(e) => e.currentTarget.select()}
-       className="w-16 p-1 text-center border border-gray-300 rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    className="w-16 p-1 text-center border border-gray-300 rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     aria-label={`Quantity for ${item.product.name}`}
                                   />
                                 </div>
                                 <div className="flex">
-                                <button
-  onClick={() => onRemoveItem(index)}
-  className="text-[13px] font-normal text-black hover:text-gray-800 relative group leading-none pb-0"
-  aria-label={`Remove ${item.product.name} from cart`}
->
-  Eltávolít
-  <span className="absolute bottom-0 left-0 w-full h-[0.5px] bg-black transform origin-left transition-transform duration-300 ease-out group-hover:scale-x-0"></span>
-</button>
+                                  <button
+                                    onClick={() => onRemoveItem(index)}
+                                    className="text-[13px] font-normal text-black hover:text-gray-800 relative group leading-none pb-0"
+                                    aria-label={`Remove ${item.product.name} from cart`}
+                                  >
+                                    Eltávolít
+                                    <span className="absolute bottom-0 left-0 w-full h-[0.5px] bg-black transform origin-left transition-transform duration-300 ease-out group-hover:scale-x-0"></span>
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -236,25 +250,26 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                   <div className="flex justify-between text-lg font-semibold text-gray-900">
                     <p>Összesen</p>
                     <p>
-  {cartTotal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
-</p>
+                      {cartTotal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+                    </p>
                   </div>
                   <p className="mt-0.5 text-sm text-gray-500">
-  {cartTotal >= 30000
-    ? "Nincs szállítási költség, "
-    : "A szállítási költséget a pénztárnál számoljuk ki, az "}
-  {"árak az ÁFÁ-t tartalmazzák. "}
-</p>
+                    {cartTotal >= 30000
+                      ? "Nincs szállítási költség, "
+                      : "A szállítási költséget a pénztárnál számoljuk ki, az "}
+                    {"árak az ÁFÁ-t tartalmazzák. "}
+                  </p>
                   <div className="mt-6 space-y-4">
-                    <Button onClick={processCheckout} disabled={isLoading} className="w-full bg-black text-white hover:bg-gray-800">
-                      {isLoading ? 'Feldolgozás...' : 'Pénztár'}
-                    </Button>
                     <Button 
                       onClick={handleUtanvetCheckout} 
-                      className="w-full border  text-white bg-[#dc2626] hover:bg-[#b91c1c]"
+                      disabled={isUtanvetLoading}
+                      className="w-full border text-white bg-[#dc2626] hover:bg-[#b91c1c]"
                       variant="outline"
                     >
-                      Utánvét
+                      {isUtanvetLoading ? 'Feldolgozás...' : 'Átvételkor fizetek'}
+                    </Button>
+                    <Button onClick={processCheckout} disabled={isCheckoutLoading} className="w-full bg-black text-white hover:bg-gray-800">
+                      {isCheckoutLoading ? 'Feldolgozás...' : 'Pénztár'}
                     </Button>
                     <Button onClick={onClose} variant="outline" className="w-full border-black text-black hover:bg-gray-100">
                       Vásárlás folytatása

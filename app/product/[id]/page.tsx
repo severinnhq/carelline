@@ -55,6 +55,8 @@ export default function ProductPage() {
 
   // Define shipping features for both desktop and mobile
   const shippingFeatures = [
+
+    
     {
       icon: <ShieldCheck className="h-10 w-10 text-black mb-3" />,
       title: "Biztonságos fizetés",
@@ -261,28 +263,31 @@ export default function ProductPage() {
 
   // Desktop view for shipping features
   const desktopShippingFeatures = (
+    
     <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4 pt-6 mt-4 ">
+        <div className="flex flex-col items-center text-center">
+        <Truck className="h-10 w-10 text-black mb-2" />        
+        <h3 className="text-sm font-bold mb-1">Ingyenes szállítás</h3>  
+        <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
+          30 000 Ft feletti rendeléseknél
+        </p>
+      </div> 
+      <div className="flex flex-col items-center text-center">
+        <RefreshCcw className="h-10 w-10 text-black mb-2" />
+        <h3 className="text-sm font-bold mb-1">Termékvisszaküldés</h3>
+        <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
+          Az áru átvételét követő 14 naptári napon belül
+        </p>
+      </div>      
       <div className="flex flex-col items-center text-center">
         <ShieldCheck className="h-10 w-10 text-black mb-2" />
         <h3 className="text-sm font-bold mb-1">Biztonságos fizetés</h3>
         <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
-          Kártyás fizetés vagy utánvét
+          100%-ban titkosítva, adatok tárolása nélkül
         </p>
       </div>
-      <div className="flex flex-col items-center text-center">
-        <Truck className="h-10 w-10 text-black mb-2" />        
-        <h3 className="text-sm font-bold mb-1">Ingyenes szállítás</h3>
-        <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
-          30 000 Ft felett ingyenes kiszállítás
-        </p>
-      </div>      
-      <div className="flex flex-col items-center text-center">
-        <RefreshCcw className="h-10 w-10 text-black mb-2" />
-        <h3 className="text-sm font-bold mb-1">14 nap visszaküldés</h3>
-        <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
-          A csomag átvételétől számítva
-        </p>
-      </div>      
+         
+     
     </div>
   );
 

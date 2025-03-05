@@ -24,7 +24,7 @@ export default function CancelPage() {
               <XCircle className="w-16 h-16 text-red-600" strokeWidth={1.5} />
             </div>
           </motion.div>
-          <CardTitle className="text-3xl font-extrabold text-center text-green-900">
+          <CardTitle className="text-3xl font-extrabold text-center text-black">
             Rendelés törölve
           </CardTitle>
         </CardHeader>
@@ -33,7 +33,7 @@ export default function CancelPage() {
           <p className="text-center text-gray-700 mb-6 leading-relaxed">
             Sajnáljuk, hogy elállt a rendelésétől. Ha problémát tapasztal a rendelés leadásakor, vagy kérdései vannak, kérjük, vegye fel a kapcsolatot ügyfélszolgálatunkkal.
           </p>
-          <div className="text-center text-sm text-green-700 space-y-1">
+          <div className="text-center text-sm text-[#222] space-y-1">
             <p>✉️ carelline@outlook.com</p>
           </div>
         </CardContent>
