@@ -185,11 +185,11 @@ const ReviewSection = () => {
      <div ref={higherScrollTargetRef} className="h-[2rem] md:h-[4rem]" />
       <div ref={topRef} className={`container mx-auto px-4 py-0 ${sora.className}`}>
         <div id="review-section" className="relative w-full">
-          <div className="relative flex items-center justify-between">
-            <h1 className="text-3xl sm:text-[2.5rem] font-extrabold text-start uppercase tracking-wider mb-0 lg:mb-0">
-              MÁSOKON SEGíTETT
-            </h1>
-            <Link href="/reviews" className="view-all-link group flex items-center transition-all duration-300 ease-in-out">
+        <div className="relative flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:justify-between">
+  <h1 className="text-3xl sm:text-[2.5rem] font-extrabold text-start uppercase tracking-wider mb-0 lg:mb-0">
+    MÁSOKON SEGíTETT
+  </h1>
+  <Link href="/reviews" className="view-all-link group flex items-center transition-all duration-300 ease-in-out">
               <span className="view-all-text relative mr-1">Saját véleményem</span>
               <div className="view-all-circle flex items-center justify-center rounded-full bg-[#e5e5e5] w-6 h-6 transition-all duration-300 ease-in-out group-hover:bg-[#dc2626]">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-all duration-300 ease-in-out group-hover:text-white">
