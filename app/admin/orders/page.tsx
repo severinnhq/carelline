@@ -65,6 +65,7 @@ interface Order {
   fulfilled?: boolean
   paymentMethod?: string
   notes?: string
+  phoneNumber?: string // Added phone number field
 }
 
 async function getOrders(): Promise<Order[]> {
@@ -99,6 +100,10 @@ function formatCreatedDate(dateString?: string | Date): string {
     console.error('Error formatting date:', error)
     return 'Invalid date'
   }
+}
+
+function formatPhoneNumber(phoneNumber?: string): string {
+  return phoneNumber || 'No phone number provided';
 }
 
 function areAddressesSame(shipping?: ShippingDetails, billing?: BillingDetails): boolean {
@@ -186,6 +191,7 @@ export default async function AdminOrders() {
                     <p>Shipping Type: {order.shippingType || 'N/A'}</p>
                     <p>Payment Method: {order.paymentMethod === 'cash_on_delivery' ? 'Cash on Delivery' : 'Credit Card'}</p>
                     <p>Megye: {order.shippingDetails?.address.state || <span className="text-gray-500 italic">Not set</span>}</p>
+                    <p>Phone: <span className="font-medium">{formatPhoneNumber(order.phoneNumber)}</span></p>
                   </div>
                   <div className="flex-shrink-0 ml-4">
                     <OrderFulfillmentCheckbox 

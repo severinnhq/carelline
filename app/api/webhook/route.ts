@@ -32,6 +32,9 @@ interface Order {
   shippingType: string;
   stripeDetails: StripeDetails | null;
   createdAt: Date;
+  phoneNumber: string | null; // Added phone number field
+  paymentMethod?: string; // Payment method (card or cash_on_delivery)
+  notes?: string; // Order notes
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -110,6 +113,8 @@ async function saveOrder(session: Stripe.Checkout.Session): Promise<Order> {
   // Retrieve billing details and additional Stripe data
   let billingDetails: Stripe.Charge.BillingDetails | null = null
   let stripeDetails: StripeDetails | null = null
+  let paymentMethod = 'card' // Default payment method
+  
   if (session.payment_intent && typeof session.payment_intent === 'string') {
     try {
       const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent, {
@@ -126,10 +131,18 @@ async function saveOrder(session: Stripe.Checkout.Session): Promise<Order> {
         riskScore: paymentIntent.latest_charge && typeof paymentIntent.latest_charge === 'object' && paymentIntent.latest_charge.outcome ? paymentIntent.latest_charge.outcome.risk_score : null,
         riskLevel: paymentIntent.latest_charge && typeof paymentIntent.latest_charge === 'object' && paymentIntent.latest_charge.outcome ? paymentIntent.latest_charge.outcome.risk_level : null
       }
+      
+      // Check if this is a cash on delivery payment
+      if (paymentIntent.payment_method_types && paymentIntent.payment_method_types.includes('cash_on_delivery')) {
+        paymentMethod = 'cash_on_delivery'
+      }
     } catch (error) {
       console.error('Error retrieving payment details:', error)
     }
   }
+
+  // Extract any order notes from metadata if available
+  const notes = session.metadata?.notes || undefined
 
   const order: Omit<Order, '_id'> = {
     sessionId: session.id,
@@ -142,6 +155,9 @@ async function saveOrder(session: Stripe.Checkout.Session): Promise<Order> {
     billingDetails: billingDetails,
     shippingType: shippingType,
     stripeDetails: stripeDetails,
+    phoneNumber: session.customer_details?.phone || null, // Save the phone number
+    paymentMethod: paymentMethod,
+    notes: notes,
     createdAt: new Date()
   }
 
@@ -168,13 +184,13 @@ async function sendPushNotification(order: Order) {
 
   if (totalItemCount === 1) {
     const item = order.items[0]
-    notificationBody = `${item.n}, totaling $${totalAmount.toFixed(2)}`
+    notificationBody = `${item.n}, totaling ${order.currency?.toUpperCase() || 'HUF'} ${totalAmount.toFixed(2)}`
   } else if (totalItemCount === 2) {
     const item = order.items[0]
-    notificationBody = `${item.n} +1 other, totaling $${totalAmount.toFixed(2)}`
+    notificationBody = `${item.n} +1 other, totaling ${order.currency?.toUpperCase() || 'HUF'} ${totalAmount.toFixed(2)}`
   } else {
     const item = order.items[0]
-    notificationBody = `${item.n} +${totalItemCount - 1} others, totaling $${totalAmount.toFixed(2)}`
+    notificationBody = `${item.n} +${totalItemCount - 1} others, totaling ${order.currency?.toUpperCase() || 'HUF'} ${totalAmount.toFixed(2)}`
   }
 
   for (const { token } of pushTokens) {
@@ -209,4 +225,3 @@ export const config = {
     bodyParser: false,
   },
 }
-

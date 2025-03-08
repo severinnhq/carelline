@@ -6,11 +6,12 @@ import FeatureSection from '../components/FeatureSection';
 import BlackFridayCountdown from '../components/BlackFridayCountdown';
 import ReviewSection from '@/components/ReviewSection';
 import FAQSection from '@/components/faq';
+import WhySection from '../components/why'; // Import the new section
 import { useCountdown } from '@/lib/CountdownContext';
 import { Header } from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import CartModal from '@/components/CartModal';
-import ProductList from '../components/ProductList'
+import ProductList from '../components/ProductList';
 import { useCart } from '@/lib/CartContext';
 
 // Updated Product interface with required properties
@@ -57,6 +58,12 @@ export default function Home() {
         <HeroSection />
       </section>
 
+      
+      {/* New "Why" Section */}
+      <section id="why">
+        <WhySection />
+      </section>
+
       <section id="products">
         <ProductList />
       </section>
@@ -69,7 +76,6 @@ export default function Home() {
         <FeatureSection />
       </section>
 
-     
 
       <section id="faq">
         <FAQSection />

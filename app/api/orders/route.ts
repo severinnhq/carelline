@@ -50,6 +50,9 @@ interface Order {
     riskLevel: string | null;
   };
   fulfilled?: boolean;
+  phoneNumber?: string; // Added phone number field
+  paymentMethod?: string;
+  notes?: string;
 }
 
 function generateChallenge(): string {
@@ -155,7 +158,10 @@ export async function GET(request: Request) {
           (!order.billingDetails || typeof order.billingDetails === 'object') &&
           (!order.shippingType || typeof order.shippingType === 'string') &&
           (!order.stripeDetails || typeof order.stripeDetails === 'object') &&
-          (typeof order.fulfilled === 'undefined' || typeof order.fulfilled === 'boolean')
+          (typeof order.fulfilled === 'undefined' || typeof order.fulfilled === 'boolean') &&
+          (!order.phoneNumber || typeof order.phoneNumber === 'string') &&
+          (!order.paymentMethod || typeof order.paymentMethod === 'string') &&
+          (!order.notes || typeof order.notes === 'string')
         );
       });
     }
@@ -207,7 +213,10 @@ export async function POST(request: Request) {
         sound: 'default',
         title: 'REWEALED',
         body: notificationBody,
-        data: { orderId: result.insertedId.toString() },
+        data: { 
+          orderId: result.insertedId.toString(),
+          phoneNumber: newOrder.phoneNumber || 'No phone number' // Include phone in notification data
+        },
       };
 
       try {
@@ -254,4 +263,3 @@ export async function PUT(request: Request) {
     await client.close();
   }
 }
-

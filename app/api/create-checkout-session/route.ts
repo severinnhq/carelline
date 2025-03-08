@@ -226,6 +226,9 @@ export async function POST(request: NextRequest) {
       },
       billing_address_collection: 'required',
       shipping_options: shippingOptions,
+      phone_number_collection: {
+        enabled: true,
+      },
       metadata: {
         cartItemsSummary: cartItemsSummary,
         freeStandardShipping: isStandardShippingFree.toString(),
