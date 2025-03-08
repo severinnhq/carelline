@@ -128,7 +128,7 @@ const WhySection = () => {
     }
 
     return () => currentRefs.forEach((ref) => ref && observer.unobserve(ref));
-  }, [isLargeScreen]);
+  }, [isLargeScreen, circleData.length]);
 
   const getLineVisibility = () => {
     if (hasReachedBottom.current) return '0%';
