@@ -185,55 +185,55 @@ export default function HeroSection() {
   const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
 
   return (
-    <section className={`relative min-h-screen w-full overflow-hidden bg-white pt-24 lg:pt-32 ${sora.className}`}>
+    <section className={`relative min-h-screen w-full overflow-hidden bg-white pt-20 lg:pt-28 ${sora.className}`}>
       <style jsx global>{`
         @media (max-width: 500px) {
           .hero-heading {
             font-size: 2.4rem;
+            line-height: 1.1;
           }
         }
-           @media (max-width: 375px) {
+        @media (max-width: 375px) {
           .hero-heading {
             font-size: 2.2rem;
+            line-height: 1.1;
           }
         }
-              @media (max-width: 330px) {
+        @media (max-width: 330px) {
           .hero-heading {
             font-size: 2.1rem;
+            line-height: 1.1;
           }
         }
 
-
-
-          @media (max-width: 400px) {
+        @media (max-width: 400px) {
           .subtitle-text {
             font-size: .95rem !important;
           }
         }
-            @media (max-width: 375px) {
+        @media (max-width: 375px) {
           .subtitle-text {
             font-size: .88rem !important;
           }
         }
-        
         @media (max-width: 350px) {
           .subtitle-text {
             font-size: 0.84rem !important;
           }
         }
-           @media (max-width: 340px) {
+        @media (max-width: 340px) {
           .subtitle-text {
             font-size: 0.82rem !important;
           }
         }
-               @media (max-width: 330px) {
+        @media (max-width: 330px) {
           .subtitle-text {
             font-size: 0.80rem !important;
           }
         }
-                @media (max-width: 320px) {
+        @media (max-width: 320px) {
           .subtitle-text {
-          width:15rem;
+            width:15rem;
             font-size: 0.79rem !important;
           }
         }
@@ -272,16 +272,17 @@ export default function HeroSection() {
       </div>
 
       {/* Main Content */}
-      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-8 sm:py-12 md:py-16 flex flex-col items-center justify-center">
-        <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-8 lg:gap-16 w-full">
+      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-6 sm:py-10 md:py-12 flex flex-col items-center justify-center">
+        <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-6 lg:gap-12 w-full">
           {/* Left Column: Text & Button */}
-          <div className="w-full lg:w-2/5 z-10 flex-shrink-0 lg:mt-10">
+          <div className="w-full lg:w-2/5 z-10 flex-shrink-0 lg:mt-8">
             <motion.h1
-              className="hero-heading font-black text-black mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-5xl xl:text-6xl leading-tight mt-4 sm:mt-8 lg:mt-0 tracking-tight w-11/12 sm:w-full mx-auto lg:mx-0"
+              className="hero-heading font-black text-black mb-3 sm:mb-4 text-4xl sm:text-5xl md:text-5xl xl:text-6xl leading-tight mt-3 sm:mt-6 lg:mt-0 tracking-tight w-11/12 sm:w-full mx-auto lg:mx-0"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={0}
               variants={textVariants}
+              style={{ lineHeight: ".95" }}
             >
               <span className="block">Legyen kéznél</span>
               <span className="text-purple-600 block" style={{ color: '#dc2626' }}>
@@ -289,27 +290,27 @@ export default function HeroSection() {
               </span>
             </motion.h1>
             <motion.p
-              style={{ fontSize: "1rem" }}
-              className="subtitle-text mb-6 sm:mb-8 text-gray-600 text-sm sm:text-base md:text-lg w-10/12 sm:w-8/12 max-w-lg mx-auto lg:mx-0 text-center lg:text-left"
+              style={{ fontSize: "1rem", lineHeight: "1.4" }}
+              className="subtitle-text mb-4 sm:mb-6 text-[#222] text-sm sm:text-base md:text-lg w-10/12 sm:w-8/12 max-w-lg mx-auto lg:mx-0 text-center lg:text-left"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={1}
               variants={textVariants}
             >
-              Fulladásgátló eszközeink pillanatok alatt tisztítják meg a légutat!
+             A fulladás 4 perc alatt végzetes lehet. Ne várj a segítségre – légy te a megmentő!
             </motion.p>
             <motion.div
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={buttonVariants}
-              className="mb-6 sm:mb-8 text-center lg:text-left"
+              className="mb-4 sm:mb-6 text-center lg:text-left"
             >
               
               <Link href="/product/67c1cce79beb94961403e8f1">
                 <button 
                   className="text-white font-semibold rounded-md transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-base sm:text-lg" 
                   style={{ 
-                    padding: "0.7rem 1.5rem", 
+                    padding: "0.65rem 1.4rem", 
                     backgroundColor: "#dc2626",  
                     color: "white" 
                   }}
@@ -326,57 +327,57 @@ export default function HeroSection() {
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               variants={testimonialsVariant}
-              className="flex flex-col items-center lg:items-start mb-6"
+              className="flex flex-col items-center lg:items-start mb-4"
             >
               <div className="flex -space-x-1 sm:-space-x-2 mr-2">
                 {/* Profile Images */}
                 <div className="flex -space-x-2 mr-2">
-                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-50">
+                  <div className="w-7 h-7 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-50">
                     <Image
                       src="/uploads/baby1.png"
                       alt="Baby 1"
-                      width={32}
-                      height={32}
+                      width={28}
+                      height={28}
                       quality={100}
                       className="object-cover object-center"
                     />
                   </div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-40">
+                  <div className="w-7 h-7 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-40">
                     <Image
                       src="/uploads/baby2.png"
                       alt="Baby 2"
-                      width={32}
-                      height={32}
+                      width={28}
+                      height={28}
                       quality={100}
                       className="object-cover object-center"
                     />
                   </div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-30">
+                  <div className="w-7 h-7 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-30">
                     <Image
                       src="/uploads/baby3.png"
                       alt="Baby 3"
-                      width={32}
-                      height={32}
+                      width={28}
+                      height={28}
                       quality={100}
                       className="object-cover object-center"
                     />
                   </div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-20">
+                  <div className="w-7 h-7 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-20">
                     <Image
                       src="/uploads/baby4.png"
                       alt="Baby 4"
-                      width={32}
-                      height={32}
+                      width={28}
+                      height={28}
                       quality={100}
                       className="object-cover"
                     />
                   </div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-10">
+                  <div className="w-7 h-7 rounded-full border-2 border-white overflow-hidden bg-gray-200 z-10">
                     <Image
                       src="/uploads/baby5.png"
                       alt="Baby 5"
-                      width={32}
-                      height={32}
+                      width={28}
+                      height={28}
                       quality={100}
                       className="object-cover"
                     />
@@ -389,7 +390,7 @@ export default function HeroSection() {
                     <svg 
                       key={star} 
                       xmlns="http://www.w3.org/2000/svg" 
-                      className="h-5 w-5 text-yellow-400" 
+                      className="h-4 w-4 text-yellow-400" 
                       viewBox="0 0 20 20" 
                       fill="currentColor"
                     >
@@ -401,7 +402,7 @@ export default function HeroSection() {
                 </div>
               </div>
               
-              <p className="text-gray-600 text-sm mt-1 text-center lg:text-left" style={{ width: "fit-content" }}>
+              <p className="text-gray-600 text-xs sm:text-sm mt-1 text-center lg:text-left" style={{ width: "fit-content", lineHeight: "1.3" }}>
                 <span className="font-semibold">122</span>{" "}
                 <Link href="" className="underline">
                   regisztrált
@@ -420,18 +421,18 @@ export default function HeroSection() {
               variants={videoVariants}
             >
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-xl transform translate-x-2 sm:translate-x-4 translate-y-2 sm:translate-y-4"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-xl transform translate-x-2 sm:translate-x-3 translate-y-2 sm:translate-y-3"></div>
                 <div className="relative bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
-                  <div className="h-8 sm:h-10 md:h-12 bg-gray-100 border-b flex items-center px-4">
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-400 mr-2"></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-400 mr-2"></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-400"></div>
+                  <div className="h-7 sm:h-9 md:h-10 bg-gray-100 border-b flex items-center px-4">
+                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-400 mr-2"></div>
+                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-yellow-400 mr-2"></div>
+                    <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-green-400"></div>
                   </div>
                   <div className="relative aspect-video bg-gray-50">
                     {!isVideoLoaded && (
                       <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
                         <div className="animate-pulse flex flex-col items-center">
-                          <div className="w-10 h-10 sm:w-16 sm:h-16 bg-gray-200 rounded-full mb-4"></div>
+                          <div className="w-10 h-10 sm:w-14 sm:h-14 bg-gray-200 rounded-full mb-3"></div>
                           <div className="h-3 sm:h-4 bg-gray-200 rounded w-24 sm:w-32"></div>
                         </div>
                       </div>
@@ -461,7 +462,7 @@ export default function HeroSection() {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-8 w-8 sm:h-12 sm:w-12 text-white"
+                          className="h-8 w-8 sm:h-10 sm:w-10 text-white"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -477,13 +478,13 @@ export default function HeroSection() {
                     )}
                     <button
                       onClick={toggleMute}
-                      className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 z-20 bg-white p-1.5 sm:p-2 rounded-full hover:bg-white/90 focus:outline-none shadow-md transition-all"
+                      className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 z-20 bg-white p-1.5 rounded-full hover:bg-white/90 focus:outline-none shadow-md transition-all"
                       aria-label={isMuted ? 'Unmute video' : 'Mute video'}
                     >
                       {isMuted ? (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 sm:h-6 sm:w-6 text-gray-800"
+                          className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-gray-800"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -497,7 +498,7 @@ export default function HeroSection() {
                       ) : (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 sm:h-6 sm:w-6 text-gray-800"
+                          className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-gray-800"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"

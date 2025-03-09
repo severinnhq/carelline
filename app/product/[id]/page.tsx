@@ -15,6 +15,7 @@ import RecommendedProducts from '@/components/RecommendedProducts'
 import { Sora } from 'next/font/google'
 import { Skeleton } from "@/components/ui/skeleton"
 import MatrixButton from '@/components/MatrixButton';
+import GoogleReviewsSection from '@/components/GoogleReviewsSection';
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -603,6 +604,7 @@ export default function ProductPage() {
                   </div>
                 ))}
               </div>
+  
               
               {/* Shipping features: Desktop and Mobile */}
               {desktopShippingFeatures}
@@ -628,6 +630,7 @@ export default function ProductPage() {
         onRemoveItem={removeFromCart}
         onUpdateQuantity={updateQuantity}
       />
+          <GoogleReviewsSection />
       <RecommendedProducts />
     </div>
   )

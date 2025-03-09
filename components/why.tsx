@@ -138,8 +138,8 @@ const WhySection = () => {
   };
 
   return (
-    <>
-      <section ref={sectionRef} className="pt-32 px-4 min-h-screen">
+    <div className="bg-[#fff5f5]">
+      <section ref={sectionRef} className="pt-8 px-4 min-h-screen">
         <div className="relative mx-auto w-full max-w-screen-md">
           <div
             ref={lineRef}
@@ -291,7 +291,7 @@ const WhySection = () => {
 
       <section 
         ref={additionalSectionRef}
-        className="px-4 my-24 opacity-0"
+        className="px-4 mt-12 pb-24 opacity-0"
       >
         <div className="max-w-screen-md mx-auto">
           {isLargeScreen ? (
@@ -411,7 +411,7 @@ const WhySection = () => {
           }
         }
       `}</style>
-    </>
+    </div>
   );
 };
 
