@@ -398,9 +398,9 @@ export default function ProductList() {
       <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
       <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[4rem] md:mt-[8rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-[2rem] md:mb-[4rem]">
-  <h1 className="text-3xl sm:text-[2.5rem] font-extrabold text-start uppercase tracking-wider mb-2 lg:mb-0">
+  <div className="text-3xl sm:text-[2.5rem] font-black text-start uppercase tracking-wider mb-2 lg:mb-0">
     JOBB BIZTOSRA MENNI
-  </h1>
+  </div>
   
   <a href="/products" className="view-all-link group flex items-center transition-all duration-300 ease-in-out lg:ml-auto">
     <span className="view-all-text relative mr-1">Összes megtekintése</span>

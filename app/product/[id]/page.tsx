@@ -264,7 +264,7 @@ export default function ProductPage() {
   // Desktop view for shipping features
   const desktopShippingFeatures = (
     
-    <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4 pt-6 mt-4 ">
+    <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4 pt-6 mt-4  ">
         <div className="flex flex-col items-center text-center">
         <Truck className="h-10 w-10 text-black mb-2" />        
         <h3 className="text-sm font-bold mb-1">Ingyenes szállítás</h3>  
@@ -437,7 +437,7 @@ export default function ProductPage() {
               <div className="text-sm font-medium text-gray-500 mb-0">
                 Carelline
               </div>
-              <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
+              <h1 className="text-4xl font-black mb-2">{product.name}</h1>
               <div className="mb-0">
                 <div className="flex flex-col w-full">
                   <div className="flex flex-col sm:flex-row sm:items-center">

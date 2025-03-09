@@ -164,7 +164,7 @@ const WhySection = () => {
               style={{ 
                 right: '0',
                 marginRight: isLargeScreen ? '-100px' : '0',
-                top: '182px',
+                top: '200px', // Changed from 182px to 280px to position it lower
                 height: '232px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -261,7 +261,7 @@ const WhySection = () => {
                       ...(!isLargeScreen && { top: '-1.5rem' })
                     }}
                   >
-                    <div className="text-2xl max-[450px]:text-xl font-bold text-left leading-tight">
+                    <div className="text-2xl max-[450px]:text-xl font-extrabold text-left leading-tight">
                       <div>&gt;10</div>
                       <div>perc</div>
                     </div>
@@ -276,8 +276,7 @@ const WhySection = () => {
                 <div
                   ref={el => { circleRefs.current[index] = el; }}
                   className={`w-24 h-24 max-[450px]:w-20 max-[450px]:h-20 flex items-center justify-center rounded-full ${circle.color} text-white 
-                  text-4xl max-[450px]:text-3xl font-bold opacity-0 translate-y-8 transition-all duration-200 ease-out cursor-pointer
-                  hover:scale-125 hover:shadow-2xl hover:z-10 relative`}
+                  text-5xl max-[450px]:text-4xl font-bold opacity-0 translate-y-8 transition-all duration-200 ease-out relative`}
                   style={{
                     transform: `translateY(2rem) ${isLargeScreen ? '' : 'translateX(-50%)'}`,
                   }}
@@ -313,9 +312,9 @@ const WhySection = () => {
             </div>
           ) : (
             <>
-              <h2 className="text-3xl max-[450px]:text-2xl font-extrabold mb-4">
+              <div className="text-3xl max-[450px]:text-2xl font-black mb-4">
                 ORSZÁGOS MENTŐSZOLGÁLAT
-              </h2>
+              </div>
               <div className="additional-flex flex gap-6 items-start">
                 <div className="w-1/2">
                   <p className="text-base max-[450px]:text-sm max-w-md">
@@ -339,9 +338,9 @@ const WhySection = () => {
           className="px-4 my-24 opacity-0"
         >
           <div className="max-w-screen-md mx-auto">
-            <h2 className="text-3xl max-[450px]:text-2xl font-extrabold mb-4">
+            <div className="text-3xl max-[450px]:text-2xl font-black mb-4">
               CARELLINE BREATHGUARD
-            </h2>
+            </div>
             <div className="carelline-flex flex gap-6 items-start">
               <div className="w-1/2">
                 <p className="text-base max-[450px]:text-sm max-w-md">

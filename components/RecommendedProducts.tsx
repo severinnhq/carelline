@@ -370,7 +370,7 @@ export default function RecommendedProducts() {
   return (
     <>
       <div className={`container mx-auto p-4 py-16 sm:py-24 ${sora.className}`} ref={containerRef}>
-        <h2 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-extrabold mb-8 sm:mb-16">Ezeket is ajánljuk</h2>
+        <div className="text-2xl sm:text-3xl lg:text-[2.5rem] font-black mb-8 sm:mb-16">Ezeket is ajánljuk</div>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {isLoading
             ? Array(3).fill(null).map((_, index) => <div key={index}>{renderSkeletonCard()}</div>)

@@ -277,7 +277,7 @@ export default function HeroSection() {
           {/* Left Column: Text & Button */}
           <div className="w-full lg:w-2/5 z-10 flex-shrink-0 lg:mt-10">
             <motion.h1
-              className="hero-heading font-extrabold text-black mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-5xl xl:text-6xl leading-tight mt-4 sm:mt-8 lg:mt-0 tracking-tight w-11/12 sm:w-full mx-auto lg:mx-0"
+              className="hero-heading font-black text-black mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-5xl xl:text-6xl leading-tight mt-4 sm:mt-8 lg:mt-0 tracking-tight w-11/12 sm:w-full mx-auto lg:mx-0"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={0}
