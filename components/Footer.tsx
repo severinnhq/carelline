@@ -56,7 +56,7 @@ const Footer = () => {
   return (
     <footer 
       id="footer" 
-      className={`text-gray-300 py-12 px-4 ${sora.className}`}
+      className={`text-white py-12 px-4 ${sora.className}`}
       style={{ backgroundColor: '#671C1C ' }} // Dark red color (you can adjust this hex code)
     >
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">

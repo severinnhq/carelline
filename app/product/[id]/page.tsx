@@ -9,7 +9,7 @@ import { useCart } from '@/lib/CartContext'
 import { WhiteHeader } from '@/components/WhiteHeader'
 import Sidebar from '@/components/Sidebar'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Plus, Truck, RefreshCcw, BellIcon, ShieldCheck, Eye } from 'lucide-react'
+import { Plus, Truck, RefreshCcw, BellIcon, ShieldCheck, Eye, Star } from 'lucide-react'
 import { FloatingProductBox } from '@/components/FloatingProductBox'
 import RecommendedProducts from '@/components/RecommendedProducts'
 import { Sora } from 'next/font/google'
@@ -34,7 +34,6 @@ interface Product {
 }
 
 export default function ProductPage() {
-  // State declarations
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [product, setProduct] = useState<Product | null>(null)
   const [selectedSize, setSelectedSize] = useState<string>('')
@@ -49,15 +48,12 @@ export default function ProductPage() {
   const [activeEmailInput, setActiveEmailInput] = useState<boolean>(false)
   const [notifyMessage, setNotifyMessage] = useState<{ type: 'success' | 'error', content: string } | null>(null)
   const [currentViewers, setCurrentViewers] = useState<number>(0)
-
-  // For mobile shipping slider container width
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const shippingContainerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
 
-  // Define shipping features for both desktop and mobile
   const shippingFeatures = [
-
-    
     {
       icon: <ShieldCheck className="h-10 w-10 text-black mb-3" />,
       title: "Biztonságos fizetés",
@@ -75,20 +71,40 @@ export default function ProductPage() {
     },
   ];
 
-  // Fetch the product
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+      if (shippingContainerRef.current) {
+        setContainerWidth(shippingContainerRef.current.offsetWidth);
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     async function fetchProduct() {
-      const response = await fetch(`/api/products/${id}`)
-      if (response.ok) {
-        const data = await response.json()
-        setProduct(data)
-        setSelectedImage(data.mainImage)
-        // Set the default selected size.
-        if (data.sizes.includes('One Size')) {
-          setSelectedSize('One Size')
-        } else if (data.sizes.length > 0) {
-          setSelectedSize(data.sizes[0])
+      setIsLoading(true);
+      try {
+        const response = await fetch(`/api/products/${id}`)
+        if (response.ok) {
+          const data = await response.json()
+          setProduct(data)
+          setSelectedImage(data.mainImage)
+          if (data.sizes.includes('One Size')) {
+            setSelectedSize('One Size')
+          } else if (data.sizes.length > 0) {
+            setSelectedSize(data.sizes[0])
+          }
         }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 800);
       }
     }
     if (id) {
@@ -96,7 +112,6 @@ export default function ProductPage() {
     }
   }, [id])
 
-  // Update viewers count
   useEffect(() => {
     const getViewersCount = () => {
       const now = new Date().getTime();
@@ -104,7 +119,8 @@ export default function ProductPage() {
   
       if (storedData) {
         const { count, timestamp } = JSON.parse(storedData);
-        if (now - timestamp < 300000) {
+        // Changed from 300000 (5 minutes) to 60000 (1 minute)
+        if (now - timestamp < 60000) {
           return count;
         }
       }
@@ -128,21 +144,16 @@ export default function ProductPage() {
       if (storedData) {
         const { timestamp } = JSON.parse(storedData);
         const now = new Date().getTime();
-        if (now - timestamp >= 300000) {
+        // Changed from 300000 (5 minutes) to 60000 (1 minute)
+        if (now - timestamp >= 60000) {
           setCurrentViewers(getViewersCount());
         }
       }
-    }, 60000);
+    }, 60000); // Check every minute
   
     return () => clearInterval(interval);
   }, [id]);
   
-  const displayedViewers = currentViewers > 0 ? currentViewers - 1 : 0;
-  const viewerSuffix = [3, 6, 8].includes(displayedViewers)
-    ? '-an nézik önön kívül'
-    : '-en nézik önön kívül';
-
-  // Show floating box based on scroll position
   useEffect(() => {
     const handleScroll = () => {
       if (productRef.current) {
@@ -159,20 +170,6 @@ export default function ProductPage() {
       window.removeEventListener('resize', handleScroll)
     }
   }, [])
-
-  // Update container width for mobile slider on mount and on resize
-  useEffect(() => {
-    if (shippingContainerRef.current) {
-      setContainerWidth(shippingContainerRef.current.offsetWidth);
-    }
-    const handleResize = () => {
-      if (shippingContainerRef.current) {
-        setContainerWidth(shippingContainerRef.current.offsetWidth);
-      }
-    }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleAddToCart = () => {
     if (product && selectedSize) {
@@ -228,51 +225,15 @@ export default function ProductPage() {
     })
   }
 
-  if (!product) {
-    return (
-      <div className={`${sora.className} min-h-screen flex flex-col`}>
-        <Skeleton className="h-16 w-full" />
-        <div className="flex-grow container mx-auto px-4 py-24">
-          <div className="flex flex-col lg:flex-row gap-8">
-            <div className="lg:w-3/5">
-              <Skeleton className="w-full aspect-square mb-6" />
-              <div className="flex gap-2">
-                {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="w-20 h-20" />
-                ))}
-              </div>
-            </div>
-            <div className="lg:w-2/5 space-y-4">
-              <Skeleton className="h-10 w-3/4" />
-              <Skeleton className="h-6 w-1/4" />
-              <Skeleton className="h-4 w-1/2" />
-              <div className="space-y-2">
-                {[...Array(4)].map((_, i) => (
-                  <Skeleton key={i} className="h-10 w-full" />
-                ))}
-              </div>
-              <Skeleton className="h-12 w-full" />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
-  const isProductAvailable = product.sizes.length > 0 && product.inventoryStatus !== 'elfogyott'
-
-  // Desktop view for shipping features
   const desktopShippingFeatures = (
-    
-    <div className="hidden sm:grid sm:grid-cols-3 sm:gap-4 pt-6 mt-4  ">
-        <div className="flex flex-col items-center text-center">
+    <div className="hidden 2xl:grid 2xl:grid-cols-3 2xl:gap-4 pt-6 mt-4 w-[85%] max-lg:w-full">
+      <div className="flex flex-col items-center text-center">
         <Truck className="h-10 w-10 text-black mb-2" />        
         <h3 className="text-sm font-bold mb-1">Ingyenes szállítás</h3>  
         <p className="text-xs text-gray-600 max-w-[150px] mx-auto">
           30 000 Ft feletti rendeléseknél
         </p>
-      </div> 
+      </div>
       <div className="flex flex-col items-center text-center">
         <RefreshCcw className="h-10 w-10 text-black mb-2" />
         <h3 className="text-sm font-bold mb-1">Termékvisszaküldés</h3>
@@ -287,31 +248,20 @@ export default function ProductPage() {
           100%-ban titkosítva, adatok tárolása nélkül
         </p>
       </div>
-         
-     
     </div>
   );
 
-  // Mobile view for shipping features using a draggable slider
   const mobileShippingFeatures = (
     <div
-      className="sm:hidden overflow-hidden border-t border-gray-200 pt-6 mt-4 w-full"
+      className="2xl:hidden overflow-hidden pt-6 mt-4 w-full"
       ref={shippingContainerRef}
     >
       <motion.div
-        drag="x"
+        drag={isMobile ? "x" : false}
         dragElastic={0.2}
         dragConstraints={{ left: -((shippingFeatures.length - 1) * containerWidth), right: 0 }}
         animate={{ x: -currentFeatureIndex * containerWidth }}
         transition={{ duration: 0.15 }}
-        onDragEnd={(event, info) => {
-          const threshold = 50;
-          if (info.offset.x < -threshold && currentFeatureIndex < shippingFeatures.length - 1) {
-            setCurrentFeatureIndex(currentFeatureIndex + 1);
-          } else if (info.offset.x > threshold && currentFeatureIndex > 0) {
-            setCurrentFeatureIndex(currentFeatureIndex - 1);
-          }
-        }}
         className="flex"
       >
         {shippingFeatures.map((feature, index) => (
@@ -325,7 +275,6 @@ export default function ProductPage() {
           </div>
         ))}
       </motion.div>
-      {/* Navigation dots */}
       <div className="flex justify-center mt-4 space-x-2">
         {shippingFeatures.map((_, index) => (
           <button
@@ -339,7 +288,6 @@ export default function ProductPage() {
     </div>
   );
 
-  // Availability status component
   const StyledAvailabilityStatus = ({ status, quantity }: { status: string, quantity?: number }) => {
     let statusText = '';
     let statusColor = '';
@@ -363,11 +311,10 @@ export default function ProductPage() {
     );
   };
 
-  // FAQ sections
   const faqs = [
     {
       question: "Leírás",
-      answer: product.description
+      answer: product?.description || ''
     },
     {
       question: "Fizetés & Szállítás",
@@ -390,12 +337,153 @@ export default function ProductPage() {
     }
   ]
 
+  const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+  const isProductAvailable = (product?.sizes?.length ?? 0) > 0 && product?.inventoryStatus !== 'elfogyott'
+  const displayedViewers = currentViewers > 0 ? currentViewers - 1 : 0;
+  const viewerSuffix = [3, 6, 8].includes(displayedViewers)
+    ? '-an nézik önön kívül'
+    : '-en nézik önön kívül';
+
+  // Star rating component
+  const StarRating = () => (
+    <div className="flex">
+      {[...Array(5)].map((_, i) => (
+        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+      ))}
+    </div>
+  );
+
+  if (isLoading || !product) {
+    return (
+      <div className={`${sora.className} min-h-screen flex flex-col bg-white`}>
+        <Skeleton className="h-16 w-full bg-gray-200" />
+        <div className="flex-grow container mx-auto px-4 py-24">
+          <div className="flex flex-col lg:flex-row gap-8">
+            <div className="lg:w-3/5">
+              <div className="relative">
+                <Skeleton className="w-full aspect-square rounded-lg mb-6 animate-pulse bg-gray-200" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skeleton-shine"></div>
+              </div>
+              
+              <div className="flex gap-2 overflow-x-auto">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="relative">
+                    <Skeleton className="w-20 h-20 rounded-md animate-pulse bg-gray-200" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skeleton-shine"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="lg:w-2/5 space-y-4 pt-12">
+              <Skeleton className="h-4 w-20 animate-pulse bg-gray-200" />
+              <Skeleton className="h-10 w-3/4 animate-pulse bg-gray-200" />
+              <div className="flex items-center gap-2 mt-2">
+                <Skeleton className="h-8 w-32 animate-pulse bg-gray-200" />
+                <Skeleton className="h-6 w-16 animate-pulse bg-gray-200" />
+              </div>
+              
+              <Skeleton className="h-px w-full bg-gray-200 my-4" />
+              
+              <div className="flex gap-2 flex-wrap">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-10 w-12 rounded-md animate-pulse bg-gray-200" />
+                ))}
+              </div>
+              
+              <div className="space-y-4 mt-4">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-4 w-4 rounded-full animate-pulse bg-gray-200" />
+                  <Skeleton className="h-4 w-48 animate-pulse bg-gray-200" />
+                </div>
+                
+                <div className="flex flex-col lg:flex-row gap-4">
+                  <div className="space-y-2">
+                    <Skeleton className="h-6 w-24 animate-pulse bg-gray-200" />
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="h-8 w-8 animate-pulse bg-gray-200" />
+                      <Skeleton className="h-6 w-6 animate-pulse bg-gray-200" />
+                      <Skeleton className="h-8 w-8 animate-pulse bg-gray-200" />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Skeleton className="h-6 w-32 animate-pulse bg-gray-200" />
+                    <Skeleton className="h-8 w-40 rounded-md animate-pulse bg-gray-200" />
+                  </div>
+                </div>
+              </div>
+              
+              <Skeleton className="h-12 w-full rounded-md animate-pulse bg-gray-200 mt-6" />
+              
+              <div className="space-y-2 mt-6">
+                {[...Array(2)].map((_, i) => (
+                  <Skeleton key={i} className="h-12 w-full rounded-lg animate-pulse bg-gray-200" />
+                ))}
+              </div>
+              
+              <div className="grid grid-cols-3 gap-4 mt-6">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex flex-col items-center">
+                    <Skeleton className="h-10 w-10 rounded-full animate-pulse bg-gray-200 mb-2" />
+                    <Skeleton className="h-4 w-24 animate-pulse bg-gray-200 mb-1" />
+                    <Skeleton className="h-3 w-20 animate-pulse bg-gray-200" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-20">
+            <Skeleton className="h-8 w-64 animate-pulse bg-gray-200 mb-6" />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="w-full aspect-square rounded-lg animate-pulse bg-gray-200" />
+                  <Skeleton className="h-5 w-3/4 animate-pulse bg-gray-200" />
+                  <Skeleton className="h-4 w-1/2 animate-pulse bg-gray-200" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <style jsx global>{`
+          @keyframes shine {
+            0% {
+              transform: translateX(-100%);
+            }
+            100% {
+              transform: translateX(100%);
+            }
+          }
+          
+          .skeleton-shine {
+            animation: shine 1.5s infinite;
+          }
+          
+          .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          }
+          
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0.7;
+            }
+          }
+        `}</style>
+      </div>
+    )
+  }
+
   return (
     <div className={sora.className}>
       <WhiteHeader onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
-      <div className="max-w-screen-2xl mx-auto px-4 md:px-6 py-24" ref={productRef}>
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-6 pt-24 pb-24" ref={productRef}>
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left column - Images */}
           <div className="lg:w-3/5 flex-shrink-0">
             <div className="mb-6">
               <Image
@@ -432,8 +520,7 @@ export default function ProductPage() {
             </div>
           </div>
           
-          {/* Right column - Product info */}
-          <div className="lg:w-2/5 w-full max-w-full overflow-x-hidden">
+          <div className="lg:w-2/5 w-full max-w-full overflow-x-hidden mt-12 lg:mt-24">
             <div className="px-0 lg:px-4 w-full">
               <div className="text-sm font-medium text-gray-500 mb-0">
                 Carelline
@@ -484,64 +571,112 @@ export default function ProductPage() {
                     </div>
                   </div>
                   <div className="mb-6">
-                    <div className="flex flex-col">
-                      <div className="mt-0 mb-4 flex items-center font-bold text-gray-500 text-sm">
-                        <Eye className="h-4 w-4 mr-1 text-gray-500" />
-                        <span>{currentViewers} ember nézi jelenleg</span>
-                      </div>
-                      <div className="flex flex-col xl:flex-row items-start">
-                        <div className="mb-4 xl:mb-0 xl:order-2">
-                          <div className="mb-2">
-                            <span className="font-medium text-base">Elérhetőség:</span>
-                          </div>
-                          <StyledAvailabilityStatus
-                            status={product.inventoryStatus}
-                            quantity={product.stockQuantity}
-                          />
-                        </div>
-                        <div className="mr-0 xl:mr-20 xl:order-1">
-                          <div className="mb-2">
-                            <span className="font-medium text-base">Mennyiség:</span>
-                          </div>
-                          <div className="flex items-center">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => handleQuantityChange(quantity - 1)}
-                              className="h-8 w-8 text-sm"
-                            >
-                              -
-                            </Button>
-                            <span className="mx-3 text-base font-medium">{quantity}</span>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => handleQuantityChange(quantity + 1)}
-                              className={`h-8 w-8 text-sm ${quantity >= product.stockQuantity ? 'opacity-50 cursor-not-allowed' : ''}`}
-                              disabled={quantity >= product.stockQuantity}
-                            >
-                              +
-                            </Button>
-                          </div>
-                          {quantity >= product.stockQuantity && (
-                            <p className="text-xs text-[#dc2626] mt-1">Jelenleg nincs több raktáron</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-[85%] max-lg:w-full">
-                    <MatrixButton
-                      phrases={[
-                        "Kosárba teszem",
-                        "Rendelje meg mielőtt elfogy",
-                        `${displayedViewers} ${viewerSuffix}`,
-                        `Siessen! Már csak ${product.stockQuantity} darab van`,
-                      ]}
-                      onClick={handleAddToCart}
-                      className="w-full block py-4 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
-                    />
-                  </div>
+  <div className="flex flex-col">
+    {/* Stars and Viewers section */}
+    <div className="mt-0 mb-4 w-[85%] max-lg:w-full">
+  <div className="flex flex-col xl:flex-row items-start justify-between">
+    {/* Order on mobile: Stars first, then Viewers */}
+    <div className="order-2 xl:order-1 flex items-center text-xs text-[#222] mt-2 xl:mt-0">
+      <Eye className="h-4 w-4 mr-1 text-[#222] animate-pulse" />
+      <span>{currentViewers} ember nézi jelenleg</span>
+    </div>
+    <div className="order-1 xl:order-2 flex items-center">
+      <StarRating />
+      <span className="ml-1 text-xs text-[#222]">(4,8)</span>
+    </div>
+  </div>
+</div>
+    
+    {/* Mobile Order: Elérhetőség, then Mennyiség */}
+    <div className="flex flex-col xl:flex-row items-start justify-between w-[85%] max-lg:w-full">
+  {/* Availability section - first on mobile */}
+  <div className="order-1 xl:order-2 mt-4 xl:mt-0">
+    <div className="mb-2 flex flex-col">
+      <span className="font-medium text-base">Elérhetőség:</span>
+    </div>
+    <StyledAvailabilityStatus
+      status={product.inventoryStatus}
+      quantity={product.stockQuantity}
+    />
+  </div>
+  
+  {/* Quantity section - second on mobile */}
+  <div className="order-2 xl:order-1 flex-1 mt-4 xl:mt-0">
+    <div className="mb-2">
+      <span className="font-medium text-base">Mennyiség:</span>
+    </div>
+    <div className="flex items-center">
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => handleQuantityChange(quantity - 1)}
+        className="h-8 w-8 text-sm"
+      >
+        -
+      </Button>
+      <span className="mx-3 text-base font-medium">{quantity}</span>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => handleQuantityChange(quantity + 1)}
+        className={`h-8 w-8 text-sm ${quantity >= product.stockQuantity ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={quantity >= product.stockQuantity}
+      >
+        +
+      </Button>
+    </div>
+    {quantity >= product.stockQuantity && (
+      <p className="text-xs text-[#dc2626] mt-1">Jelenleg nincs több raktáron</p>
+    )}
+  </div>
+</div>
+
+  </div>
+</div>
+
+{/* Button section - last in both mobile and desktop */}
+<div className="w-[85%] max-lg:w-full flex gap-3">
+  <MatrixButton
+    phrases={[
+      "Kosárba teszem",
+      "Rendelje meg mielőtt elfogy",
+      `${displayedViewers} ${viewerSuffix}`,
+      `Siessen! Már csak ${product.stockQuantity} darab van`,
+    ]}
+    onClick={handleAddToCart}
+    className="flex-1 block py-4 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
+  />
+  <Button
+    variant="outline"
+    className="h-auto w-12 border-2 border-gray-400 flex items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_15px_rgba(0,0,0,0.25)] transition-all duration-200 hover:border-gray-500"
+    onClick={() => {
+      if (navigator.share) {
+        navigator.share({
+          title: product.name,
+          url: window.location.href
+        }).catch(err => console.error('Error sharing:', err));
+      }
+    }}
+  >
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      width="20" 
+      height="20" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+    </svg>
+  </Button>
+</div>
                 </>
               ) : (
                 <div className="mb-3 w-full">
@@ -568,6 +703,7 @@ export default function ProductPage() {
                           Notify
                         </Button>
                       </form>
+
                       {notifyMessage && (
                         <div
                           className={`mt-2 p-2 rounded-md text-sm font-medium ${notifyMessage.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
@@ -605,8 +741,6 @@ export default function ProductPage() {
                 ))}
               </div>
   
-              
-              {/* Shipping features: Desktop and Mobile */}
               {desktopShippingFeatures}
               {mobileShippingFeatures}
             </div>
@@ -630,7 +764,7 @@ export default function ProductPage() {
         onRemoveItem={removeFromCart}
         onUpdateQuantity={updateQuantity}
       />
-          <GoogleReviewsSection />
+      <GoogleReviewsSection />
       <RecommendedProducts />
     </div>
   )

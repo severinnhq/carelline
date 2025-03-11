@@ -24,7 +24,7 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
       setIsScrolled(window.scrollY > 10)
     }
     window.addEventListener('scroll', handleScroll)
-    handleScroll() // Check initial scroll position
+    handleScroll() // initial check
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -32,8 +32,17 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
 
   return (
     <>
+      {/* Banner fixed at the top with responsive text size and a static message */}
+      <div
+  className="w-full bg-[#dc2626] text-white text-center h-10 flex items-center justify-center whitespace-nowrap text-xs sm:text-sm md:text-base lg:text-lg font-bold fixed top-0 left-0 z-50"
+        suppressHydrationWarning
+      >
+        Kedvezményeink csak március 14-ig tartanak
+      </div>
+
+      {/* Header shifted down by the banner height (h-10 => top-10) */}
       <header
-        className={`fixed top-0 left-0 right-0 z-[90] transition-all duration-300 ${
+        className={`fixed top-10 left-0 right-0 z-[90] transition-all duration-300 ${
           isScrolled ? 'bg-white shadow-md' : 'bg-transparent'
         } ${sora.className}`}
       >

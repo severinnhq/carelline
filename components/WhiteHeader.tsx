@@ -19,12 +19,21 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
   const handleLogoClick = () => {
-    sessionStorage.removeItem('productListScrollPosition');
+    sessionStorage.removeItem('productListScrollPosition')
   }
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+      {/* Red Banner */}
+      <div
+   className="w-full bg-[#dc2626] text-white text-center h-10 flex items-center justify-center whitespace-nowrap text-xs sm:text-sm md:text-base lg:text-lg font-bold fixed top-0 left-0 z-50"
+        suppressHydrationWarning
+      >
+        Kedvezményeink csak március 14-ig tartanak
+      </div>
+
+      {/* White Header shifted down by banner height (h-10 => top-10) */}
+      <header className="fixed top-10 left-0 right-0 z-50 bg-white shadow-md">
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
           <Button 
             variant="ghost" 
@@ -68,4 +77,3 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
     </>
   )
 }
-

@@ -45,7 +45,7 @@ export default function FAQSection() {
     <div className="bg-[#fff5f5] w-full pb-[4rem] md:pb-[8rem]">
       <div id="faq-section" className="max-w-6xl mx-auto px-4 pt-12">
         <div className="text-3xl sm:text-[2.5rem] font-black mb-[1rem] md:mb-[1rem] text-center uppercase tracking-wider">FONTOS TUDNIVALÓK</div>
-        <p className="text-center text-gray-600 mb-[4rem] text-lg mx-auto max-w-[600px] w-full px-4 sm:px-6 md:px-8">
+        <p className="text-center text-[#222] mb-[4rem] text-lg mx-auto max-w-[600px] w-full px-4 sm:px-6 md:px-8">
         Amikor minden másodperc számít, gyors válaszokra van szükség. Íme minden, amit érdemes tudni.
         </p>
 
@@ -73,7 +73,7 @@ export default function FAQSection() {
                     : 'max-h-0 opacity-0 py-0'
                 }`}
               >
-                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">{faq.answer}</p>
+                <p className="text-[#222] font-light text-sm sm:text-base leading-relaxed">{faq.answer}</p>
               </div>
             </div>
           ))}

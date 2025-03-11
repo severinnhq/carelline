@@ -181,7 +181,7 @@ const ReviewSection = () => {
   ]
 
   return (
-    <div className="bg-gradient-to-b from-white via-white to-[#fff5f5] pb-16">
+    <div className="bg-white pb-16">
       <div ref={higherScrollTargetRef} className="h-[2rem] md:h-[4rem]" />
       <div ref={topRef} className={`container mx-auto px-4 py-0 ${sora.className}`}>
         <div id="review-section" className="relative w-full">

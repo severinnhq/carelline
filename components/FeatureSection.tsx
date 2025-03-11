@@ -28,7 +28,7 @@ const FeatureSection = () => {
   ];
 
   return (
-    <div id="feature-section" className="bg-[#fff5f5] py-[10rem] sm:py-[10rem] md:py-[10rem] lg:py-[10rem]">
+    <div id="feature-section" className="bg-gradient-to-b from-white via-white to-[#fff5f5] py-[10rem] sm:py-[10rem] md:py-[10rem] lg:py-[10rem]">
       <section className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center">
           {/* Left side: Image area with a slight scale-down effect */}
@@ -69,7 +69,7 @@ const FeatureSection = () => {
                         : 'max-h-0 opacity-0'
                     }`}
                   >
-                    <p className="text-gray-600">{feature.description}</p>
+                    <p className="text-[#222] font-light">{feature.description}</p>
                   </div>
                   {/* Divider between items */}
                   {index < features.length - 1 && (
