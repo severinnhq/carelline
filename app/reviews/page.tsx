@@ -127,9 +127,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
 
   return (
     <div className="max-w-lg mx-auto py-10 my-48 px-6 bg-white rounded-lg shadow-md relative">
-      <h1 className="text-xl font-bold text-start uppercase tracking-wider mb-4">
+      <div className="text-3xl font-black text-start uppercase tracking-wider mb-4">
         Értékelés beküldése
-      </h1>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="name" className="block mb-2">
