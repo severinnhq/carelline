@@ -138,7 +138,7 @@ const WhySection = () => {
   };
 
   return (
-    <div className="bg-[#fff5f5]">
+    <div className="bg-gradient">
       <section ref={sectionRef} className="pt-8 px-4 min-h-screen">
         <div className="relative mx-auto w-full max-w-screen-md">
           <div
@@ -262,7 +262,7 @@ const WhySection = () => {
                     }}
                   >
                     <div className="text-2xl max-[450px]:text-xl font-extrabold text-left leading-tight">
-                      <div>&gt;10</div>
+                      <div>&gt; 10</div>
                       <div>perc</div>
                     </div>
                     <div className="text-xl max-[450px]:text-base font-normal text-left leading-tight max-[450px]:mt-1">
@@ -289,9 +289,10 @@ const WhySection = () => {
         </div>
       </section>
 
+      {/* The Orszagos Mentoszolgalat section is now part of the gradient background */}
       <section 
         ref={additionalSectionRef}
-        className="px-4 mt-12 pb-24 opacity-0"
+        className="px-4 mt-[2rem] pb-24 opacity-0"
       >
         <div className="max-w-screen-md mx-auto">
           {isLargeScreen ? (
@@ -389,6 +390,11 @@ const WhySection = () => {
 
         .animate-fadeIn {
           animation: fadeIn 0.7s ease-out forwards;
+        }
+        
+        /* Gradient background that transitions from #fff5f5 to white */
+        .bg-gradient {
+          background: linear-gradient(to bottom, #fff5f5 0%, #fff8f8 20%, #fffafa 40%, #fffcfc 60%, #ffffff 80%, #ffffff 100%);
         }
 
         @media (max-width: 450px) {

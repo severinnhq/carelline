@@ -39,7 +39,7 @@ const ReviewImage: React.FC<ReviewImageProps> = ({ src, alt, reviewText, reviewe
                 key={i}
                 className="w-4 h-4 text-yellow-400"
                 viewBox="0 0 20 20"
-                fill="currentColor" // Add this attribute
+                fill="currentColor"
               >
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
@@ -181,15 +181,15 @@ const ReviewSection = () => {
   ]
 
   return (
-    <>
-     <div ref={higherScrollTargetRef} className="h-[2rem] md:h-[4rem]" />
+    <div className="bg-gradient-to-b from-white via-white to-[#fff5f5] pb-16">
+      <div ref={higherScrollTargetRef} className="h-[2rem] md:h-[4rem]" />
       <div ref={topRef} className={`container mx-auto px-4 py-0 ${sora.className}`}>
         <div id="review-section" className="relative w-full">
-        <div className="relative flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:justify-between">
-  <div className="text-3xl sm:text-[2.5rem] font-black text-start uppercase tracking-wider mb-0 lg:mb-0">
-    MÁSOKON SEGíTETT
-  </div>
-  <Link href="/reviews" className="view-all-link group flex items-center transition-all duration-300 ease-in-out">
+          <div className="relative flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:justify-between">
+            <div className="text-3xl sm:text-[2.5rem] font-black text-start uppercase tracking-wider mb-0 lg:mb-0">
+              MÁSOKON SEGíTETT
+            </div>
+            <Link href="/reviews" className="view-all-link group flex items-center transition-all duration-300 ease-in-out">
               <span className="view-all-text relative mr-1">Saját véleményem</span>
               <div className="view-all-circle flex items-center justify-center rounded-full bg-[#e5e5e5] w-6 h-6 transition-all duration-300 ease-in-out group-hover:bg-[#dc2626]">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-all duration-300 ease-in-out group-hover:text-white">
@@ -462,7 +462,7 @@ const ReviewSection = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

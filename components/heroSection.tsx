@@ -185,7 +185,7 @@ export default function HeroSection() {
   const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
 
   return (
-    <section className={`relative min-h-screen w-full overflow-hidden bg-white pt-20 lg:pt-28 ${sora.className}`}>
+    <section className={`relative flex items-center min-h-screen w-full overflow-hidden bg-white ${sora.className}`}>
       <style jsx global>{`
         @media (max-width: 500px) {
           .hero-heading {
@@ -272,12 +272,12 @@ export default function HeroSection() {
       </div>
 
       {/* Main Content */}
-      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-6 sm:py-10 md:py-12 flex flex-col items-center justify-center">
+      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-6 sm:py-10 md:py-12 flex flex-col items-center justify-center w-full">
         <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-6 lg:gap-12 w-full">
           {/* Left Column: Text & Button */}
-          <div className="w-full lg:w-2/5 z-10 flex-shrink-0 lg:mt-8">
+          <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
             <motion.h1
-              className="hero-heading font-black text-black mb-3 sm:mb-4 text-4xl sm:text-5xl md:text-5xl xl:text-6xl leading-tight mt-3 sm:mt-6 lg:mt-0 tracking-tight w-11/12 sm:w-full mx-auto lg:mx-0"
+              className="hero-heading font-black text-black mb-3 sm:mb-4 text-4xl sm:text-5xl md:text-5xl xl:text-6xl leading-tight tracking-tight w-11/12 sm:w-full mx-auto lg:mx-0"
               initial="hidden"
               animate={isLoaded ? 'visible' : 'hidden'}
               custom={0}
