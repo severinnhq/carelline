@@ -133,8 +133,8 @@ export async function POST(request: NextRequest) {
     const totalAmount = totalBeforeShipping;
     const freeShippingThreshold = 30000; // HUF threshold for free standard shipping
     const isStandardShippingFree = totalAmount >= freeShippingThreshold;
-    const standardShippingCost = isStandardShippingFree ? 0 : 1490;
-    const expressShippingCost = 2990;
+    const standardShippingCost = isStandardShippingFree ? 0 : 1990;
+    const expressShippingCost = 3990;
     const minShippingTotal = totalAmount + standardShippingCost;
 
     if (minShippingTotal < MIN_AMOUNT_HUF) {
