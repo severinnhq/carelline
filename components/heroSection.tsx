@@ -185,7 +185,10 @@ export default function HeroSection() {
   const videoSrc = videoError ? '/api/placeholder/video' : '/uploads/herovideo.mp4'
 
   return (
-    <section className={`relative flex items-center min-h-screen w-full overflow-hidden bg-white ${sora.className}`}>
+    <section 
+      className={`relative flex items-center min-h-screen w-full overflow-hidden bg-white ${sora.className}`}
+      style={{ paddingTop: "5rem" }} // Add padding to account for header + banner
+    >
       <style jsx global>{`
         @media (max-width: 500px) {
           .hero-heading {
@@ -272,7 +275,7 @@ export default function HeroSection() {
       </div>
 
       {/* Main Content */}
-      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-6 sm:py-10 md:py-12 flex flex-col items-center justify-center w-full">
+      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-8 py-20 sm:py-24 md:py-28 flex flex-col items-center justify-center w-full">
         <div className="flex flex-col lg:flex-row items-center text-center lg:text-left gap-6 lg:gap-12 w-full">
           {/* Left Column: Text & Button */}
           <div className="w-full lg:w-2/5 z-10 flex-shrink-0">
