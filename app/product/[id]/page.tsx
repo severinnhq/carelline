@@ -644,11 +644,11 @@ export default function ProductPage() {
       `Siessen! Már csak ${product.stockQuantity} darab van`,
     ]}
     onClick={handleAddToCart}
-    className="flex-1 block py-4 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
+    className="flex-1 block py-7 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
   />
   <Button
     variant="outline"
-    className="h-auto w-12 border-2 border-gray-400 flex items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_15px_rgba(0,0,0,0.25)] transition-all duration-200 hover:border-gray-500"
+    className="h-auto w-18 border-2 border-gray-300 flex items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_15px_rgba(0,0,0,0.25)] transition-all duration-200 hover:border-gray-400"
     onClick={() => {
       if (navigator.share) {
         navigator.share({
@@ -660,8 +660,8 @@ export default function ProductPage() {
   >
     <svg 
       xmlns="http://www.w3.org/2000/svg" 
-      width="20" 
-      height="20" 
+      width="28" 
+      height="28" 
       viewBox="0 0 24 24" 
       fill="none" 
       stroke="currentColor" 
