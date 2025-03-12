@@ -484,17 +484,17 @@ export default function ProductPage() {
       <WhiteHeader onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
       <div className="max-w-screen-2xl mx-auto px-4 md:px-6 pt-24 pb-24" ref={productRef}>
         <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-3/5 flex-shrink-0">
-            <div className="mb-6">
-              <Image
-                src={`/uploads/${selectedImage}`}
-                alt={product.name}
-                width={800}
-                height={800}
-                quality={90}
-                className="w-full h-auto object-cover rounded-lg max-w-2xl mx-auto"
-              />
-            </div>
+        <div className="lg:w-3/5 flex-shrink-0">
+  <div className="mb-6 pt-6 lg:pt-0">
+    <Image
+      src={`/uploads/${selectedImage}`}
+      alt={product.name}
+      width={800}
+      height={800}
+      quality={90}
+      className="w-full h-auto object-cover rounded-lg max-w-2xl mx-auto"
+    />
+  </div>
             <div className="flex gap-2 overflow-x-auto">
               <Image
                 src={`/uploads/${product.mainImage}`}

@@ -164,7 +164,7 @@ const WhySection = () => {
               style={{ 
                 right: '0',
                 marginRight: isLargeScreen ? '-100px' : '0',
-                top: '200px', // Changed from 182px to 280px to position it lower
+                top: '200px',
                 height: '232px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -289,10 +289,10 @@ const WhySection = () => {
         </div>
       </section>
 
-      {/* The Orszagos Mentoszolgalat section is now part of the gradient background */}
+      {/* The Orszagos Mentoszolgalat section with increased margin for mobile */}
       <section 
-        ref={additionalSectionRef}
-        className="px-4 mt-[2rem] pb-24 opacity-0"
+  ref={additionalSectionRef}
+  className={`px-4 ${isLargeScreen ? 'mt-[2rem]' : 'mt-16'} pb-24 opacity-0`}
       >
         <div className="max-w-screen-md mx-auto">
           {isLargeScreen ? (
@@ -334,10 +334,10 @@ const WhySection = () => {
       </section>
       
       {!isLargeScreen && (
-        <section 
-          ref={carellineSmallScreenRef}
-          className="px-4 my-24 opacity-0"
-        >
+  <section 
+    ref={carellineSmallScreenRef}
+    className="px-4 my-16 opacity-0"
+  >
           <div className="max-w-screen-md mx-auto">
             <div className="text-3xl max-[450px]:text-2xl font-black mb-4">
               CARELLINE BREATHGUARD
@@ -395,6 +395,19 @@ const WhySection = () => {
         /* Gradient background that transitions from #fff5f5 to white */
         .bg-gradient {
           background: linear-gradient(to bottom, #fff5f5 0%, #fff8f8 20%, #fffafa 40%, #fffcfc 60%, #ffffff 80%, #ffffff 100%);
+        }
+
+        /* Add bigger gaps for mobile view */
+        @media (max-width: 1130px) {
+          .mento-section {
+            margin-top: 8rem !important;
+          }
+          
+          .carelline-section {
+            margin-top: 8rem !important;
+            margin-bottom: 8rem !important;
+            padding-top: 2rem !important;
+          }
         }
 
         @media (max-width: 450px) {
