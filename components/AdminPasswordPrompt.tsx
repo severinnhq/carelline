@@ -15,7 +15,7 @@ export function AdminPasswordPrompt({ onCorrectPassword }: AdminPasswordPromptPr
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // In a real application, you would validate this against a securely stored password
+    // In a real application, you would validate  this against a securely stored password
     // For demonstration purposes, we're using a hardcoded password
     if (password === 'Hustlefy888ChainMyHeart') {
       onCorrectPassword()
