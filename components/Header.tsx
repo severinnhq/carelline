@@ -64,7 +64,7 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
 
   // Animation for the scrolling banner
   useEffect(() => {
-    const scrollBanner = (timestamp: number) => {
+    const scrollBanner = () => {
       setScrollX(prevScrollX => {
         // Reset position when scrolled far enough to create seamless loop
         if (prevScrollX <= -2000) return 0
