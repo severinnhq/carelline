@@ -15,16 +15,14 @@ interface WhiteHeaderProps {
 
 export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) { 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [scrollX, setScrollX] = useState(0)
+  const [showCountdown, setShowCountdown] = useState(false)
   const [countdown, setCountdown] = useState('')
-  const animationRef = useRef<number | null>(null)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
-  // Original banner text
-  const bannerText1 = "Kedvezményeink csak március 14-ig tartanak"
-  // Larger spacer with more non-breaking spaces
-  const spacer = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"
+  // Banner text
+  const bannerText = "KEDVEZMÉNYEINK CSAK MÁRCIUS 14-IG TARTANAK!"
 
   // Calculate and update countdown timer
   useEffect(() => {
@@ -43,7 +41,7 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       const seconds = Math.floor((diff % (1000 * 60)) / 1000)
       
-      setCountdown(`Már csak ${days} nap ${hours} óra ${minutes} perc ${seconds} másodperc van hátra`)
+      setCountdown(`MÁR CSAK ${days} NAP ${hours} ÓRA ${minutes} PERC ${seconds} MP VAN HÁTRA`)
     }
     
     calculateTimeRemaining()
@@ -52,47 +50,38 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
     return () => clearInterval(timerId)
   }, [])
 
-  // Animation for the scrolling banner
+  // Alternating text effect
   useEffect(() => {
-    const scrollBanner = () => {
-      setScrollX(prevScrollX => {
-        // Reset position when scrolled far enough to create seamless loop
-        if (prevScrollX <= -2000) return 0
-        return prevScrollX - 0.5 // Adjust speed here (smaller = slower)
-      })
-      animationRef.current = requestAnimationFrame(scrollBanner)
+    const alternateText = () => {
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setShowCountdown(prev => !prev)
+        setIsTransitioning(false)
+      }, 500) // Transition duration
     }
     
-    animationRef.current = requestAnimationFrame(scrollBanner)
+    const intervalId = setInterval(alternateText, 5000) // Switch every 5 seconds
     
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current)
-      }
-    }
+    return () => clearInterval(intervalId)
   }, [])
 
   const handleLogoClick = () => {
     sessionStorage.removeItem('productListScrollPosition')
   }
 
-  // Create alternating text with the original message and countdown
-  const bannerText2 = countdown
-  const alternatingText = `${bannerText1}${spacer}${bannerText2}${spacer}`
-  const repeatedText = `${alternatingText}${alternatingText}${alternatingText}`
-
   return (
     <>
-      {/* Scrolling banner fixed at the top */}
+      {/* Fixed banner at the top with alternating text */}
       <div
-        className="w-full bg-[#dc2626] text-white overflow-hidden h-10 flex items-center fixed top-0 left-0 z-50"
+        className="w-full bg-[#dc2626] text-white overflow-hidden h-10 flex items-center justify-center fixed top-0 left-0 z-50"
         suppressHydrationWarning
       >
         <div 
-          className="whitespace-nowrap animate-none flex items-center text-xs sm:text-sm md:text-base lg:text-lg font-bold"
-          style={{ transform: `translateX(${scrollX}px)` }}
+          className={`text-center text-xs sm:text-sm md:text-base lg:text-lg font-bold transition-opacity duration-500 ${
+            isTransitioning ? 'opacity-0' : 'opacity-100'
+          }`}
         >
-          {repeatedText}{repeatedText} {/* Double the content to ensure smooth looping */}
+          {showCountdown ? countdown : bannerText}
         </div>
       </div>
 
