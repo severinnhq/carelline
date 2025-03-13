@@ -250,7 +250,7 @@ const RecentPurchasePopup = () => {
             const newCount = popupsShown + 1
             sessionStorage.setItem('popupsShown', newCount.toString())
             
-            // Hide popup after 12 seconds
+            // Hide popup after 5 seconds (changed from 12 seconds)
             setTimeout(() => {
               setIsVisible(false)
               
@@ -268,7 +268,7 @@ const RecentPurchasePopup = () => {
                 
                 setTimeout(fetchRandomProduct, nextPopupDelay);
               }
-            }, 12000)
+            }, 5000) // Changed from 12000 to 5000 (5 seconds)
           } else if (availableProducts.length === 0 && products.length > 0) {
             // If we run out of unique products but have products available,
             // reset the used products array and try again
