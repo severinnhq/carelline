@@ -43,32 +43,29 @@ const RecentPurchasePopup = () => {
 
   // Expanded list of Hungarian names with first initial of last name + first name format
   const hungarianNames = [
-    'N. Zsófia', 'K. Péter', 'T. Eszter', 'Sz. Máté', 
-    'H. Anna', 'K. Dániel', 'V. Bence', 'M. Kata',
-    'N. Gábor', 'F. Viktória', 'B. Ádám', 'P. Nóra',
-    'T. János', 'K. István', 'N. László', 'Sz. Zoltán',
-    'V. Lajos', 'P. Gyula', 'B. Ferenc', 'M. József',
-    'K. Erzsébet', 'N. Katalin', 'S. Ilona', 'H. Mária',
+    'N. Zsófia', 'K. Eszter', 'T. Anna', 'Sz. Viktória', 
+    'H. Nóra', 'K. Dóra', 'V. Virág', 'M. Kata',
+    'N. Emese', 'F. Veronika', 'B. Lilla', 'P. Tímea',
+    'T. Adrienn', 'K. Orsolya', 'N. Katalin', 'Sz. Zsanett',
+    'V. Boglárka', 'P. Diána', 'B. Erika', 'M. Anikó',
+    'K. Edina', 'N. Beáta', 'S. Henrietta', 'H. Mária',
     'F. Éva', 'B. Margit', 'G. Judit', 'V. Ágnes',
     'R. Magdolna', 'Cs. Irén', 'K. Klára', 'N. Piroska',
-    'T. Tamás', 'B. Attila', 'K. Csaba', 'H. Tibor',
-    'V. Gergely', 'Sz. Balázs', 'N. Krisztián', 'F. Zsolt',
-    'M. Roland', 'B. Norbert', 'K. Sándor', 'H. Dávid',
-    'P. Levente', 'V. Márton', 'K. Mihály', 'T. Róbert'
-  ]
+    'T. Nikolett', 'B. Szilvia', 'K. Bianka', 'H. Petra',
+    'V. Flóra', 'Sz. Gabriella', 'N. Réka', 'F. Zsuzsanna'
+  ];
   
-  // Expanded list of Hungarian cities
   const hungarianCities = [
-    'Budapest', 'Debrecen', 'Szeged', 'Miskolc', 'Pécs', 
-    'Győr', 'Nyíregyháza', 'Kecskemét', 'Székesfehérvár', 'Szombathely',
-    'Sopron', 'Veszprém', 'Zalaegerszeg', 'Eger', 'Nagykanizsa',
-    'Dunaújváros', 'Hódmezővásárhely', 'Szolnok', 'Baja', 'Esztergom',
-    'Gödöllő', 'Pápa', 'Gyöngyös', 'Kiskunfélegyháza', 'Mosonmagyaróvár',
-    'Ajka', 'Békéscsaba', 'Cegléd', 'Kaposvár', 'Ózd',
-    'Salgótarján', 'Siófok', 'Szekszárd', 'Vác', 'Várpalota',
-    'Hatvan', 'Kazincbarcika', 'Keszthely', 'Tatabánya', 'Szentendre',
-    'Gyula', 'Hajdúböszörmény', 'Jászberény', 'Kiskunhalas', 'Mátészalka'
-  ]
+    'Budapestről', 'Debrecenből', 'Szegedről', 'Miskolcról', 'Pécsről', 
+    'Győrből', 'Nyíregyházáról', 'Kecskemétről', 'Székesfehérvárról', 'Szombathelyről',
+    'Sopronból', 'Veszprémből', 'Zalaegerszegről', 'Egerről', 'Nagykanizsáról',
+    'Dunaújvárosból', 'Hódmezővásárhelyről', 'Szolnokról', 'Bajáról', 'Esztergomból',
+    'Gödöllőről', 'Pápáról', 'Gyöngyösről', 'Kiskunfélegyházáról', 'Mosonmagyaróvárról',
+    'Ajkáról', 'Békéscsabáról', 'Ceglédről', 'Kaposvárról', 'Ózdról',
+    'Salgótarjánból', 'Siófokról', 'Szekszárdról', 'Váczról', 'Várpalotáról',
+    'Hatvanból', 'Kazincbarcikáról', 'Keszthelyről', 'Tatabányáról', 'Szentendréről',
+    'Gyuláról', 'Hajdúböszörményből', 'Jászberényből', 'Kiskunhalasról', 'Mátészalkáról'
+  ];
   
   const timeFrames = [
     '2 perce', '3 perce', '5 perce', '7 perce', 
@@ -283,7 +280,7 @@ const RecentPurchasePopup = () => {
         console.error('Error fetching random product:', error)
       }
     }
-  }, [])
+  }, [hungarianNames, hungarianCities, timeFrames, visitorLocation]) // Added missing dependencies
 
   if (!purchaseInfo.product) return null
 
