@@ -485,7 +485,7 @@ export default function ProductPage() {
       <div className="max-w-screen-2xl mx-auto px-4 md:px-6 pt-24 pb-24" ref={productRef}>
         <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:w-3/5 flex-shrink-0">
-  <div className="mb-6 pt-6 lg:pt-0">
+  <div className="mb-6 pt-6 lg:pt-6">
     <Image
       src={`/uploads/${selectedImage}`}
       alt={product.name}
