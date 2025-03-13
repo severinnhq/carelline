@@ -25,12 +25,6 @@ interface PurchaseInfo {
   timeAgo: string;
 }
 
-interface GeoLocation {
-  city: string;
-  country: string;
-  countryCode: string;
-}
-
 const RecentPurchasePopup = () => {
   const [isVisible, setIsVisible] = useState(false)
   const [purchaseInfo, setPurchaseInfo] = useState<PurchaseInfo>({
@@ -39,7 +33,6 @@ const RecentPurchasePopup = () => {
     city: '',
     timeAgo: ''
   })
-  const [visitorLocation, setVisitorLocation] = useState<GeoLocation | null>(null)
 
   // Memoize arrays so they remain stable across renders.
   const hungarianNames = useMemo(() => [
@@ -72,43 +65,7 @@ const RecentPurchasePopup = () => {
     return Date.now().toString(36) + Math.random().toString(36).substring(2);
   };
 
-  // Fetch visitor's location based on IP
-  const fetchVisitorLocation = async () => {
-    try {
-      // Using a free geolocation API (replace with your preferred service)
-      const response = await fetch('https://ipapi.co/json/');
-      if (response.ok) {
-        const data = await response.json();
-        setVisitorLocation({
-          city: data.city,
-          country: data.country_name,
-          countryCode: data.country_code
-        });
-        
-        // Store the visitor's location in session storage
-        sessionStorage.setItem('visitorLocation', JSON.stringify({
-          city: data.city,
-          country: data.country_name,
-          countryCode: data.country_code
-        }));
-        
-        return data.city;
-      }
-    } catch (error) {
-      console.error('Error fetching visitor location:', error);
-      return null;
-    }
-  };
-
   useEffect(() => {
-    // Fetch visitor's location as soon as component mounts
-    const storedLocation = sessionStorage.getItem('visitorLocation');
-    if (storedLocation) {
-      setVisitorLocation(JSON.parse(storedLocation));
-    } else {
-      fetchVisitorLocation();
-    }
-    
     // Use localStorage to check if the user has EVER visited the site
     const hasVisitedBefore = localStorage.getItem('hasVisitedSite');
     
@@ -188,28 +145,21 @@ const RecentPurchasePopup = () => {
             // Get used names from session storage
             const usedNames = JSON.parse(sessionStorage.getItem('usedNames') || '[]')
             
-            // For the second popup (when popupsShown is 1), use the visitor's city if available
-            let cityToUse = '';
+            // Get a random Hungarian city
+            const usedCities = JSON.parse(sessionStorage.getItem('usedCities') || '[]')
+            const availableCities = hungarianCities.filter(city => !usedCities.includes(city))
             
-            if (popupsShown === 1 && visitorLocation && visitorLocation.city) {
-              // For the second popup, use the visitor's actual city
-              cityToUse = visitorLocation.city;
+            let cityToUse = '';
+            if (availableCities.length === 0) {
+              console.warn('Not enough unique cities left')
+              sessionStorage.setItem('usedCities', JSON.stringify([]))
+              const resetAvailableCities = hungarianCities;
+              cityToUse = resetAvailableCities[Math.floor(Math.random() * resetAvailableCities.length)];
             } else {
-              // For other popups, use a random Hungarian city
-              const usedCities = JSON.parse(sessionStorage.getItem('usedCities') || '[]')
-              const availableCities = hungarianCities.filter(city => !usedCities.includes(city))
-              
-              if (availableCities.length === 0) {
-                console.warn('Not enough unique cities left')
-                sessionStorage.setItem('usedCities', JSON.stringify([]))
-                const resetAvailableCities = hungarianCities;
-                cityToUse = resetAvailableCities[Math.floor(Math.random() * resetAvailableCities.length)];
-              } else {
-                cityToUse = availableCities[Math.floor(Math.random() * availableCities.length)];
-                // Add selected city to used list
-                usedCities.push(cityToUse);
-                sessionStorage.setItem('usedCities', JSON.stringify(usedCities));
-              }
+              cityToUse = availableCities[Math.floor(Math.random() * availableCities.length)];
+              // Add selected city to used list
+              usedCities.push(cityToUse);
+              sessionStorage.setItem('usedCities', JSON.stringify(usedCities));
             }
             
             // Filter out already used names
@@ -288,7 +238,7 @@ const RecentPurchasePopup = () => {
         console.error('Error fetching random product:', error)
       }
     }
-  }, [hungarianNames, hungarianCities, visitorLocation]) 
+  }, [hungarianNames, hungarianCities]) 
 
   if (!purchaseInfo.product) return null
 
