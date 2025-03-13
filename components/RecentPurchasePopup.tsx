@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
@@ -41,8 +41,8 @@ const RecentPurchasePopup = () => {
   })
   const [visitorLocation, setVisitorLocation] = useState<GeoLocation | null>(null)
 
-  // Expanded list of Hungarian names with first initial of last name + first name format
-  const hungarianNames = [
+  // Memoize arrays so they remain stable across renders.
+  const hungarianNames = useMemo(() => [
     'N. Zsófia', 'K. Eszter', 'T. Anna', 'Sz. Viktória', 
     'H. Nóra', 'K. Dóra', 'V. Virág', 'M. Kata',
     'N. Emese', 'F. Veronika', 'B. Lilla', 'P. Tímea',
@@ -53,9 +53,9 @@ const RecentPurchasePopup = () => {
     'R. Magdolna', 'Cs. Irén', 'K. Klára', 'N. Piroska',
     'T. Nikolett', 'B. Szilvia', 'K. Bianka', 'H. Petra',
     'V. Flóra', 'Sz. Gabriella', 'N. Réka', 'F. Zsuzsanna'
-  ];
-  
-  const hungarianCities = [
+  ], []);
+
+  const hungarianCities = useMemo(() => [
     'Budapestről', 'Debrecenből', 'Szegedről', 'Miskolcról', 'Pécsről', 
     'Győrből', 'Nyíregyházáról', 'Kecskemétről', 'Székesfehérvárról', 'Szombathelyről',
     'Sopronból', 'Veszprémből', 'Zalaegerszegről', 'Egerről', 'Nagykanizsáról',
@@ -65,12 +65,12 @@ const RecentPurchasePopup = () => {
     'Salgótarjánból', 'Siófokról', 'Szekszárdról', 'Váczról', 'Várpalotáról',
     'Hatvanból', 'Kazincbarcikáról', 'Keszthelyről', 'Tatabányáról', 'Szentendréről',
     'Gyuláról', 'Hajdúböszörményből', 'Jászberényből', 'Kiskunhalasról', 'Mátészalkáról'
-  ];
-  
-  const timeFrames = [
+  ], []);
+
+  const timeFrames = useMemo(() => [
     '2 perce', '3 perce', '5 perce', '7 perce', 
     '10 perce', '15 perce', 'Most', '1 perce'
-  ]
+  ], []);
 
   // Generate a unique session ID for this browser session
   const generateSessionId = () => {
@@ -280,7 +280,7 @@ const RecentPurchasePopup = () => {
         console.error('Error fetching random product:', error)
       }
     }
-  }, [hungarianNames, hungarianCities, timeFrames, visitorLocation]) // Added missing dependencies
+  }, [hungarianNames, hungarianCities, timeFrames, visitorLocation]) // Now these arrays are stable
 
   if (!purchaseInfo.product) return null
 
