@@ -575,7 +575,7 @@ const UtanvetPage = () => {
                     </div>
 
                     <div className="mt-2 text-xs text-gray-600">
-                      A "Rendelés Leadása" gomb megnyomásával elfogadom az ÁSZF-t és tudomásul veszem a fizetési kötelezettségemet.
+                      A "Rendelés leadása" gomb megnyomásával elfogadom az ÁSZF-t és tudomásul veszem a fizetési kötelezettségemet.
                     </div>
                   </div>
 
