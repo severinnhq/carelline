@@ -86,8 +86,8 @@ function calculateTotal(cartItems: CartItem[], shippingType: 'standard' | 'expre
 
   const freeShippingThreshold = 30000
   const isStandardShippingFree = subtotal >= freeShippingThreshold
-  const standardShippingCost = isStandardShippingFree ? 0 : 1490
-  const expressShippingCost = 2990
+  const standardShippingCost = isStandardShippingFree ? 0 : 1990
+  const expressShippingCost = 3990
 
   const shippingCost =
     shippingType === 'standard' ? standardShippingCost : expressShippingCost
