@@ -479,16 +479,16 @@ const UtanvetPage = () => {
                         />
                       </div>
                       <div className="ml-4 flex flex-1 flex-col">
-                        <div className="flex justify-between text-base font-medium text-gray-900">
-                          <h3>{item.product.name}</h3>
-                          <p className="ml-4">
-                            {((item.product.salePrice || item.product.price) * item.quantity)
-                              .toFixed(0)
-                              .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} Ft
-                          </p>
-                        </div>
-                        <p className="mt-0 text-sm text-gray-500">Mennyiség: {item.quantity}</p>
-                      </div>
+  <div className="flex justify-between text-base font-medium text-gray-900 lg:flex-row flex-col">
+    <h3>{item.product.name}</h3>
+    <p className="lg:ml-4 mt-1 lg:mt-0">
+      {((item.product.salePrice || item.product.price) * item.quantity)
+        .toFixed(0)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} Ft
+    </p>
+  </div>
+  <p className="mt-0 text-sm text-gray-500">Mennyiség: {item.quantity}</p>
+</div>
                     </div>
                   ))}
 
@@ -580,16 +580,18 @@ const UtanvetPage = () => {
                   </div>
 
                   <div className="border-t border-gray-200 pt-4">
-                    <div className="rounded-md bg-blue-50 p-4">
-                      <div className="flex items-center">
-                        <Info className="h-10 w-10 text-blue-700" />
-                        <div className="ml-3">
-                          <p className="text-sm text-blue-700">
-                            Az utánvétes fizetés esetén a termék árát és a szállítási költséget a futárnak kell fizetnie a csomag átvételekor. Kérjük, készítsen elő elegendő készpénzt.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="border-t border-gray-200 pt-4">
+  <div className="rounded-md bg-blue-50 p-4">
+    <div className="flex items-center">
+      <Info className="h-6 w-6 md:h-8 md:w-8 text-blue-700 flex-shrink-0" />
+      <div className="ml-3">
+        <p className="text-sm text-blue-700">
+          Az utánvétes fizetés esetén a termék árát és a szállítási költséget a futárnak kell fizetnie a csomag átvételekor. Kérjük, készítsen elő elegendő készpénzt.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
                   </div>
                 </div>
               )}
