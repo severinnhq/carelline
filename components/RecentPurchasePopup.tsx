@@ -67,11 +67,6 @@ const RecentPurchasePopup = () => {
     'Gyuláról', 'Hajdúböszörményből', 'Jászberényből', 'Kiskunhalasról', 'Mátészalkáról'
   ], []);
 
-  const timeFrames = useMemo(() => [
-    '2 perce', '3 perce', '5 perce', '7 perce', 
-    '10 perce', '15 perce', 'Most', '1 perce'
-  ], []);
-
   // Generate a unique session ID for this browser session
   const generateSessionId = () => {
     return Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -230,7 +225,20 @@ const RecentPurchasePopup = () => {
             
             // Generate random Hungarian customer info
             const randomName = availableNames[Math.floor(Math.random() * availableNames.length)]
-            const randomTime = timeFrames[Math.floor(Math.random() * timeFrames.length)]
+            let randomTime: string;
+            if (popupsShown === 0) {
+              // For the first popup: random time between 6 perce and 15 perce
+              const randomMinutes = Math.floor(Math.random() * (15 - 6 + 1)) + 6;
+              randomTime = `${randomMinutes} perce`;
+            } else {
+              // For subsequent popups: 50% chance "Most", or 50% chance one of "1 perce", "2 perce", "3 perce"
+              if (Math.random() < 0.5) {
+                randomTime = "Most";
+              } else {
+                const times = ["1 perce", "2 perce", "3 perce"];
+                randomTime = times[Math.floor(Math.random() * times.length)];
+              }
+            }
             
             // Add selected name to used list
             usedNames.push(randomName)
@@ -250,7 +258,7 @@ const RecentPurchasePopup = () => {
             const newCount = popupsShown + 1
             sessionStorage.setItem('popupsShown', newCount.toString())
             
-            // Hide popup after 5 seconds (changed from 12 seconds)
+            // Hide popup after 5 seconds
             setTimeout(() => {
               setIsVisible(false)
               
@@ -268,7 +276,7 @@ const RecentPurchasePopup = () => {
                 
                 setTimeout(fetchRandomProduct, nextPopupDelay);
               }
-            }, 5000) // Changed from 12000 to 5000 (5 seconds)
+            }, 5000) // Popup is visible for 5 seconds
           } else if (availableProducts.length === 0 && products.length > 0) {
             // If we run out of unique products but have products available,
             // reset the used products array and try again
@@ -280,7 +288,7 @@ const RecentPurchasePopup = () => {
         console.error('Error fetching random product:', error)
       }
     }
-  }, [hungarianNames, hungarianCities, timeFrames, visitorLocation]) // Now these arrays are stable
+  }, [hungarianNames, hungarianCities, visitorLocation]) 
 
   if (!purchaseInfo.product) return null
 
