@@ -217,11 +217,11 @@ const RecentPurchasePopup = () => {
                 let nextPopupDelay;
                 
                 if (newCount === 1) {
-                  // First popup shown, second coming up - fixed 20 second delay
-                  nextPopupDelay = 20000;
+                  // First popup shown, second coming up - fixed 10 second delay
+                  nextPopupDelay = 10000;
                 } else {
-                  // Third, fourth, and fifth popups - random delay between 30-60 seconds
-                  nextPopupDelay = Math.floor(Math.random() * (60000 - 30000 + 1)) + 30000;
+                  // Third, fourth, and fifth popups - random delay between 20-50 seconds
+                  nextPopupDelay = Math.floor(Math.random() * (50000 - 20000 + 1)) + 20000;
                 }
                 
                 setTimeout(fetchRandomProduct, nextPopupDelay);
