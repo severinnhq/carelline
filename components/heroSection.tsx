@@ -300,7 +300,7 @@ export default function HeroSection() {
               custom={1}
               variants={textVariants}
             >
-             A fulladás 4 perc alatt végzetes lehet. Ne várjon a segítségre – legyen ön a megmentő!
+            Már több ezer életet megmentett. Legyen ott nálad is vészhelyzet esetén.
             </motion.p>
             <motion.div
               initial="hidden"
