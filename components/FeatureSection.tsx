@@ -71,7 +71,7 @@ const FeatureSection = () => {
                   >
                     <p className="text-[#222] font-light">{feature.description}</p>
                   </div>
-                  {/* Divider between items */}
+                  {/* Divider between items  */}
                   {index < features.length - 1 && (
                     <div className="my-2 border-t border-gray-300"></div>
                   )}
