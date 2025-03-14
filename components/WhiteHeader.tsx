@@ -36,7 +36,7 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
         return
       }
       
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+      // Removed the unused 'days' variable
       const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       const seconds = Math.floor((diff % (1000 * 60)) / 1000)
