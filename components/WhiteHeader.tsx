@@ -41,7 +41,7 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       const seconds = Math.floor((diff % (1000 * 60)) / 1000)
       
-      setCountdown(`MÁR CSAK ${days} NAP ${hours} ÓRA ${minutes} PERC ${seconds} MP VAN HÁTRA`)
+      setCountdown(`MÁR CSAK ${hours} ÓRA ${minutes} PERC ${seconds} MP VAN HÁTRA`)
     }
     
     calculateTimeRemaining()
