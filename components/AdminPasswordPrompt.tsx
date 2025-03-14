@@ -15,9 +15,8 @@ export function AdminPasswordPrompt({ onCorrectPassword }: AdminPasswordPromptPr
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // In a real application, you would validate  this against a securely stored password
-    // For demonstration purposes, we're using a hardcoded password
-    if (password === 'Hustlefy888ChainMyHeart') {
+    // Use the admin password from the environment variable
+    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
       onCorrectPassword()
     } else {
       setError('Incorrect password. Please try again.')
@@ -34,7 +33,7 @@ export function AdminPasswordPrompt({ onCorrectPassword }: AdminPasswordPromptPr
           <CardContent>
             <div className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                <label htmlFor="password" className="text-sm font-medium leading-none">
                   Password
                 </label>
                 <Input
@@ -59,4 +58,3 @@ export function AdminPasswordPrompt({ onCorrectPassword }: AdminPasswordPromptPr
     </div>
   )
 }
-
