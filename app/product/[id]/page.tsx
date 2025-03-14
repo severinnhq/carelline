@@ -260,28 +260,30 @@ export default function ProductPage() {
         drag={isMobile ? "x" : false}
         dragElastic={0.2}
         dragConstraints={{ left: -((shippingFeatures.length - 1) * containerWidth), right: 0 }}
-        onDrag={(event, info) => {
-          // Only respond to significant horizontal movement
-          if (Math.abs(info.offset.x) > 20) {
-            if (info.offset.x > 0 && currentFeatureIndex > 0) {
-              // Moving right - go to previous feature
-              setCurrentFeatureIndex(currentFeatureIndex - 1);
-              // Reset drag to prevent multiple triggers
-              info.point.x = 0;
-            } else if (info.offset.x < 0 && currentFeatureIndex < shippingFeatures.length - 1) {
-              // Moving left - go to next feature
-              setCurrentFeatureIndex(currentFeatureIndex + 1);
-              // Reset drag to prevent multiple triggers
-              info.point.x = 0;
-            }
+        dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+        onDragEnd={(event, info) => {
+          // Calculate which feature to snap to based on drag velocity and distance
+          const dragDistance = info.offset.x;
+          const dragVelocity = info.velocity.x;
+          
+          // Get current index
+          let newIndex = currentFeatureIndex;
+          
+          // If dragged more than 20% of width or velocity is high enough, change index
+          if (Math.abs(dragDistance) > containerWidth * 0.2 || Math.abs(dragVelocity) > 500) {
+            newIndex = dragDistance > 0 
+              ? Math.max(currentFeatureIndex - 1, 0) 
+              : Math.min(currentFeatureIndex + 1, shippingFeatures.length - 1);
           }
+          
+          setCurrentFeatureIndex(newIndex);
         }}
-        dragMomentum={false} // Disable momentum for immediate response
         animate={{ x: -currentFeatureIndex * containerWidth }}
         transition={{ 
-          duration: 0.25, 
-          type: "tween",
-          ease: "easeOut" 
+          duration: 0.3, 
+          type: "spring", 
+          stiffness: 300, 
+          damping: 30 
         }}
         className="flex"
       >
