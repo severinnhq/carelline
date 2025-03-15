@@ -292,7 +292,7 @@ const WhySection = () => {
       {/* The Orszagos Mentoszolgalat section with increased margin for mobile */}
       <section 
   ref={additionalSectionRef}
-  className={`px-4 ${isLargeScreen ? 'mt-[2rem]' : 'mt-16'} pb-24 opacity-0`}
+  className={`px-4 ${isLargeScreen ? 'mt-[2rem]' : 'mt-8'} pb-0 opacity-0`}
       >
         <div className="max-w-screen-md mx-auto">
           {isLargeScreen ? (
@@ -336,7 +336,7 @@ const WhySection = () => {
       {!isLargeScreen && (
   <section 
     ref={carellineSmallScreenRef}
-    className="px-4 my-16 opacity-0"
+    className="px-4 mt-16 mb-8 opacity-0"
   >
           <div className="max-w-screen-md mx-auto">
             <div className="text-3xl max-[450px]:text-2xl font-black mb-4">
