@@ -300,7 +300,7 @@ export default function HeroSection() {
               custom={1}
               variants={textVariants}
             >
-            Már több ezer életet megmentett. Legyen ott nálad is vészhelyzet esetén.
+            Már több száz életet megmentett. Legyen ott nálad is vészhelyzet esetén.
             </motion.p>
             <motion.div
               initial="hidden"
