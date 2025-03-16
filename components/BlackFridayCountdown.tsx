@@ -15,7 +15,7 @@ interface TimeLeft {
   seconds: number;
 }
 
-const DROP_TIME = new Date('2024-12-06T21:00:00-05:00') // December 6, 2024, 9:00 PM ET
+const DROP_TIME = new Date('2024-12-06T21:00:00-05:00') // December 6,  2024, 9:00 PM ET
 
 export default function NextDropCountdown() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
