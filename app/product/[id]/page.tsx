@@ -16,6 +16,7 @@ import { Sora } from 'next/font/google'
 import { Skeleton } from "@/components/ui/skeleton"
 import MatrixButton from '@/components/MatrixButton';
 import GoogleReviewsSection from '@/components/GoogleReviewsSection';
+import { ProductPagePopup } from '@/components/ProductPagePopup'
 
 const sora = Sora({ subsets: ['latin'] })
 
@@ -505,6 +506,7 @@ export default function ProductPage() {
   return (
     <div className={sora.className}>
       <WhiteHeader onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
+      {product && <ProductPagePopup product={product} />}
       <div className="max-w-screen-2xl mx-auto px-4 md:px-6 pt-24 pb-24" ref={productRef}>
         <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:w-3/5 flex-shrink-0">

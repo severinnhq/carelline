@@ -24,7 +24,7 @@ export function FloatingProductBox({ product, quantity, onAddToCart }: FloatingP
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 flex items-center space-x-4 z-50 ${sora.className}`}
+      className={`fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 flex items-center space-x-4 z-50 ${sora.className} hidden lg:flex`}
     >
       <Image
         src={`/uploads/${product.mainImage}`}

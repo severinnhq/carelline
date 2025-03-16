@@ -13,7 +13,8 @@ import Sidebar from '@/components/Sidebar';
 import CartModal from '@/components/CartModal';
 import ProductList from '../components/ProductList';
 import { useCart } from '@/lib/CartContext';
-import RecentPurchasePopup from '@/components/RecentPurchasePopup'
+
+
 
 // Updated Product interface with required properties
 interface Product {
@@ -97,7 +98,8 @@ export default function Home() {
         onRemoveItem={removeFromCart}
         onUpdateQuantity={updateQuantity}
       />
-      <RecentPurchasePopup />
+
+
     </main>
   );
 }
