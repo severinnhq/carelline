@@ -82,8 +82,9 @@ export const ProductPagePopup = ({ product }: { product: Product }) => {
           if (displayed < 25) {
             return { ...parsed, displayedMinutes: displayed }
           }
-        } catch (err) {
+        } catch (_) {
           // If parsing fails, fall through to generating new info.
+          // Using underscore to indicate unused parameter
         }
       }
     }
@@ -107,7 +108,7 @@ export const ProductPagePopup = ({ product }: { product: Product }) => {
         })
       )
     }
-  }, [product._id, storageKey])
+  }, [product._id, storageKey, loadPopupInfo])
 
   // Update the displayed minutes every minute.
   useEffect(() => {
