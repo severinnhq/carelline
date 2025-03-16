@@ -22,7 +22,7 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
   // Banner text
-  const bannerText = "KEDVEZMÉNYEINK CSAK MÁRCIUS 15-IG TARTANAK!"
+  const bannerText = "KEDVEZMÉNYEINK CSAK MÁRCIUS 16-IG TARTANAK!"
 
   // Calculate and update countdown timer
   useEffect(() => {
