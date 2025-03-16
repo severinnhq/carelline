@@ -70,31 +70,31 @@ export const ProductPagePopup = ({ product }: { product: Product }) => {
   const [popupInfo, setPopupInfo] = useState<PopupInfoState | null>(null)
   const storageKey = LOCAL_STORAGE_KEY(product._id)
 
-  // Load from localStorage if available, otherwise generate new info.
-  const loadPopupInfo = (): PopupInfoState => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(storageKey)
-      if (stored) {
-        try {
-          const parsed: PopupInfo = JSON.parse(stored)
-          const displayed = computeDisplayedMinutes(parsed)
-          // If the current displayed minutes haven't reached 25, use it.
-          if (displayed < 25) {
-            return { ...parsed, displayedMinutes: displayed }
-          }
-        } catch (_) {
-          // If parsing fails, fall through to generating new info.
-          // Using underscore to indicate unused parameter
-        }
-      }
-    }
-    // Generate new info if none exists or if expired
-    const newInfo = generateRandomPurchase()
-    return { ...newInfo, displayedMinutes: newInfo.baseMinutes }
-  }
-
   // Initialize popup info when the component mounts or product changes.
   useEffect(() => {
+    // Load from localStorage if available, otherwise generate new info.
+    const loadPopupInfo = (): PopupInfoState => {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem(storageKey)
+        if (stored) {
+          try {
+            const parsed: PopupInfo = JSON.parse(stored)
+            const displayed = computeDisplayedMinutes(parsed)
+            // If the current displayed minutes haven't reached 25, use it.
+            if (displayed < 25) {
+              return { ...parsed, displayedMinutes: displayed }
+            }
+          } catch {
+            // If parsing fails, fall through to generating new info.
+            // Removed parameter to avoid unused variable warning
+          }
+        }
+      }
+      // Generate new info if none exists or if expired
+      const newInfo = generateRandomPurchase()
+      return { ...newInfo, displayedMinutes: newInfo.baseMinutes }
+    }
+
     const info = loadPopupInfo()
     setPopupInfo(info)
     if (typeof window !== 'undefined') {
@@ -108,7 +108,7 @@ export const ProductPagePopup = ({ product }: { product: Product }) => {
         })
       )
     }
-  }, [product._id, storageKey, loadPopupInfo])
+  }, [product._id, storageKey])
 
   // Update the displayed minutes every minute.
   useEffect(() => {
