@@ -23,12 +23,12 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
   const [isTransitioning, setIsTransitioning] = useState(false)
   
   // Banner text
-  const bannerText = "KEDVEZMÉNYEINK CSAK MÁRCIUS 16-IG TARTANAK!"
+  const bannerText = "KEDVEZMÉNYEINK CSAK MÁRCIUS 18-IG TARTANAK!"
 
   // Calculate and update countdown timer
   useEffect(() => {
     const calculateTimeRemaining = () => {
-      const targetDate = new Date('2025-03-16T23:59:00')
+      const targetDate = new Date('2025-03-18T23:59:00')
       const now = new Date()
       const diff = targetDate.getTime() - now.getTime()
       
