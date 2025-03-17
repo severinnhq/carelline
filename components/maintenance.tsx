@@ -66,7 +66,7 @@ export default function Maintenance({
       } else {
         setError(data.error || 'Hiba történt a küldés során. Kérjük, próbálja újra később.');
       }
-    } catch (_) {
+    } catch {
       setError('Hiba történt a küldés során. Kérjük, próbálja újra később.');
     } finally {
       setIsLoading(false);
