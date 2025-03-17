@@ -6,15 +6,14 @@ import FeatureSection from '../components/FeatureSection';
 import BlackFridayCountdown from '../components/BlackFridayCountdown';
 import ReviewSection from '@/components/ReviewSection';
 import FAQSection from '@/components/faq';
-import WhySection from '../components/why'; // Import the new section
+import WhySection from '../components/why';
+import Maintenance from '../components/maintenance';
 import { useCountdown } from '@/lib/CountdownContext';
 import { Header } from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import CartModal from '@/components/CartModal';
 import ProductList from '../components/ProductList';
 import { useCart } from '@/lib/CartContext';
-
-
 
 // Updated Product interface with required properties
 interface Product {
@@ -28,11 +27,15 @@ interface Product {
 
 const SHOW_COUNTDOWN = false;
 
+// Set this to true when you want to show maintenance mode
+const IS_MAINTENANCE_MODE = true;
+
 export default function Home() {
   const { setIsCountdownActive } = useCountdown();
   const { cartItems, addToCart, removeFromCart, updateQuantity } = useCart();
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMaintenanceMode, setIsMaintenanceMode] = useState(IS_MAINTENANCE_MODE);
 
   useEffect(() => {
     setIsCountdownActive(SHOW_COUNTDOWN);
@@ -54,52 +57,59 @@ export default function Home() {
 
   return (
     <main className="flex flex-col min-h-screen">
-      <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
-
-      <section id="hero">
-        <HeroSection />
-      </section>
-
-      
-      {/* New "Why" Section */}
-      <section id="why">
-        <WhySection />
-      </section>
-
-      <section id="products">
-        <ProductList />
-      </section>
-
-      <section id="review">
-        <ReviewSection />
-      </section>
-
-      <section id="features">
-        <FeatureSection />
-      </section>
-
-
-      <section id="faq">
-        <FAQSection />
-      </section>
-
-      {cartProduct && (
-        <CartModal
-          product={cartProduct}
-          onClose={() => setCartProduct(null)}
-          onAddToCart={handleConfirmAddToCart}
-        />
-      )}
-
-      <Sidebar
-        cartItems={cartItems}
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        onRemoveItem={removeFromCart}
-        onUpdateQuantity={updateQuantity}
+      {/* Maintenance Mode Overlay */}
+      <Maintenance 
+        isMaintenanceMode={isMaintenanceMode} 
+        adminControls={false}
       />
 
+      {/* Regular Site Content */}
+      {!isMaintenanceMode && (
+        <>
+          <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
 
+          <section id="hero">
+            <HeroSection />
+          </section>
+
+          {/* New "Why" Section */}
+          <section id="why">
+            <WhySection />
+          </section>
+
+          <section id="products">
+            <ProductList />
+          </section>
+
+          <section id="review">
+            <ReviewSection />
+          </section>
+
+          <section id="features">
+            <FeatureSection />
+          </section>
+
+          <section id="faq">
+            <FAQSection />
+          </section>
+
+          {cartProduct && (
+            <CartModal
+              product={cartProduct}
+              onClose={() => setCartProduct(null)}
+              onAddToCart={handleConfirmAddToCart}
+            />
+          )}
+
+          <Sidebar
+            cartItems={cartItems}
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            onRemoveItem={removeFromCart}
+            onUpdateQuantity={updateQuantity}
+          />
+        </>
+      )}
     </main>
   );
 }
