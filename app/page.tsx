@@ -35,7 +35,7 @@ export default function Home() {
   const { cartItems, addToCart, removeFromCart, updateQuantity } = useCart();
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMaintenanceMode, setIsMaintenanceMode] = useState(IS_MAINTENANCE_MODE);
+  const [isMaintenanceMode] = useState(IS_MAINTENANCE_MODE);
 
   useEffect(() => {
     setIsCountdownActive(SHOW_COUNTDOWN);

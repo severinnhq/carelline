@@ -13,9 +13,7 @@ interface MaintenanceProps {
 }
 
 export default function Maintenance({ 
-  isMaintenanceMode = false, 
-  onToggleMode,
-  adminControls = false
+  isMaintenanceMode = false
 }: MaintenanceProps) {
   const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -68,7 +66,7 @@ export default function Maintenance({
       } else {
         setError(data.error || 'Hiba történt a küldés során. Kérjük, próbálja újra később.');
       }
-    } catch (err) {
+    } catch (_) {
       setError('Hiba történt a küldés során. Kérjük, próbálja újra később.');
     } finally {
       setIsLoading(false);
