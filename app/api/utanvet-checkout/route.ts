@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MongoClient, ObjectId } from 'mongodb';
 import { Expo } from 'expo-server-sdk';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface OrderItem {
   n: string; // name
@@ -55,92 +58,191 @@ interface Order {
   billingDetails: BillingDetails;
   shippingType: string;
   cashOnDeliveryFee: number;
+  subtotal: number;
+  shippingCost: number;
+  total: number;
   notes?: string;
   createdAt: Date;
 }
 
 const mongoUri = process.env.MONGODB_URI!;
-
 let cachedClient: MongoClient | null = null;
-// Initialize Expo SDK for push notifications
-const expoInstance = new Expo();
 
 async function connectToDatabase() {
-  if (cachedClient) {
-    return cachedClient;
-  }
-
+  if (cachedClient) return cachedClient;
   const client = new MongoClient(mongoUri);
   await client.connect();
   cachedClient = client;
   return client;
 }
 
-// Generate order number with format UTN-YYYYMMDD-XXXX
 function generateOrderNumber(): string {
   const date = new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-  
   return `UTN-${year}${month}${day}-${random}`;
 }
 
-async function sendPushNotification(order: Order) {
+async function sendConfirmationEmail(email: string, order: Order) {
   try {
-    console.log(`Push notification system ready for order ${order.orderNumber}`);
-    
-    // In a real implementation, you would fetch push tokens from your database
-    // This is a simplified example
-    const someMockPushTokens = ['ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]'];
-    
-    // Create the notification messages
-    const messages = [];
-    for (const pushToken of someMockPushTokens) {
-      // Validate the token
-      if (!Expo.isExpoPushToken(pushToken)) {
-        console.error(`Push token ${pushToken} is not a valid Expo push token`);
-        continue;
-      }
-      
-      // Create a message
-      messages.push({
-        to: pushToken,
-        sound: 'default',
-        title: 'New Order Received',
-        body: `Order #${order.orderNumber} has been placed for ${order.currency} ${order.amount}`,
-        data: { orderNumber: order.orderNumber },
-      });
+    const formattedDate = new Date(order.createdAt).toLocaleDateString('hu-HU', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const formatCurrency = (amount: number) => 
+      amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+    const { data, error } = await resend.emails.send({
+      from: 'support@carelline.com',
+      to: email,
+      subject: `Köszönjük a rendelését! - #${order.orderNumber}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+            .section { margin: 25px 0; }
+            .product-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+            .totals-table { width: 100%; margin-top: 20px; }
+            .totals-table td { padding: 8px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 0.9em; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Köszönjük a rendelését! 🎉</h1>
+            <p>Rendelési szám: <strong>${order.orderNumber}</strong></p>
+            <p>Dátum: ${formattedDate}</p>
+          </div>
+
+          <div class="section">
+            <h2>Termékek</h2>
+            ${order.items.map(item => `
+              <div class="product-item">
+                <strong>${item.n}</strong><br>
+                Méret: ${item.s} | Mennyiség: ${item.q}<br>
+                Ár: ${formatCurrency(item.p * item.q)} Ft
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="section">
+            <h2>Szállítási adatok</h2>
+            <p>
+              ${order.shippingDetails.name}<br>
+              ${order.shippingDetails.address.line1}<br>
+              ${order.shippingDetails.address.city}, ${order.shippingDetails.address.postal_code}
+            </p>
+          </div>
+
+          <table class="totals-table">
+            <tr>
+              <td>Részösszeg:</td>
+              <td align="right">${formatCurrency(order.subtotal)} Ft</td>
+            </tr>
+            <tr>
+              <td>Szállítás:</td>
+              <td align="right">${formatCurrency(order.shippingCost)} Ft</td>
+            </tr>
+            <tr>
+              <td>Utánvét díja:</td>
+              <td align="right">${formatCurrency(order.cashOnDeliveryFee)} Ft</td>
+            </tr>
+            <tr style="font-weight: bold;">
+              <td>Összesen:</td>
+              <td align="right">${formatCurrency(order.total)} Ft</td>
+            </tr>
+          </table>
+
+          ${order.notes ? `
+            <div class="section">
+              <h2>Megjegyzés</h2>
+              <p>${order.notes}</p>
+            </div>
+          ` : ''}
+
+          <div class="footer">
+            <p>🛍️ Köszönjük, hogy nálunk vásárolt!</p>
+            <p>Ha kérdése van, írjon a support@carelline.com címre.</p>
+          </div>
+        </body>
+        </html>
+      `
+    });
+
+    if (error) {
+      console.error('Email sending error:', error);
+      return false;
     }
-    
-    // Send the messages using the Expo SDK
-    const chunks = expoInstance.chunkPushNotifications(messages);
-    for (const chunk of chunks) {
-      await expoInstance.sendPushNotificationsAsync(chunk);
-    }
-    
-    console.log(`Push notification sent for order ${order.orderNumber}`);
+
+    console.log('Email sent successfully');
     return true;
   } catch (error) {
-    console.error('Error sending push notification:', error);
+    console.error('Error sending confirmation email:', error);
     return false;
   }
 }
 
+async function saveOrder(data: RequestBody): Promise<Order> {
+  const client = await connectToDatabase();
+  const db = client.db('webstore');
+  const ordersCollection = db.collection<Order>('orders');
+
+  // Calculate amounts server-side
+  const subtotal = data.items.reduce((sum, item) => sum + (item.p * item.q), 0);
+  let shippingCost = 0;
+  
+  if (data.shippingType.includes('Standard')) {
+    const freeShippingThreshold = 30000;
+    shippingCost = subtotal >= freeShippingThreshold ? 0 : 1990;
+  } else {
+    shippingCost = 3990;
+  }
+  
+  const total = subtotal + shippingCost + data.cashOnDeliveryFee;
+
+  // Validate amount
+  if (total !== data.amount) {
+    throw new Error('A kalkulált összeg nem egyezik a megadott összeggel.');
+  }
+
+  const orderNumber = generateOrderNumber();
+  
+  const order: Omit<Order, '_id'> = {
+    orderNumber,
+    customerId: null,
+    amount: data.amount,
+    currency: data.currency,
+    status: 'pending',
+    paymentMethod: 'cash_on_delivery',
+    items: data.items,
+    shippingDetails: data.shippingDetails,
+    billingDetails: data.billingDetails,
+    shippingType: data.shippingType,
+    cashOnDeliveryFee: data.cashOnDeliveryFee,
+    subtotal,
+    shippingCost,
+    total,
+    notes: data.notes,
+    createdAt: new Date()
+  };
+
+  const result = await ordersCollection.insertOne(order);
+  return { ...order, _id: result.insertedId };
+}
+
 export async function POST(req: NextRequest) {
   try {
-    // Parse the body
     const body: RequestBody = await req.json();
-    
-    // Create the order
     const order = await saveOrder(body);
-    
-    // Send push notification
-    if (order) {
-      await sendPushNotification(order);
-    }
-    
+    await sendConfirmationEmail(body.email, order);
+
     return NextResponse.json({ 
       success: true, 
       orderId: order._id?.toString(), 
@@ -152,45 +254,5 @@ export async function POST(req: NextRequest) {
       { error: err instanceof Error ? err.message : 'An unknown error occurred' }, 
       { status: 500 }
     );
-  }
-}
-
-async function saveOrder(data: RequestBody): Promise<Order> {
-  console.log('Saving utanvet order');
-  
-  const client = await connectToDatabase();
-  const db = client.db('webstore');
-  const ordersCollection = db.collection('orders');
-
-  // Generate a unique order number
-  const orderNumber = generateOrderNumber();
-  
-  const order: Omit<Order, '_id'> = {
-    orderNumber,
-    customerId: null, // No Stripe customer ID for cash on delivery
-    amount: data.amount,
-    currency: data.currency,
-    status: 'pending',
-    paymentMethod: 'cash_on_delivery',
-    items: data.items,
-    shippingDetails: data.shippingDetails,
-    billingDetails: data.billingDetails,
-    shippingType: data.shippingType,
-    cashOnDeliveryFee: data.cashOnDeliveryFee,
-    notes: data.notes,
-    createdAt: new Date()
-  };
-
-  try {
-    const result = await ordersCollection.insertOne(order);
-    console.log(`Cash on delivery order saved with ID: ${result.insertedId}`);
-    
-    // Optional: Send confirmation email here
-    // await sendConfirmationEmail(data.email, { ...order, _id: result.insertedId });
-    
-    return { ...order, _id: result.insertedId };
-  } catch (error) {
-    console.error('Error saving order:', error);
-    throw error;
   }
 }

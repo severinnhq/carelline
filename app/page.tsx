@@ -28,7 +28,7 @@ interface Product {
 const SHOW_COUNTDOWN = false;
 
 // Set this to true when you want to show maintenance mode
-const IS_MAINTENANCE_MODE = true;
+const IS_MAINTENANCE_MODE = false;
 
 export default function Home() {
   const { setIsCountdownActive } = useCountdown();
