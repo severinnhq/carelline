@@ -96,7 +96,7 @@ async function sendConfirmationEmail(email: string, order: Order) {
     const formatCurrency = (amount: number) => 
       amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'support@carelline.com',
       to: email,
       subject: `Köszönjük a rendelését! - #${order.orderNumber}`,
