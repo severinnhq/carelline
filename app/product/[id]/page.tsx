@@ -327,7 +327,7 @@ export default function ProductPage() {
     }
     
     return (
-      <div className="inline-block bg-white border border-gray-200 rounded-md py-1 px-3 shadow-lg">
+<div className="inline-block bg-white border border-gray-200 rounded-md py-1 px-3 shadow-md">
         <span className={`font-medium text-sm ${statusColor}`}>
           {statusText}
         </span>
@@ -673,7 +673,7 @@ export default function ProductPage() {
   />
   <Button
     variant="outline"
-    className="h-auto w-18 border-2 border-gray-300 flex items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_6px_15px_rgba(0,0,0,0.25)] transition-all duration-200 hover:border-gray-400"
+   className="h-auto w-18 border-2 border-gray-300 flex items-center justify-center shadow-[0_2px_6px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_10px_rgba(0,0,0,0.2)] transition-all duration-200 hover:border-gray-400"
     onClick={() => {
       if (navigator.share) {
         navigator.share({

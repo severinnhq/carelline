@@ -110,12 +110,12 @@ const GoogleReviewsSection: React.FC = () => {
   return (
     <div className="max-w-screen-2xl mx-auto px-0 py-12 relative">
       <div className="text-left pl-4 md:pl-6 mb-8">
-        <div className="text-2xl sm:text-3xl lg:text-[2.5rem] font-black mb-2">
-          Több mint <span className="text-red-600">2500</span>
-        </div>
-        <div className="text-2xl sm:text-3xl lg:text-[2.5rem] font-black mb-3">
-          elégedett vásárló
-        </div>
+      <div className="text-2xl sm:text-3xl lg:text-[2.5rem] font-black mb-0 lg:mb-2">
+  Több mint <span className="text-red-600">2500</span>
+</div>
+<div className="text-2xl sm:text-3xl lg:text-[2.5rem] font-black mb-3">
+  elégedett vásárló
+</div>
         <p className="text-gray-600 mt-5 text-lg">100+ Google értékelés</p>
       </div>
 
