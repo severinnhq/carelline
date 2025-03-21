@@ -263,21 +263,14 @@ export default function ProductPage() {
         dragConstraints={{ left: -((shippingFeatures.length - 1) * containerWidth), right: 0 }}
         dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
         onDragEnd={(event, info) => {
-          // Calculate which feature to snap to based on drag velocity and distance
-          const dragDistance = info.offset.x;
-          const dragVelocity = info.velocity.x;
-          
-          // Get current index
-          let newIndex = currentFeatureIndex;
-          
-          // If dragged more than 20% of width or velocity is high enough, change index
-          if (Math.abs(dragDistance) > containerWidth * 0.2 || Math.abs(dragVelocity) > 500) {
-            newIndex = dragDistance > 0 
-              ? Math.max(currentFeatureIndex - 1, 0) 
-              : Math.min(currentFeatureIndex + 1, shippingFeatures.length - 1);
+          // Determine drag direction regardless of distance or velocity.
+          if (info.offset.x < 0) {
+            // Dragging left: move to the next slide, if available.
+            setCurrentFeatureIndex(prev => Math.min(prev + 1, shippingFeatures.length - 1));
+          } else if (info.offset.x > 0) {
+            // Dragging right: move to the previous slide, if available.
+            setCurrentFeatureIndex(prev => Math.max(prev - 1, 0));
           }
-          
-          setCurrentFeatureIndex(newIndex);
         }}
         animate={{ x: -currentFeatureIndex * containerWidth }}
         transition={{ 
@@ -311,6 +304,7 @@ export default function ProductPage() {
       </div>
     </div>
   );
+  
 
   const StyledAvailabilityStatus = ({ status, quantity }: { status: string, quantity?: number }) => {
     let statusText = '';
