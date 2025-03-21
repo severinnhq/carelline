@@ -174,6 +174,7 @@ async function sendConfirmationEmail(email: string, order: Order) {
           <div class="footer">
             <p>🛍️ Köszönjük, hogy nálunk vásárolt!</p>
             <p>Ha kérdése van, írjon a support@carelline.com címre.</p>
+              <p style="font-size: 12px; color: #555;">Ez az e-mail mobil eszközökre optimalizált, nem asztali gépre.</p>
           </div>
         </body>
         </html>`
