@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MongoClient, ObjectId } from 'mongodb';
-
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface OrderItem {
-  n: string; // name
-  s: string; // size
-  q: number; // quantity
-  p: number; // price
+  n: string;
+  s: string;
+  q: number;
+  p: number;
 }
 
 interface ShippingAddress {
@@ -86,6 +85,13 @@ function generateOrderNumber(): string {
 }
 
 async function sendConfirmationEmail(email: string, order: Order) {
+  console.log('[Email] Attempting to send confirmation email to:', email);
+  
+  if (!process.env.RESEND_API_KEY) {
+    console.error('[Email] Missing Resend API key');
+    return false;
+  }
+
   try {
     const formattedDate = new Date(order.createdAt).toLocaleDateString('hu-HU', {
       year: 'numeric',
@@ -96,12 +102,11 @@ async function sendConfirmationEmail(email: string, order: Order) {
     const formatCurrency = (amount: number) => 
       amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
-    const { error } = await resend.emails.send({
+    const emailPayload = {
       from: 'support@carelline.com',
       to: email,
       subject: `Köszönjük a rendelését! - #${order.orderNumber}`,
-      html: `
-        <!DOCTYPE html>
+      html: `<!DOCTYPE html>
         <html>
         <head>
           <style>
@@ -123,13 +128,13 @@ async function sendConfirmationEmail(email: string, order: Order) {
 
           <div class="section">
             <h2>Termékek</h2>
-            ${order.items.map(item => `
-              <div class="product-item">
+            ${order.items.map(item => 
+              `<div class="product-item">
                 <strong>${item.n}</strong><br>
                 Méret: ${item.s} | Mennyiség: ${item.q}<br>
                 Ár: ${formatCurrency(item.p * item.q)} Ft
-              </div>
-            `).join('')}
+              </div>`
+            ).join('')}
           </div>
 
           <div class="section">
@@ -160,31 +165,31 @@ async function sendConfirmationEmail(email: string, order: Order) {
             </tr>
           </table>
 
-          ${order.notes ? `
-            <div class="section">
+          ${order.notes ? 
+            `<div class="section">
               <h2>Megjegyzés</h2>
               <p>${order.notes}</p>
-            </div>
-          ` : ''}
+            </div>` : ''}
 
           <div class="footer">
             <p>🛍️ Köszönjük, hogy nálunk vásárolt!</p>
             <p>Ha kérdése van, írjon a support@carelline.com címre.</p>
           </div>
         </body>
-        </html>
-      `
-    });
+        </html>`
+    };
+
+    const { data, error } = await resend.emails.send(emailPayload);
 
     if (error) {
-      console.error('Email sending error:', error);
+      console.error('[Email] Resend API Error:', error);
       return false;
     }
 
-    console.log('Email sent successfully');
+    console.log('[Email] Email sent successfully. Resend response:', data);
     return true;
   } catch (error) {
-    console.error('Error sending confirmation email:', error);
+    console.error('[Email] Unexpected error:', error);
     return false;
   }
 }
@@ -194,7 +199,6 @@ async function saveOrder(data: RequestBody): Promise<Order> {
   const db = client.db('webstore');
   const ordersCollection = db.collection<Order>('orders');
 
-  // Calculate amounts server-side
   const subtotal = data.items.reduce((sum, item) => sum + (item.p * item.q), 0);
   let shippingCost = 0;
   
@@ -207,7 +211,6 @@ async function saveOrder(data: RequestBody): Promise<Order> {
   
   const total = subtotal + shippingCost + data.cashOnDeliveryFee;
 
-  // Validate amount
   if (total !== data.amount) {
     throw new Error('A kalkulált összeg nem egyezik a megadott összeggel.');
   }
@@ -239,19 +242,34 @@ async function saveOrder(data: RequestBody): Promise<Order> {
 
 export async function POST(req: NextRequest) {
   try {
+    console.log('[Order] Starting order processing');
     const body: RequestBody = await req.json();
-    const order = await saveOrder(body);
-    await sendConfirmationEmail(body.email, order);
+    
+    console.log('[Order] Received order data:', {
+      ...body,
+      items: body.items.slice(0, 2)
+    });
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(body.email)) {
+      throw new Error('Invalid email format');
+    }
+
+    const order = await saveOrder(body);
+    console.log('[Order] Order saved with ID:', order._id);
+
+    const emailSent = await sendConfirmationEmail(body.email, order);
+    
     return NextResponse.json({ 
       success: true, 
-      orderId: order._id?.toString(), 
-      orderNumber: order.orderNumber 
+      orderId: order._id?.toString(),
+      orderNumber: order.orderNumber,
+      emailSent
     });
   } catch (err) {
-    console.error('Error processing utanvet order:', err);
+    console.error('[Order] Processing error:', err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'An unknown error occurred' }, 
+      { error: err instanceof Error ? err.message : 'Internal server error' }, 
       { status: 500 }
     );
   }
