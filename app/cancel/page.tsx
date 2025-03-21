@@ -34,7 +34,7 @@ export default function CancelPage() {
             Sajnáljuk, hogy elállt a rendelésétől. Ha problémát tapasztal a rendelés leadásakor, vagy kérdései vannak, kérjük, vegye fel a kapcsolatot ügyfélszolgálatunkkal.
           </p>
           <div className="text-center text-sm text-[#222] space-y-1">
-            <p>✉️ carelline@outlook.com</p>
+            <p>✉️ support@carelline.com</p>
           </div>
         </CardContent>
         <CardFooter className="p-8 pt-0">

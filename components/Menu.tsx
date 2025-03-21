@@ -152,7 +152,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
                     <Instagram className="h-6 w-6" />
                   </a>
                   <a 
-                    href="mailto:carelline@outlook.com" 
+                    href="mailto:support@carelline.com" 
                     className="text-gray-400 hover:text-gray-500 transition-colors"
                   >
                     <span className="sr-only">Email</span>

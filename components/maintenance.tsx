@@ -228,7 +228,7 @@ export default function Maintenance({
             animate={isLoaded ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
           >
-            Kérdése van? Írjon nekünk az <a href="mailto:carelline@outlook.com" className="text-red-600 hover:underline">carelline@outlook.com</a> címre.
+            Kérdése van? Írjon nekünk az <a href="mailto:support@carelline.com" className="text-red-600 hover:underline">support@carelline.com</a> címre.
           </motion.p>
         </div>
       </div>
