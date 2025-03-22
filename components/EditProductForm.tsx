@@ -25,7 +25,7 @@ interface EditProductFormProps {
   product: Product
   onCancel: () => void
 }
-
+ 
 export function EditProductForm({ product, onCancel }: EditProductFormProps) {
   const [name, setName] = useState(product.name)
   const [description, setDescription] = useState(product.description)
