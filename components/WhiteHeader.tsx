@@ -21,13 +21,13 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
-  // Banner text
-  const bannerText = "KEDVEZMÉNYEINK CSAK MÁRCIUS 18-IG TARTANAK!"
+  // Updated Banner text for Easter promotion
+  const bannerText = "HUSVÉTI AKCIÓ CSAK ÁPRILIS 23-IG!"
 
   // Calculate and update countdown timer
   useEffect(() => {
     const calculateTimeRemaining = () => {
-      const targetDate = new Date('2025-03-18T23:59:00')
+      const targetDate = new Date('2025-04-23T23:59:00')
       const now = new Date()
       const diff = targetDate.getTime() - now.getTime()
       
@@ -36,12 +36,12 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
         return
       }
       
-      // Removed the unused 'days' variable
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
       const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       const seconds = Math.floor((diff % (1000 * 60)) / 1000)
       
-      setCountdown(`MÁR CSAK ${hours} ÓRA ${minutes} PERC ${seconds} MP VAN HÁTRA`)
+      setCountdown(`MÁR CSAK ${days} NAP ${hours} ÓRA ${minutes} PERC ${seconds} MP VAN HÁTRA`)
     }
     
     calculateTimeRemaining()
