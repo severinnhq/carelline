@@ -576,16 +576,16 @@ export default function ProductPage() {
                   
                   {/* Button section */}
                   <div className="w-[85%] max-lg:w-full flex gap-3">
-                    <MatrixButton
-                      phrases={[
-                        "Kosárba teszem",
-                        "Rendelje meg mielőtt elfogy",
-                        `${displayedViewers} ${viewerSuffix}`,
-                        `Siessen! Már csak ${product.stockQuantity} darab van`,
-                      ]}
-                      onClick={handleAddToCart}
-                      className="flex-1 block py-7 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-base"
-                    />
+                  <MatrixButton
+  phrases={[
+    "Kosárba teszem",
+    "Rendelje meg mielőtt elfogy",
+    `${displayedViewers} ${viewerSuffix}`,
+    `Siessen! Már csak ${product.stockQuantity} darab van`,
+  ]}
+  onClick={handleAddToCart}
+  className="flex-1 block py-7 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-lg font-bold shadow-[0_6px_18px_rgba(220,38,38,0.6)] hover:shadow-[0_8px_25px_rgba(220,38,38,0.8)] hover:bg-[#c81e1e] transform hover:scale-[1.02] transition-all duration-200"
+/>
                     <Button
                       variant="outline"
                       className="h-auto w-18 border-2 border-gray-300 flex items-center justify-center shadow-[0_2px_6px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_10px_rgba(0,0,0,0.2)] transition-all duration-200 hover:border-gray-400"
