@@ -260,21 +260,58 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                     {"árak az ÁFÁ-t tartalmazzák. "}
                   </p>
                   <div className="mt-6 space-y-4">
-                    <Button 
-                      onClick={handleUtanvetCheckout} 
-                      disabled={isUtanvetLoading}
-                      className="w-full border text-white bg-[#dc2626] hover:bg-[#b91c1c]"
-                      variant="outline"
-                    >
-                      {isUtanvetLoading ? 'Feldolgozás...' : 'Átvételkor fizetek'}
-                    </Button>
-                    <Button onClick={processCheckout} disabled={isCheckoutLoading} className="w-full bg-black text-white hover:bg-gray-800">
-                      {isCheckoutLoading ? 'Feldolgozás...' : 'Pénztár'}
-                    </Button>
-                    <Button onClick={onClose} variant="outline" className="w-full border-black text-black hover:bg-gray-100">
-                      Vásárlás folytatása
-                    </Button>
-                  </div>
+  <Button 
+    onClick={processCheckout} 
+    disabled={isCheckoutLoading} 
+    className="w-full border border-black text-black bg-white hover:bg-gray-100"
+    variant="outline"
+  >
+    {isCheckoutLoading ? 'Feldolgozás...' : (
+      <div className="flex items-center justify-center space-x-2">
+        <span>Fizetés Bankkártyával</span>
+        <div className="flex items-center space-x-1">
+          <img 
+            src="/uploads/visa.png" 
+            alt="Visa" 
+            className="h-3"
+          />
+          <img 
+            src="/uploads/mastercard.png" 
+            alt="MasterCard" 
+            className="h-5"
+          />
+          <img 
+            src="/uploads/americanexpress.png" 
+            alt="American Express" 
+            className="h-5"
+          />
+        </div>
+      </div>
+    )}
+  </Button>
+  
+  <Button 
+    onClick={handleUtanvetCheckout} 
+    disabled={isUtanvetLoading}
+    className="w-full bg-black text-white hover:bg-gray-800"
+    variant="default"
+  >
+    {isUtanvetLoading ? 'Feldolgozás...' : 'Átvételkor Fizetek (+590FT)'}
+  </Button>
+  
+  <button 
+    onClick={onClose} 
+    className="w-full text-black hover:text-gray-600 relative group text-sm"
+  >
+    <span className="relative inline-block">
+      Vásárlás folytatása
+      <span className="absolute bottom-0 left-0 w-full h-[0.5px] bg-black transform origin-left transition-transform duration-300 ease-out group-hover:scale-x-0"></span>
+    </span>
+  </button>
+</div>
+
+
+
                 </div>
               )}
             </div>
