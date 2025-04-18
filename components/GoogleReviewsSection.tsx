@@ -10,10 +10,10 @@ interface ReviewProps {
 
 const GoogleReviewCard: React.FC<ReviewProps> = ({ name, date, stars, review }) => {
   return (
-    <div className="bg-black text-white rounded-lg px-8 py-4 shadow-lg flex flex-col min-w-80 max-w-80">
-      <div className="flex items-center">
+    <div className="bg-black text-white rounded-lg px-6 py-4 shadow-lg flex flex-col flex-shrink-0 w-full sm:w-1/2 md:w-80 text-left snap-start">
+      <div className="flex items-start">
         {/* Google logo as inline SVG */}
-        <div className="w-6 h-6 mr-auto">
+        <div className="w-6 h-6 mr-2">
           <svg viewBox="0 0 24 24" className="w-full h-full">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -22,17 +22,23 @@ const GoogleReviewCard: React.FC<ReviewProps> = ({ name, date, stars, review }) 
           </svg>
         </div>
 
-        <div className="flex flex-col items-end">
-          <div className="flex items-center">
-            {Array(5).fill(0).map((_, i) => (
-              <Star
-                key={i}
-                size={16}
-                className={i < stars ? "text-yellow-400 fill-yellow-400" : "text-gray-500"}
-              />
-            ))}
+        <div className="flex flex-col items-start">
+          <div className="flex mb-1">
+            {Array(5)
+              .fill(0)
+              .map((_, i) => (
+                <Star
+                  key={i}
+                  size={16}
+                  className={
+                    i < stars
+                      ? 'text-yellow-400 fill-yellow-400'
+                      : 'text-gray-500'
+                  }
+                />
+              ))}
           </div>
-          <div className="text-xs text-gray-400 mt-1">{date}</div>
+          <div className="text-xs text-gray-400">{date}</div>
         </div>
       </div>
 
@@ -92,21 +98,28 @@ const GoogleReviewsSection: React.FC = () => {
     }
   ];
 
+  // Scroll by single card width so arrows always move one card
   const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -320, behavior: 'smooth' });
+    const container = scrollContainerRef.current;
+    if (container) {
+      const card = container.children[0] as HTMLElement;
+      const cardWidth = card.clientWidth;
+      container.scrollBy({ left: -cardWidth, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 320, behavior: 'smooth' });
+    const container = scrollContainerRef.current;
+    if (container) {
+      const card = container.children[0] as HTMLElement;
+      const cardWidth = card.clientWidth;
+      container.scrollBy({ left: cardWidth, behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="max-w-screen-2xl mx-auto px-8 md:px-12 py-12 relative">
-      <div className="text-left pl-8 md:pl-12 mb-8">
+    <div className="max-w-screen-2xl mx-auto px-5  pb-12 relative">
+      <div className="text-left mb-8">
         <div className="text-2xl sm:text-3xl lg:text-[2.5rem] font-black mb-0 lg:mb-2">
           Több mint <span className="text-red-600">2500</span>
         </div>
@@ -119,7 +132,7 @@ const GoogleReviewsSection: React.FC = () => {
       <div className="relative">
         <div
           ref={scrollContainerRef}
-          className="flex overflow-x-auto gap-4 pl-8 pr-8 md:pl-12 md:pr-12 pb-4 scrollbar-hide"
+          className="flex overflow-x-auto gap-4 pl-8 pr-8 md:pl-12 md:pr-12 pb-4 scrollbar-hide snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {reviews.map((review, index) => (
@@ -132,7 +145,6 @@ const GoogleReviewsSection: React.FC = () => {
           <button
             onClick={scrollLeft}
             className="bg-white rounded-full p-2 shadow-2xl hover:bg-gray-100 transition-all"
-            style={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2)" }}
             aria-label="Scroll left"
           >
             <ChevronLeft size={20} />
@@ -141,7 +153,6 @@ const GoogleReviewsSection: React.FC = () => {
           <button
             onClick={scrollRight}
             className="bg-white rounded-full p-2 shadow-2xl hover:bg-gray-100 transition-all"
-            style={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2)" }}
             aria-label="Scroll right"
           >
             <ChevronRight size={20} />
