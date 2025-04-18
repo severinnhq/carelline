@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import Link from 'next/link';
-
+import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -22,8 +21,6 @@ import { ProductPagePopup } from '@/components/ProductPagePopup'
 
 const sora = Sora({ subsets: ['latin'] })
 
-// We keep the Product interface for the main product,
-// and assume that upsell products come with an additional "categories" property.
 interface Product {
   _id: string
   name: string
@@ -31,7 +28,6 @@ interface Product {
   price: number
   salePrice?: number
   mainImage: string
-  // For your main product, it's a string; upsell products will have a categories array.
   category?: string
   categories?: string[]
   sizes: string[]
@@ -41,7 +37,7 @@ interface Product {
 }
 
 export default function ProductPage() {
-  const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
+  const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0)
   const [product, setProduct] = useState<Product | null>(null)
   const [selectedSize, setSelectedSize] = useState<string>('')
   const [quantity, setQuantity] = useState(1)
@@ -55,13 +51,12 @@ export default function ProductPage() {
   const [activeEmailInput, setActiveEmailInput] = useState<boolean>(false)
   const [notifyMessage, setNotifyMessage] = useState<{ type: 'success' | 'error', content: string } | null>(null)
   const [currentViewers, setCurrentViewers] = useState<number>(0)
-  const [isLoading, setIsLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const shippingContainerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
-
-  // NEW: Upsell products state
-  const [upsellProducts, setUpsellProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
+  const shippingContainerRef = useRef<HTMLDivElement>(null)
+  const [containerWidth, setContainerWidth] = useState(0)
+  const [upsellProducts, setUpsellProducts] = useState<Product[]>([])
+  const [selectedUpsells, setSelectedUpsells] = useState<Set<string>>(new Set())
 
   const shippingFeatures = [
     {
@@ -79,23 +74,23 @@ export default function ProductPage() {
       title: "14 nap visszaküldés",
       description: "A csomag átvételétől számítva",
     },
-  ];
+  ]
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
+      setIsMobile(window.innerWidth < 1024)
       if (shippingContainerRef.current) {
-        setContainerWidth(shippingContainerRef.current.offsetWidth);
+        setContainerWidth(shippingContainerRef.current.offsetWidth)
       }
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     async function fetchProduct() {
-      setIsLoading(true);
+      setIsLoading(true)
       try {
         const response = await fetch(`/api/products/${id}`)
         if (response.ok) {
@@ -109,11 +104,11 @@ export default function ProductPage() {
           }
         }
       } catch (error) {
-        console.error("Error fetching product:", error);
+        console.error("Error fetching product:", error)
       } finally {
         setTimeout(() => {
-          setIsLoading(false);
-        }, 800);
+          setIsLoading(false)
+        }, 800)
       }
     }
     if (id) {
@@ -121,7 +116,6 @@ export default function ProductPage() {
     }
   }, [id])
 
-  // NEW: Fetch all products and then filter for upsell products.
   useEffect(() => {
     async function fetchAllProducts() {
       try {
@@ -131,7 +125,6 @@ export default function ProductPage() {
           const upsell = data
             .map((p) => ({
               ...p,
-              // Ensure categories is an array even if returned as a string.
               categories: Array.isArray(p.categories)
                 ? p.categories
                 : p.category ? [p.category] : []
@@ -140,51 +133,50 @@ export default function ProductPage() {
           setUpsellProducts(upsell)
         }
       } catch (error) {
-        console.error("Error fetching upsell products:", error);
+        console.error("Error fetching upsell products:", error)
       }
     }
-    fetchAllProducts();
-  }, []);
+    fetchAllProducts()
+  }, [])
 
   useEffect(() => {
     const getViewersCount = () => {
-      const now = new Date().getTime();
-      const storedData = localStorage.getItem(`product_viewers_${id}`);
+      const now = new Date().getTime()
+      const storedData = localStorage.getItem(`product_viewers_${id}`)
   
       if (storedData) {
-        const { count, timestamp } = JSON.parse(storedData);
+        const { count, timestamp } = JSON.parse(storedData)
         if (now - timestamp < 60000) {
-          return count;
+          return count
         }
       }
   
-      const newCount = Math.floor(Math.random() * 9) + 3;
+      const newCount = Math.floor(Math.random() * 9) + 3
       localStorage.setItem(
         `product_viewers_${id}`,
         JSON.stringify({
           count: newCount,
           timestamp: now
         })
-      );
+      )
+      return newCount
+    }
   
-      return newCount;
-    };
-  
-    setCurrentViewers(getViewersCount());
+    setCurrentViewers(getViewersCount())
   
     const interval = setInterval(() => {
-      const storedData = localStorage.getItem(`product_viewers_${id}`);
+      const storedData = localStorage.getItem(`product_viewers_${id}`)
       if (storedData) {
-        const { timestamp } = JSON.parse(storedData);
-        const now = new Date().getTime();
+        const { timestamp } = JSON.parse(storedData)
+        const now = new Date().getTime()
         if (now - timestamp >= 60000) {
-          setCurrentViewers(getViewersCount());
+          setCurrentViewers(getViewersCount())
         }
       }
-    }, 60000);
+    }, 60000)
   
-    return () => clearInterval(interval);
-  }, [id]);
+    return () => clearInterval(interval)
+  }, [id])
   
   useEffect(() => {
     const handleScroll = () => {
@@ -205,6 +197,17 @@ export default function ProductPage() {
   const handleAddToCart = () => {
     if (product && selectedSize) {
       addToCart(product, selectedSize, quantity)
+      
+      selectedUpsells.forEach(upsellId => {
+        const upsellProduct = upsellProducts.find(p => p._id === upsellId)
+        if (upsellProduct) {
+          const defaultSize = upsellProduct.sizes && upsellProduct.sizes.length > 0 
+            ? upsellProduct.sizes[0] 
+            : "One Size"
+          addToCart(upsellProduct, defaultSize, 1)
+        }
+      })
+      
       setIsSidebarOpen(true)
     }
   }
@@ -215,8 +218,8 @@ export default function ProductPage() {
 
   const handleQuantityChange = (newQuantity: number) => {
     if (product && newQuantity >= 1) {
-      const maxQuantity = product.stockQuantity || 1;
-      setQuantity(Math.min(newQuantity, maxQuantity));
+      const maxQuantity = product.stockQuantity || 1
+      setQuantity(Math.min(newQuantity, maxQuantity))
     }
   }
 
@@ -272,7 +275,7 @@ export default function ProductPage() {
         <p className="text-xs text-gray-600 max-w-[150px] mx-auto">100%-ban titkosítva, adatok tárolása nélkül</p>
       </div>
     </div>
-  );
+  )
 
   const mobileShippingFeatures = (
     <div className="2xl:hidden overflow-hidden pt-6 mt-4 w-full" ref={shippingContainerRef}>
@@ -283,9 +286,9 @@ export default function ProductPage() {
         dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
         onDragEnd={(event, info) => {
           if (info.offset.x < 0) {
-            setCurrentFeatureIndex(prev => Math.min(prev + 1, shippingFeatures.length - 1));
+            setCurrentFeatureIndex(prev => Math.min(prev + 1, shippingFeatures.length - 1))
           } else if (info.offset.x > 0) {
-            setCurrentFeatureIndex(prev => Math.max(prev - 1, 0));
+            setCurrentFeatureIndex(prev => Math.max(prev - 1, 0))
           }
         }}
         animate={{ x: -currentFeatureIndex * containerWidth }}
@@ -311,26 +314,26 @@ export default function ProductPage() {
         ))}
       </div>
     </div>
-  );
+  )
   
   const StyledAvailabilityStatus = ({ status, quantity }: { status: string, quantity?: number }) => {
-    let statusText = '';
-    let statusColor = '';
+    let statusText = ''
+    let statusColor = ''
     if (status === 'raktáron' || status === 'rendelésre') {
       statusText = quantity && quantity <= 30 
         ? `Raktáron - Csak ${quantity} db elérhető`
-        : `Raktáron - ${quantity} db elérhető`;
-      statusColor = 'text-[#007c01]';
+        : `Raktáron - ${quantity} db elérhető`
+      statusColor = 'text-[#007c01]'
     } else {
-      statusText = 'Elfogyott';
-      statusColor = 'text-[#dc2626]';
+      statusText = 'Elfogyott'
+      statusColor = 'text-[#dc2626]'
     }
     return (
       <div className="inline-block bg-white border border-gray-200 rounded-md py-1 px-3 shadow-md">
         <span className={`font-medium text-sm ${statusColor}`}>{statusText}</span>
       </div>
-    );
-  };
+    )
+  }
 
   const faqs = [
     {
@@ -356,10 +359,10 @@ export default function ProductPage() {
 
   const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   const isProductAvailable = (product?.sizes?.length ?? 0) > 0 && product?.inventoryStatus !== 'elfogyott'
-  const displayedViewers = currentViewers > 0 ? currentViewers - 1 : 0;
+  const displayedViewers = currentViewers > 0 ? currentViewers - 1 : 0
   const viewerSuffix = [3, 6, 8].includes(displayedViewers)
     ? '-an nézik önön kívül'
-    : '-en nézik önön kívül';
+    : '-en nézik önön kívül'
 
   const StarRating = () => (
     <div className="flex">
@@ -367,14 +370,12 @@ export default function ProductPage() {
         <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
       ))}
     </div>
-  );
+  )
 
-  // Determine which upsell products to show:
-  // If the current product is an upsell, filter it out from the list and then take the first three.
   const upsellProductsToShow =
     product && product.categories && product.categories.includes('upsell')
       ? upsellProducts.filter(p => p._id !== product._id).slice(0, 3)
-      : upsellProducts.slice(0, 3);
+      : upsellProducts.slice(0, 3)
 
   if (isLoading || !product) {
     return (
@@ -426,7 +427,7 @@ export default function ProductPage() {
             </div>
           </div>
           
-          <div className="lg:w-2/5 w-full max-w-full overflow-x-hidden mt-12 lg:mt-24">
+        <div className="lg:w-2/5 w-full max-w-full overflow-x-hidden mt-8 lg:mt-16">
             <div className="px-0 lg:px-4 w-full">
               <div className="text-sm font-medium text-gray-500 mb-0">Carelline</div>
               <h1 className="text-4xl font-black mb-2">{product.name}</h1>
@@ -530,7 +531,6 @@ export default function ProductPage() {
                         </div>
                       </div>
 
-                      {/* NEW: Upsell Products Section */}
                       {upsellProductsToShow.length > 0 && (
                         <div className="mt-6">
                           <p className="font-medium text-base mb-2">Szerezze be mellé:</p>
@@ -539,15 +539,19 @@ export default function ProductPage() {
                               <div key={upsell._id} className="flex items-center space-x-2">
                                 <input
                                   type="checkbox"
+                                  checked={selectedUpsells.has(upsell._id)}
                                   className="form-checkbox h-5 w-5 text-blue-600"
                                   onChange={(e) => {
-                                    if (e.target.checked) {
-                                      const defaultSize =
-                                        upsell.sizes && upsell.sizes.length > 0 ? upsell.sizes[0] : "One Size";
-                                      addToCart(upsell, defaultSize, 1);
-                                    } else {
-                                      // Optionally, remove the upsell product from the cart if unchecked.
-                                    }
+                                    const upsellId = upsell._id
+                                    setSelectedUpsells(prev => {
+                                      const newSet = new Set(prev)
+                                      if (e.target.checked) {
+                                        newSet.add(upsellId)
+                                      } else {
+                                        newSet.delete(upsellId)
+                                      }
+                                      return newSet
+                                    })
                                   }}
                                 />
                                 <Link href={`/product/${upsell._id}`} className="flex items-center space-x-2">
@@ -574,18 +578,33 @@ export default function ProductPage() {
                     </div>
                   </div>
                   
-                  {/* Button section */}
                   <div className="w-[85%] max-lg:w-full flex gap-3">
-                  <MatrixButton
-  phrases={[
-    "Kosárba teszem",
-    "Rendelje meg mielőtt elfogy",
-    `${displayedViewers} ${viewerSuffix}`,
-    `Siessen! Már csak ${product.stockQuantity} darab van`,
-  ]}
-  onClick={handleAddToCart}
-  className="flex-1 block py-7 bg-[#dc2626] text-white flex items-center justify-center text-xs sm:text-lg font-bold shadow-[0_6px_18px_rgba(220,38,38,0.6)] hover:shadow-[0_8px_25px_rgba(220,38,38,0.8)] hover:bg-[#c81e1e] transform hover:scale-[1.02] transition-all duration-200"
-/>
+                    <MatrixButton
+                      phrases={[
+                        "Kosárba teszem",
+                        "Rendelje meg mielőtt elfogy",
+                        `${displayedViewers} ${viewerSuffix}`,
+                        `Siessen! Már csak ${product.stockQuantity} darab van`,
+                      ]}
+                      onClick={handleAddToCart}
+                      className="
+                      flex-1 block py-6 
+                      bg-[#dc2626] text-white 
+                      flex items-center justify-center 
+                      text-xs sm:text-lg font-bold 
+                    
+                      /* stronger default red glow */
+                      shadow-[0_4px_12px_rgba(220,38,38,0.6)] 
+                    
+                      hover:shadow-[0_6px_18px_rgba(220,38,38,0.8)] /* stronger on hover */
+                      hover:bg-[#c81e1e] 
+                    
+                      transform hover:scale-[1.01] 
+                      transition-all duration-150
+                    "
+                    
+
+                    />
                     <Button
                       variant="outline"
                       className="h-auto w-18 border-2 border-gray-300 flex items-center justify-center shadow-[0_2px_6px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_10px_rgba(0,0,0,0.2)] transition-all duration-200 hover:border-gray-400"
@@ -594,7 +613,7 @@ export default function ProductPage() {
                           navigator.share({
                             title: product.name,
                             url: window.location.href
-                          }).catch(err => console.error('Error sharing:', err));
+                          }).catch(err => console.error('Error sharing:', err))
                         }
                       }}
                     >
