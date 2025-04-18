@@ -59,7 +59,42 @@ const GoogleReviewsSection: React.FC = () => {
       stars: 5,
       review: "“Ez a készülék szó szerint megmentette a kisfiam életét! Egy falat étel miatt elkezdett fulladozni, és pánikba estem. Azonnal elővettem az eszközt, és pár másodperc alatt sikerült eltávolítani az akadályt. Minden szülőnek kötelezővé tenném!”"
     },
-    // ... other reviews remain the same ...
+    {
+      name: "Egy egészségügyi dolgozó",
+      date: "2025. január 8.",
+      stars: 5,
+      review: "“Egészségügyi dolgozóként már láttam, milyen veszélyes lehet egy félrenyelés. Ez az eszköz gyors, hatékony és életmentő lehet. Minden otthonban, iskolában és étteremben szükség lenne rá!”"
+    },
+    {
+      name: "Egy először szkeptikus vásárló",
+      date: "2024. december 14.",
+      stars: 5,
+      review: "“Először kételkedtem, hogy tényleg működik-e, de miután megnéztem a teszteket és valós eseteket, meggyőzött. Most már mindig nálunk van utazáskor és otthon is. Nem lehet elég óvatos az ember!”"
+    },
+    {
+      name: "Aki sajnos élesben is tesztelte",
+      date: "2024. október 4.",
+      stars: 5,
+      review: "“A nagypapám hirtelen félrenyelt és fulladozni kezdett. Azonnal előkaptuk ezt a készüléket, és sikerült megmenteni az életét! Hihetetlen érzés, hogy egy ilyen egyszerű eszköz ekkora segítséget jelenthet.”"
+    },
+    {
+      name: "Étterem tulajdonos",
+      date: "2024. június 18.",
+      stars: 5,
+      review: "“Éttermünkben mindig kiemelt figyelmet fordítunk a vendégeink biztonságára, ezért beszereztünk ebből a készülékből. Egy vendégünk rosszul lett evés közben, és szerencsére az eszköz azonnal segített. Minden vendéglátóhelynek ajánlom!”"
+    },
+    {
+      name: "Egy óvónő",
+      date: "2024. november 21.",
+      stars: 5,
+      review: "“Óvónőként mindig aggódom a kicsik biztonságáért. Az óvodánkba vásároltunk egy ilyen eszközt, és sajnos már használnunk is kellett. Sikeresen megmentettük egy kisgyermek életét! Minden oktatási intézményben ott a helye!”"
+    },
+    {
+      name: "Egy új vásárló",
+      date: "2025. március 4.",
+      stars: 5,
+      review: "“Nagyon gyors szállítás és kiváló minőség! Remélem, sosem kell használnom, de hatalmas megnyugvás, hogy ott van a konyhában vészhelyzet esetére. Jobb félni, mint megijedni!”"
+    }
   ];
 
   const scrollLeft = () => {
