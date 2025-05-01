@@ -96,7 +96,7 @@ export default function OrderDetailScreen({ route }: OrderDetailScreenProps) {
       const challengeResponse = await fetch('https://carelline.com/api/orders');
       const challengeData = await challengeResponse.json();
       const challenge = challengeData.challenge;
-      const response = simpleHash(challenge + 'carelline_secret'); // Ensure this matches Carelline's secret
+      const response = simpleHash(challenge + 'rewealed_secret'); // Ensure this matches Carelline's secret
   
       // Then use Carelline's API to fetch the order detail
       const orderResponse = await fetch(`https://carelline.com/api/orders?id=${orderId}&challenge=${challenge}&response=${response}`);

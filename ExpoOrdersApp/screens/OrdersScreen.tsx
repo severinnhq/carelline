@@ -82,7 +82,7 @@ export default function OrdersScreen({ navigation }: OrdersScreenProps) {
       const challengeResponse = await fetch(`${API_URL}?`);
       const challengeData = await challengeResponse.json();
       const challenge = challengeData.challenge;
-      const response = simpleHash(challenge + 'carelline_secret');
+      const response = simpleHash(challenge + 'rewealed_secret');
       const ordersResponse = await fetch(`${API_URL}?challenge=${challenge}&response=${response}`);
 
       if (!ordersResponse.ok) {
