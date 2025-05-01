@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import { Metadata } from 'next';
 import { parseISO, format } from 'date-fns';
 import { OrderFulfillmentCheckbox } from '@/components/OrderFulfillmentCheckbox';
@@ -7,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import AuthWrapper from '@/components/AuthWrapper';
+
 
 export const metadata: Metadata = {
   title: 'Admin: Order Management',
