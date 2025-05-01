@@ -80,53 +80,25 @@ export async function GET(request: Request) {
   const response = searchParams.get('response');
   const acceptHeader = request.headers.get('accept');
 
-  // If the request is from a browser (HTML), serve the HTML page
-  if (acceptHeader && acceptHeader.includes('text/html')) {
-    return new NextResponse(
-      `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>404 - Page Not Found</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <style>
-          .bg-404::before {
-            content: '404';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 20vw;
-            font-weight: bold;
-            opacity: 0.1;
-            z-index: -1;
-          }
-        </style>
-      </head>
-      <body class="bg-white flex items-center justify-center min-h-screen bg-404">
-        <a href="/" class="text-2xl bg-black hover:bg-gray-800 text-white font-bold py-3 px-6 rounded transition duration-300 ease-in-out z-10">
-          Continue Shopping
-        </a>
-      </body>
-      </html>
-      `,
-      {
-        headers: { 'Content-Type': 'text/html' },
-        status: 404,
-      }
-    );
-  }
+  console.log('Request params:', { challenge, response });
 
-  // Handle the challenge-response for API requests
   if (!challenge && !response) {
+    // Initial request - generate challenge
     const newChallenge = generateChallenge();
-    return NextResponse.json({ challenge: newChallenge }, { status: 200 });
+    console.log('Generated challenge:', newChallenge);
+    return NextResponse.json({ challenge: newChallenge });
   }
 
-  if (!challenge || !response || !verifyResponse(challenge, response)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!challenge || !response) {
+    console.log('Missing challenge or response');
+    return NextResponse.json({ error: 'Missing challenge or response' }, { status: 400 });
+  }
+
+  const isValid = verifyResponse(challenge, response);
+  console.log('Verification result:', { isValid, challenge, response });
+
+  if (!isValid) {
+    return NextResponse.json({ error: 'Invalid response' }, { status: 401 });
   }
 
   const id = searchParams.get('id');
