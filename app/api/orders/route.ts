@@ -70,7 +70,7 @@ function simpleHash(str: string): string {
 }
 
 function verifyResponse(challenge: string, response: string): boolean {
-  const expectedResponse = simpleHash(challenge + 'rewealed_secret');
+  const expectedResponse = simpleHash(challenge + 'carelline_secret');
   return response === expectedResponse;
 }
 
