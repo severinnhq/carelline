@@ -309,7 +309,7 @@ export default function HeroSection() {
               className="mb-4 sm:mb-6 text-center lg:text-left"
             >
               
-              <Link href="/product/67c1cce79beb94961403e8f1">
+              <Link href="/product/6813e3c242a62d4613ac46a2">
                 <button 
                   className="text-white font-semibold rounded-md transition shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 text-base sm:text-lg" 
                   style={{ 

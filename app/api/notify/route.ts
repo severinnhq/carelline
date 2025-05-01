@@ -1,37 +1,44 @@
+// app/api/notify/route.ts
 import { NextResponse } from 'next/server'
-import { MongoClient } from 'mongodb'
-
-const uri = process.env.MONGODB_URI 
-const client = new MongoClient(uri as string)
+import clientPromise from '@/lib/mongodb'
 
 export async function POST(request: Request) {
+  // 1) Parse incoming JSON
   const { email, productId, productName } = await request.json()
 
   try {
-    await client.connect()
-    const database = client.db('webstore')
-    const notifyCollection = database.collection('notify')
+    // 2) Get the shared MongoClient and select your database/collection
+    const client = await clientPromise
+    const db = client.db('webstore')
+    const notifyCollection = db.collection('notify')
 
-    // Check if the email already exists for this product
-    const existingNotification = await notifyCollection.findOne({ email, productId })
-
-    if (existingNotification) {
-      return NextResponse.json({ message: 'You are already subscribed to notifications for this product.' }, { status: 400 })
+    // 3) Duplication check
+    const existing = await notifyCollection.findOne({ email, productId })
+    if (existing) {
+      return NextResponse.json(
+        { message: 'Már feliratkozott. Értesítve lesz.' },
+        { status: 400 }
+      )
     }
 
+    // 4) Insert the new subscription
     const result = await notifyCollection.insertOne({
       email,
       productId,
       productName,
-      createdAt: new Date()
+      createdAt: new Date(),
     })
 
-    return NextResponse.json({ message: 'Email saved successfully', id: result.insertedId }, { status: 200 })
+    // 5) Return success
+    return NextResponse.json(
+      { message: 'Email saved successfully', id: result.insertedId },
+      { status: 200 }
+    )
   } catch (error) {
     console.error('Error saving email:', error)
-    return NextResponse.json({ message: 'Error saving email' }, { status: 500 })
-  } finally {
-    await client.close()
+    return NextResponse.json(
+      { message: 'Error saving email' },
+      { status: 500 }
+    )
   }
 }
-
