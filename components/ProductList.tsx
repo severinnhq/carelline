@@ -8,7 +8,7 @@ import Sidebar from "@/components/Sidebar"
 import { Header } from './Header'
 import { useCart } from '@/lib/CartContext'
 import { useRouter } from 'next/navigation'
-import { ShoppingCart, BellIcon } from 'lucide-react'
+import {BellIcon } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Sora } from 'next/font/google'
