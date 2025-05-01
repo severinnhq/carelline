@@ -167,7 +167,7 @@ export default function ProductList() {
       let responseData;
       try {
         responseData = await res.json();
-      } catch (_) {
+      } catch {
         responseData = {};
       }
       
