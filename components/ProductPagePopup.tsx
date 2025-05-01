@@ -149,7 +149,7 @@ export const ProductPagePopup = ({ product }: { product: Product }) => {
     return () => clearTimeout(timer)
   }, [product._id])
 
-  // If no popup info, do not render anything.
+  // If no popup info, do not render anythin g.
   if (!popupInfo) return null
 
   return (

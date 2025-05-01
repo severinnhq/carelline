@@ -15,107 +15,83 @@ interface WhiteHeaderProps {
 
 export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) { 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [showCountdown, setShowCountdown] = useState(false)
+  const [bannerIndex, setBannerIndex] = useState(0)
   const [countdown, setCountdown] = useState('')
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
-  // Updated Banner text for Easter promotion
-  const bannerText = "HUSVÉTI AKCIÓ CSAK ÁPRILIS 23-IG!"
+  const bannerText = "ANYÁK NAPI AKCIÓ CSAK MÁJUS 4-IG!"
+  const bankText = `BANKKÁRTYÁS FIZETÉS ESETÉN -10% AZ "ANYAK10" KÓDDAL`
 
-  // Calculate and update countdown timer
+  // Calculate and update countdown timer (days & hours)
   useEffect(() => {
     const calculateTimeRemaining = () => {
-      const targetDate = new Date('2025-04-23T23:59:00')
+      const targetDate = new Date('2025-05-04T23:59:00')
       const now = new Date()
       const diff = targetDate.getTime() - now.getTime()
-      
       if (diff <= 0) {
         setCountdown('Lejárt!')
         return
       }
-      
       const days = Math.floor(diff / (1000 * 60 * 60 * 24))
       const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-      
-      setCountdown(`MÁR CSAK ${days} NAP ${hours} ÓRA ${minutes} PERC ${seconds} MP VAN HÁTRA`)
+      if (days <= 0) {
+        setCountdown(`MÁR CSAK ${hours} ÓRA VAN HÁTRA`)
+      } else {
+        setCountdown(`MÁR CSAK ${days} NAP ${hours} ÓRA VAN HÁTRA`)
+      }
     }
-    
     calculateTimeRemaining()
     const timerId = setInterval(calculateTimeRemaining, 1000)
-    
     return () => clearInterval(timerId)
   }, [])
 
-  // Alternating text effect
+  // Cycle through bannerText, bankText, countdown
   useEffect(() => {
     const alternateText = () => {
       setIsTransitioning(true)
       setTimeout(() => {
-        setShowCountdown(prev => !prev)
+        setBannerIndex(prev => (prev + 1) % 3)
         setIsTransitioning(false)
-      }, 500) // Transition duration
+      }, 500)
     }
-    
-    const intervalId = setInterval(alternateText, 5000) // Switch every 5 seconds
-    
+    const intervalId = setInterval(alternateText, 5000)
     return () => clearInterval(intervalId)
   }, [])
 
-  const handleLogoClick = () => {
-    sessionStorage.removeItem('productListScrollPosition')
-  }
+  const handleLogoClick = () => sessionStorage.removeItem('productListScrollPosition')
+
+  const currentText = bannerIndex === 0
+    ? bannerText
+    : bannerIndex === 1
+    ? bankText
+    : countdown
 
   return (
     <>
-      {/* Fixed banner at the top with alternating text */}
-      <div
-        className="w-full bg-[#dc2626] text-white overflow-hidden h-10 flex items-center justify-center fixed top-0 left-0 z-50"
-        suppressHydrationWarning
-      >
-        <div 
-          className={`text-center text-xs sm:text-sm md:text-base lg:text-lg font-bold transition-opacity duration-500 ${
-            isTransitioning ? 'opacity-0' : 'opacity-100'
-          }`}
-        >
-          {showCountdown ? countdown : bannerText}
+      {/* Fixed banner with rotating messages */}
+      <div className="w-full bg-[#dc2626] text-white h-10 flex items-center justify-center fixed top-0 left-0 z-50 overflow-hidden" suppressHydrationWarning>
+        <div className={`text-center text-xs sm:text-sm md:text-base lg:text-lg font-bold transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+          {currentText}
         </div>
       </div>
 
-      {/* White Header shifted down by banner height (h-10 => top-10) */}
+      {/* Header shifted down by banner height */}
       <header className="fixed top-10 left-0 right-0 z-50 bg-white shadow-md">
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="text-gray-600 hover:text-gray-900"
-            onClick={() => setIsMenuOpen(true)}
-          >
+          <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900" onClick={() => setIsMenuOpen(true)}>
             <MenuIcon size={24} />
             <span className="sr-only">Menu</span>
           </Button>
 
           <div className="flex-grow flex justify-center">
             <Link href="/" onClick={handleLogoClick}>
-              <Image
-                src="/blacklogo.png"
-                alt="Logo"
-                width={120}
-                height={45}
-                className="object-contain cursor-pointer"
-              />
+              <Image src="/blacklogo.png" alt="Logo" width={120} height={45} className="object-contain cursor-pointer" />
             </Link>
           </div>
 
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="text-gray-600 hover:text-gray-900 relative"
-            onClick={onCartClick}
-          >
+          <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900 relative" onClick={onCartClick}>
             <ShoppingBag size={24} />
             <span className="sr-only">Shopping cart</span>
             {cartItemsCount > 0 && (
