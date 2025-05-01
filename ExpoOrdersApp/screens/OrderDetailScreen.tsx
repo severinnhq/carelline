@@ -91,20 +91,23 @@ export default function OrderDetailScreen({ route }: OrderDetailScreenProps) {
   const fetchOrderDetail = async () => {
     try {
       console.log('Fetching order detail for ID:', orderId);
-      
-      const challengeResponse = await fetch('https://rewealed.com/api/orders');
+  
+      // Change this to Carelline's API
+      const challengeResponse = await fetch('https://carelline.com/api/orders');
       const challengeData = await challengeResponse.json();
       const challenge = challengeData.challenge;
-      const response = simpleHash(challenge + 'rewealed_secret');
-      const orderResponse = await fetch(`https://rewealed.com/api/orders?id=${orderId}&challenge=${challenge}&response=${response}`);
-      
+      const response = simpleHash(challenge + 'rewealed_secret'); // Ensure this matches Carelline's secret
+  
+      // Then use Carelline's API to fetch the order detail
+      const orderResponse = await fetch(`https://carelline.com/api/orders?id=${orderId}&challenge=${challenge}&response=${response}`);
+  
       if (!orderResponse.ok) {
         throw new Error(`HTTP error! status: ${orderResponse.status}`);
       }
-
+  
       const data = await orderResponse.json();
       console.log('Fetched order data:', data);
-
+  
       if (Array.isArray(data) && data.length > 0) {
         setOrder(data[0]);
       } else {
@@ -118,6 +121,7 @@ export default function OrderDetailScreen({ route }: OrderDetailScreenProps) {
       setLoading(false);
     }
   };
+  
 
   const formatCreatedDate = (dateString: string): string => {
     try {

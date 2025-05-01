@@ -44,7 +44,7 @@ interface CarComparison {
   price: number;
 }
 
-const API_URL = 'https://rewealed.com/api/orders';
+const API_URL = 'https://carelline.com/api/orders';
 const CORVETTE_PRICE_EUR = 120000;
 const MASERATI_PRICE_EUR = 118421;
 const LAMBORGHINI_PRICE_EUR = 200000;
@@ -131,7 +131,7 @@ export default function OrdersScreen({ navigation }: OrdersScreenProps) {
 
   const updateOrderFulfillment = async (orderId: string, fulfilled: boolean) => {
     try {
-      const response = await fetch('https://rewealed.com/api/update-order-fulfillment', {
+      const response = await fetch('https://carelline.com/api/update-order-fulfillment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
