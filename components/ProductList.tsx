@@ -48,6 +48,7 @@ export default function ProductList() {
   }, [])
 
   useEffect(() => {
+    const currentProductRefs = productRefs.current // Add this line
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -64,9 +65,10 @@ export default function ProductList() {
       },
       { threshold: 0.1, rootMargin: '0px 0px 0% 0px' }
     )
-    productRefs.current.forEach(ref => ref && observer.observe(ref))
+    currentProductRefs.forEach(ref => ref && observer.observe(ref)) // Change this line
+  
     return () => {
-      productRefs.current.forEach(ref => ref && observer.unobserve(ref))
+      currentProductRefs.forEach(ref => ref && observer.unobserve(ref)) // Change this line
     }
   }, [products])
 
@@ -126,7 +128,7 @@ export default function ProductList() {
   const formatPriceToHUF = (price: number) =>
     Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 
-  const handleAddToCart = (product: Product) => setCartProduct(product)
+
   const handleCloseModal = () => setCartProduct(null)
   const handleConfirmAddToCart = (size: string) => {
     if (!cartProduct) return
@@ -165,7 +167,7 @@ export default function ProductList() {
       let responseData;
       try {
         responseData = await res.json();
-      } catch (parseError) {
+      } catch (_) {
         responseData = {};
       }
       
