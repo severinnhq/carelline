@@ -107,7 +107,7 @@ export default function App() {
 
   async function sendPushTokenToServer(token: string) {
     try {
-      const response = await fetch('https://rewealed.com/api/register-push-token', {
+      const response = await fetch('https://carelline.com/api/register-push-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'rewealed.com'],
+    domains: ['localhost', 'carelline.com'],
   },
   experimental: {
     scrollRestoration: false,

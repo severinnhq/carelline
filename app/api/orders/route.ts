@@ -211,7 +211,7 @@ export async function POST(request: Request) {
       const message = {
         to: token,
         sound: 'default',
-        title: 'REWEALED',
+        title: 'CARELLINE',
         body: notificationBody,
         data: { 
           orderId: result.insertedId.toString(),

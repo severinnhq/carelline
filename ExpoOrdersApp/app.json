@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ExpoOrdersApp",
-    "slug": "rewealed",
+    "slug": "carelline",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.severinn.rewealed",
+      "bundleIdentifier": "com.severinn.carelline",
       "infoPlist": {
         "UIBackgroundModes": ["remote-notification"]
       }
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.severinn.rewealed",
+      "package": "com.severinn.carelline",
       "permissions": ["NOTIFICATIONS"]
     },
     "web": {
