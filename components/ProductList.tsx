@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import CartModal from "@/components/CartModal"
 import Sidebar from "@/components/Sidebar"
@@ -373,6 +374,19 @@ export default function ProductList() {
     <>
       <Header onCartClick={() => setIsSidebarOpen(true)} cartItems={cartItems} />
       <div className={`container mx-auto p-4 py-0 mt-[4rem] mb-[4rem] md:mt-[8rem] md:mb-[4rem] ${sora.className}`} ref={containerRef}>
+      <div className="relative flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:justify-between mb-6">
+          <div className="text-3xl sm:text-[2.5rem] font-black uppercase tracking-wider">
+           Jobb Biztosra Menni
+          </div>
+          <Link href="/products" className="view-all-link group flex items-center transition-all duration-300 ease-in-out">
+            <span className="view-all-text relative mr-1">Összes termék</span>
+            <div className="view-all-circle flex items-center justify-center rounded-full bg-[#e5e5e5] w-6 h-6 transition-all duration-300 ease-in-out group-hover:bg-[#dc2626]">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-all duration-300 ease-in-out group-hover:text-white">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </Link>
+        </div>
         {isLoading && (
           <div className="text-center mb-6">
             <p className="text-lg text-gray-600">Loading products...</p>
