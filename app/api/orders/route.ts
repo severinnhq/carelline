@@ -11,12 +11,9 @@ interface Order {
   amount: number;
   currency: string;
   status: string;
-  items?: Array<{
-    n: string;
-    s: string;
-    q: number;
-    p: number;
-  }>;
+  items?: Array<{ n: string; s: string; q: number; p: number }>;
+
+  // Phone is now nested under shippingDetails:
   shippingDetails?: {
     name: string;
     address: {
@@ -27,7 +24,10 @@ interface Order {
       postal_code: string;
       country: string;
     };
+    phone: string;              // ← added
   };
+
+  // Email is now nested under billingDetails:
   billingDetails?: {
     name: string;
     address: {
@@ -38,7 +38,9 @@ interface Order {
       postal_code: string;
       country: string;
     };
+    email: string;              // ← added
   };
+
   createdAt: Date;
   shippingType?: string;
   stripeDetails?: {
@@ -50,10 +52,11 @@ interface Order {
     riskLevel: string | null;
   };
   fulfilled?: boolean;
-  phoneNumber?: string; // Added phone number field
+  // phoneNumber root‑level field is removed
   paymentMethod?: string;
   notes?: string;
 }
+
 
 function generateChallenge(): string {
   return Math.random().toString(36).substring(2, 15);
@@ -161,7 +164,17 @@ export async function GET(request: Request) {
           (typeof order.fulfilled === 'undefined' || typeof order.fulfilled === 'boolean') &&
           (!order.phoneNumber || typeof order.phoneNumber === 'string') &&
           (!order.paymentMethod || typeof order.paymentMethod === 'string') &&
-          (!order.notes || typeof order.notes === 'string')
+          (!order.notes || typeof order.notes === 'string') &&
+            // Ensure shippingDetails.phone exists and is string
+            !!order.shippingDetails &&
+            typeof order.shippingDetails.phone === 'string' &&
+  
+            // Ensure billingDetails.email exists and is string
+            !!order.billingDetails &&
+            typeof order.billingDetails.email === 'string' &&
+  
+            (!order.paymentMethod || typeof order.paymentMethod === 'string') &&
+            (!order.notes || typeof order.notes === 'string')
         );
       });
     }

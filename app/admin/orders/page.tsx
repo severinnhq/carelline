@@ -10,7 +10,6 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import AuthWrapper from '@/components/AuthWrapper';
 
-
 export const metadata: Metadata = {
   title: 'Admin: Order Management',
 };
@@ -37,11 +36,13 @@ interface Address {
 interface ShippingDetails {
   address: Address;
   name: string;
+  phone: string;
 }
 
 interface BillingDetails {
   address: Address;
   name: string;
+  email: string;
 }
 
 interface StripeDetails {
@@ -68,7 +69,6 @@ interface Order {
   fulfilled?: boolean;
   paymentMethod?: string;
   notes?: string;
-  phoneNumber?: string; // Added phone number field
 }
 
 async function getOrders(): Promise<Order[]> {
@@ -105,21 +105,25 @@ function formatCreatedDate(dateString?: string | Date): string {
   }
 }
 
-function formatPhoneNumber(phoneNumber?: string): string {
-  return phoneNumber || 'No phone number provided';
+function formatPhoneNumber(shippingDetails?: ShippingDetails): string {
+  return shippingDetails?.phone ?? 'No phone number provided';
+}
+
+function formatEmail(billingDetails?: BillingDetails): string {
+  return billingDetails?.email ?? 'No email provided';
 }
 
 function areAddressesSame(shipping?: ShippingDetails, billing?: BillingDetails): boolean {
   if (!shipping || !billing) return false;
-  const shippingAddress = shipping.address;
-  const billingAddress = billing.address;
+  const s = shipping.address;
+  const b = billing.address;
   return (
-    shippingAddress.line1 === billingAddress.line1 &&
-    shippingAddress.line2 === billingAddress.line2 &&
-    shippingAddress.city === billingAddress.city &&
-    shippingAddress.state === billingAddress.state &&
-    shippingAddress.postal_code === billingAddress.postal_code &&
-    shippingAddress.country === billingAddress.country
+    s.line1 === b.line1 &&
+    s.line2 === b.line2 &&
+    s.city === b.city &&
+    s.state === b.state &&
+    s.postal_code === b.postal_code &&
+    s.country === b.country
   );
 }
 
@@ -142,21 +146,14 @@ function AddressDisplay({ address, name }: { address: Address; name: string }) {
 function getCardBackgroundClass(order: Order): string {
   const isUtanvet = order.paymentMethod === 'cash_on_delivery';
   const isExpress = order.shippingType?.toLowerCase().includes('express');
-
-  if (isUtanvet && isExpress) {
-    return 'bg-gradient-to-r from-yellow-50 to-blue-50';
-  } else if (isUtanvet) {
-    return 'bg-blue-50';
-  } else if (isExpress) {
-    return 'bg-yellow-50';
-  }
-
+  if (isUtanvet && isExpress) return 'bg-gradient-to-r from-yellow-50 to-blue-50';
+  if (isUtanvet) return 'bg-blue-50';
+  if (isExpress) return 'bg-yellow-50';
   return '';
 }
 
 export default async function AdminOrders() {
   const orders = await getOrders();
-
   if (orders.length === 0) {
     return (
       <AuthWrapper>
@@ -180,13 +177,9 @@ export default async function AdminOrders() {
                   <span>Order ID: {order.sessionId}</span>
                   <div className="flex gap-2">
                     {order.paymentMethod === 'cash_on_delivery' && (
-                      <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
-                        Utanvet (COD)
-                      </Badge>
+                      <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">Utanvet (COD)</Badge>
                     )}
-                    <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>
-                      {order.status}
-                    </Badge>
+                    <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>{order.status}</Badge>
                   </div>
                 </CardTitle>
               </CardHeader>
@@ -195,121 +188,83 @@ export default async function AdminOrders() {
                   <div className="flex justify-between items-center">
                     <div className="flex-grow">
                       <h3 className="font-semibold mb-2">Order Details</h3>
-                      <p>
-                        Amount:{' '}
-                        {order.amount ? order.amount.toFixed(2) : 'N/A'}{' '}
-                        {order.currency?.toUpperCase() || 'N/A'}
-                      </p>
+                      <p>Amount: {order.amount.toFixed(2)} {order.currency?.toUpperCase()}</p>
                       <p>Created: {formatCreatedDate(order.createdAt)}</p>
-                      <p>Shipping Type: {order.shippingType || 'N/A'}</p>
-                      <p>
-                        Payment Method:{' '}
-                        {order.paymentMethod === 'cash_on_delivery' ? 'Cash on Delivery' : 'Credit Card'}
-                      </p>
-                      <p>
-                        Megye:{' '}
-                        {order.shippingDetails?.address.state || (
-                          <span className="text-gray-500 italic">Not set</span>
-                        )}
-                      </p>
-                      <p>
-                        Phone:{' '}
-                        <span className="font-medium">{formatPhoneNumber(order.phoneNumber)}</span>
-                      </p>
+                      <p>Shipping: {order.shippingType}</p>
+                      <p>Payment: {order.paymentMethod === 'cash_on_delivery' ? 'COD' : 'Card'}</p>
+                      <p>Megye: {order.shippingDetails?.address.state || 'Not set'}</p>
+                      <p>Phone: <span className="font-medium">{formatPhoneNumber(order.shippingDetails)}</span></p>
+                      <p>Email: <span className="font-medium">{formatEmail(order.billingDetails)}</span></p>
+                      <p>Total Items: <span className="font-medium">{order.items?.reduce((sum, item) => sum + item.q, 0) || 0}</span></p>
                     </div>
                     <div className="flex-shrink-0 ml-4">
-                      <OrderFulfillmentCheckbox
-                        orderId={order._id.toString()}
-                        initialFulfilled={order.fulfilled || false}
-                      />
+                      <OrderFulfillmentCheckbox orderId={order._id.toString()} initialFulfilled={!!order.fulfilled} />
                     </div>
                   </div>
+
                   <div>
                     <h3 className="font-semibold mb-2">Items</h3>
-                    {order.items && order.items.length > 0 ? (
+                    {order.items?.length ? (
                       <Table>
                         <TableHeader>
                           <TableRow>
                             <TableHead>Name</TableHead>
                             <TableHead>Size</TableHead>
-                            <TableHead>Quantity</TableHead>
+                            <TableHead>Qty</TableHead>
                             <TableHead>Price</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {order.items.map((item, index) => (
-                            <TableRow key={index}>
+                          {order.items.map((item, i) => (
+                            <TableRow key={i}>
                               <TableCell>{item.n}</TableCell>
                               <TableCell>{item.s}</TableCell>
                               <TableCell>{item.q}</TableCell>
-                              <TableCell>
-                                {item.p ? item.p.toFixed(2) : 'N/A'}{' '}
-                                {order.currency?.toUpperCase() || 'N/A'}
-                              </TableCell>
+                              <TableCell>{item.p.toFixed(2)} {order.currency?.toUpperCase()}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
                       </Table>
-                    ) : (
-                      <p>No items available for this order.</p>
-                    )}
+                    ) : <p>No items</p>}
                   </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {order.shippingDetails && (
                       <div>
                         <h3 className="font-semibold mb-2">Shipping Details</h3>
-                        <AddressDisplay
-                          address={order.shippingDetails.address}
-                          name={order.shippingDetails.name}
-                        />
+                        <AddressDisplay address={order.shippingDetails.address} name={order.shippingDetails.name} />
                       </div>
                     )}
                     <div>
                       <h3 className="font-semibold mb-2">Billing Details</h3>
                       {order.billingDetails ? (
-                        <>
-                          {areAddressesSame(order.shippingDetails, order.billingDetails) ? (
-                            <p>Same as shipping</p>
-                          ) : (
-                            <AddressDisplay
-                              address={order.billingDetails.address}
-                              name={order.billingDetails.name}
-                            />
-                          )}
-                          {order.notes && (
-                            <div className="mt-4 p-3 bg-gray-50 rounded-md">
-                              <h4 className="font-medium text-sm mb-1">Order Notes:</h4>
-                              <p className="text-sm">{order.notes}</p>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <p>No billing details available for this order.</p>
+                        areAddressesSame(order.shippingDetails, order.billingDetails) ? (
+                          <p>Same as shipping</p>
+                        ) : (
+                          <AddressDisplay address={order.billingDetails.address} name={order.billingDetails.name} />
+                        )
+                      ) : <p>No billing</p>}
+
+                      {order.notes && (
+                        <div className="mt-4 p-3 bg-gray-50 rounded-md">
+                          <h4 className="font-medium text-sm mb-1">Notes</h4>
+                          <p className="text-sm">{order.notes}</p>
+                        </div>
                       )}
                     </div>
                   </div>
+
                   <Separator />
+
                   {order.stripeDetails && (
                     <div>
                       <h3 className="font-semibold mb-2">Stripe Details</h3>
                       <p>Payment ID: {order.stripeDetails.paymentId}</p>
-                      <p>
-                        Customer ID: {order.stripeDetails?.customerId || 'Guest User'}
-                      </p>
-                      <p>
-                        Payment Method ID: {order.stripeDetails.paymentMethodId || 'N/A'}
-                      </p>
-                      <p>
-                        Payment Method Fingerprint:{' '}
-                        {order.stripeDetails.paymentMethodFingerprint || 'N/A'}
-                      </p>
-                      <p>
-                        Risk Score:{' '}
-                        {order.stripeDetails.riskScore !== null ? order.stripeDetails.riskScore : 'N/A'}
-                      </p>
-                      <p>
-                        Risk Level: {order.stripeDetails.riskLevel || 'N/A'}
-                      </p>
+                      <p>Customer: {order.stripeDetails.customerId || 'Guest'}</p>
+                      <p>Method ID: {order.stripeDetails.paymentMethodId || 'N/A'}</p>
+                      <p>Fingerprint: {order.stripeDetails.paymentMethodFingerprint || 'N/A'}</p>
+                      <p>Risk Score: {order.stripeDetails.riskScore ?? 'N/A'}</p>
+                      <p>Risk Level: {order.stripeDetails.riskLevel || 'N/A'}</p>
                     </div>
                   )}
                 </div>
