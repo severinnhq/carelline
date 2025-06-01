@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MenuIcon, ShoppingBag } from 'lucide-react'
@@ -19,23 +19,20 @@ interface HeaderProps {
 export function Header({ onCartClick, cartItems }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   
-  // Commented out banner-related state
-  /*
+  // Updated banner-related state
   const [bannerIndex, setBannerIndex] = useState(0)
   const [countdown, setCountdown] = useState('')
   const [isTransitioning, setIsTransitioning] = useState(false)
 
-  const bannerText = "ANYÁK NAPI AKCIÓ CSAK MÁJUS 4-IG!"
-  const bankText = `BANKKÁRTYÁS FIZETÉS ESETÉN -10% AZ "ANYAK10" KÓDDAL`
-  */
+  const bannerText = "NYÁR INDÍTÓ AKCIÓ CSAK JÚNIUS 4-IG!!"
+  const bankText = `BANKKÁRTYÁS FIZETÉS ESETÉN -10% AZ "NYAR10" KÓDDAL`
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
-  // Commented out countdown timer effect
-  /*
+  // Countdown timer effect
   useEffect(() => {
     const calculateTimeRemaining = () => {
-      const targetDate = new Date('2025-05-04T23:59:00')
+      const targetDate = new Date('2025-06-04T23:59:00')
       const now = new Date()
       const diff = targetDate.getTime() - now.getTime()
       if (diff <= 0) {
@@ -54,10 +51,8 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
     const timerId = setInterval(calculateTimeRemaining, 1000)
     return () => clearInterval(timerId)
   }, [])
-  */
 
-  // Commented out banner text rotation effect
-  /*
+  // Banner text rotation effect
   useEffect(() => {
     const alternateText = () => {
       setIsTransitioning(true)
@@ -69,23 +64,18 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
     const intervalId = setInterval(alternateText, 5000)
     return () => clearInterval(intervalId)
   }, [])
-  */
 
   const handleLogoClick = () => sessionStorage.removeItem('productListScrollPosition')
 
-  /*
   const currentText = bannerIndex === 0
     ? bannerText
     : bannerIndex === 1
     ? bankText
     : countdown
-  */
-
-  // Scroll state handled elsewhere if needed
 
   return (
     <>
-      {/* Commented out fixed banner with rotating messages 
+      {/* Fixed banner with rotating messages */}
       <div
         className="w-full bg-[#dc2626] text-white h-10 flex items-center justify-center fixed top-0 left-0 z-50 overflow-hidden"
         suppressHydrationWarning
@@ -98,11 +88,10 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
           {currentText}
         </div>
       </div>
-      */}
 
-      {/* Header no longer shifted down by banner height */}
+      {/* Header shifted down by banner height */}
       <header
-        className={`fixed top-0 left-0 right-0 z-[90] bg-white shadow-md ${sora.className}`}
+        className={`fixed top-10 left-0 right-0 z-[90] bg-white shadow-md ${sora.className}`}
       >
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
           <Button

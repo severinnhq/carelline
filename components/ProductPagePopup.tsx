@@ -20,7 +20,7 @@ const hungarianNames = [
 const hungarianCities = [
   'Budapestről', 'Debrecenből', 'Szegedről', 'Miskolcról', 'Pécsről', 
   'Győrből', 'Nyíregyházáról', 'Kecskemétről', 'Székesfehérvárról', 'Szombathelyről',
-  'Sopronból', 'Veszprémből', 'Zalaegerszegről', 'Egerről', 'Nagykanizsáról',
+  'Sopronból', 'Veszprémből', 'Zalaegerszegről', 'Egerből', 'Nagykanizsáról',
   'Dunaújvárosból', 'Hódmezővásárhelyről', 'Szolnokról', 'Bajáról', 'Esztergomból',
   'Gödöllőről', 'Pápáról', 'Gyöngyösről', 'Kiskunfélegyházáról', 'Mosonmagyaróvárról',
   'Ajkáról', 'Békéscsabáról', 'Ceglédről', 'Kaposvárról', 'Ózdról',
