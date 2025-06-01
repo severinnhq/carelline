@@ -25,7 +25,7 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const bannerText = "NYÁR INDÍTÓ AKCIÓ CSAK JÚNIUS 4-IG!!"
-  const bankText = `BANKKÁRTYÁS FIZETÉS ESETÉN -10% A "NYAR10" KÓDDAL`
+  const bankText = `BANKKÁRTYÁS FIZETÉS ESETÉN -20% A "NYAR10" KÓDDAL`
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
