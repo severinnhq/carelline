@@ -116,7 +116,7 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review1.png", 
       name: "Ignácz Ádám", 
-      text: ",,Ez a készülék életet mentett a családomban. Szó szerint. Minden szülőnek ajánlom!''"
+      text: ",,Egy cukrászdában láttam, ahogy ez a készülék szó szerint életet mentett a melletünk levő asztalnál. Brutális, megrázó élmény volt... Azonnal beszereztem egyet itthonra is.'"
     },
     { 
       src: "/uploads/reviews/review2.png", 
@@ -126,17 +126,17 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review3.png", 
       name: "Tóth László", 
-      text: ",,Egy étteremben lettem rosszul, és egy ilyen eszköz mentette meg az életemet. Nem is tudom, mi lett volna nélküle.''"
+      text: ",,Egy étteremben lettem rosszul, és egy ilyen eszköz mentette meg az életemet. Nem is tudom, mi lett volna nélküle... Egyből vettem itthonra is''"
     },
     { 
       src: "/uploads/reviews/review4.png", 
       name: "Krinszki-Nagy Anna", 
-      text: ",,Könnyű kezelni.* lekopogom* még csak teszteltem, remélem nem is lesz szükség rá éles helyzetben.''"
+      text: ",,A nagyszüleim minden ilyesmit megvesznek, megmosolyogtam amég nem jött a baj... Nagypapám nyelt félre, de szerencsére tudtunk segíteni, kötelezővé kéne tenni!! Egyből vettünk is itthonra''"
     },
     { 
       src: "/uploads/reviews/review5.png", 
       name: "Kanozsai Erzsébet", 
-      text: ",,A legjobb döntés, amit valaha hoztam. Minden otthonban ott kellene lennie!''"
+      text: ",,Remélem sosem lesz rá szükség, viszont minden otthonban ott kellene lennie!''"
     },
     { 
       src: "/uploads/reviews/review6.png", 
@@ -151,7 +151,7 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review8.png", 
       name: "Farkas Zsófia", 
-      text: ",,A nagypapámnál kellett használnunk, és sikerült! Minden család számára kötelező kellene legyen.''"
+      text: ",,Könnyű kezelni.* lekopogom* még csak teszteltem, remélem nem is lesz szükség rá éles helyzetben.''"
     },
     { 
       src: "/uploads/reviews/review9.png", 
