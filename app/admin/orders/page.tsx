@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Separator } from '@/components/ui/separator';
 import AuthWrapper from '@/components/AuthWrapper';
 import { OrderStatusDropdown } from '@/components/OrderStatusDropdown';
+import type { Status } from '@/components/OrderStatusDropdown'
 
 export const metadata: Metadata = {
   title: 'Admin: Order Management',
@@ -58,7 +59,7 @@ interface Order {
   sessionId: string;
   amount: number;
   currency?: string;
-  status: string;
+  status: Status 
   items?: OrderItem[];
   shippingDetails?: ShippingDetails;
   billingDetails?: BillingDetails;
@@ -164,10 +165,10 @@ export default async function AdminOrders() {
             <Card key={order._id.toString()} className="relative">
               {/* status dropdown top-right */}
               <div className="absolute top-4 right-4">
-                <OrderStatusDropdown
-                  orderId={order._id.toString()}
-                  initialStatus={(order.status as any) ?? 'pending'}
-                />
+              <OrderStatusDropdown
+  orderId={order._id.toString()}
+  initialStatus={order.status ?? 'pending'}
+/>
               </div>
 
               <CardHeader>

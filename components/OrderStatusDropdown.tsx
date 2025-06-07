@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Select, SelectTrigger, SelectContent, SelectItem } from '@/components/ui/select'
 import { ConfirmDialog } from './ConfirmDialog'
 
-type Status = 'pending' | 'success' | 'sent back' | 'sent'
+export type Status = 'pending' | 'success' | 'sent back' | 'sent'
 
 const STATUS_OPTIONS: { value: Status; label: string; emoji: string; color: string }[] = [
   { value: 'pending',   label: 'Pending',   emoji: '⏳', color: 'bg-yellow-100 text-yellow-800' },
