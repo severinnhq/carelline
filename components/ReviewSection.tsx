@@ -121,7 +121,7 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review2.png", 
       name: "Mohácsi Eszter", 
-      text: ",,Remélem sosem lesz rá szükség, viszont minden otthonban ott kellene lennie!''"
+      text: ",,A nagyszüleim minden ilyesmit megvesznek, megmosolyogtam amég nem jött a baj... Nagypapám nyelt félre, de szerencsére tudtunk segíteni, kötelezővé kéne tenni!! Azonnal vettünk is itthonra''"
     },
     { 
       src: "/uploads/reviews/review3.png", 
@@ -131,7 +131,7 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review4.png", 
       name: "Krinszki-Nagy Anna", 
-      text: ",,A nagyszüleim minden ilyesmit megvesznek, megmosolyogtam amég nem jött a baj... Nagypapám nyelt félre, de szerencsére tudtunk segíteni, kötelezővé kéne tenni!! Egyből vettünk is itthonra''"
+      text: ",,Remélem sosem lesz rá szükség, viszont minden otthonban ott kellene lennie!''"
     },
     { 
       src: "/uploads/reviews/review5.png", 
