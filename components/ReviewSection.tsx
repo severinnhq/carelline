@@ -171,7 +171,7 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review12.png", 
       name: "Pappné Sipos Lilla", 
-      text: ",,Amikor vészhelyzet volt, csak ez tudott segíteni. Hálás vagyok érte!''"
+      text: ",,Nagyon remélem, hogy soha, hogy sose kell elővenni.. ''"
     },
     { 
       src: "/uploads/reviews/review13.png", 
