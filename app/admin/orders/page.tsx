@@ -163,7 +163,7 @@ export default async function AdminOrders() {
         <div className="space-y-6">
           {orders.map((order) => (
             <Card key={order._id.toString()} className="relative">
-              {/* status dropdown top-right */}
+              {/* status dropdown top -right */}
               <div className="absolute top-4 right-4">
               <OrderStatusDropdown
   orderId={order._id.toString()}
