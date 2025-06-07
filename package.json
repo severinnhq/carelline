@@ -55,6 +55,7 @@
     "nodemailer": "^6.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.5.2",
     "react-intersection-observer": "^9.13.1",
     "react-native-paper": "^5.12.5",
     "react-native-safe-area-context": "^5.0.0",

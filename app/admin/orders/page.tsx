@@ -2,13 +2,13 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 import { Metadata } from 'next';
 import { parseISO, format } from 'date-fns';
-import { OrderFulfillmentCheckbox } from '@/components/OrderFulfillmentCheckbox';
 import { MongoClient, ObjectId } from 'mongodb';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import AuthWrapper from '@/components/AuthWrapper';
+import { OrderStatusDropdown } from '@/components/OrderStatusDropdown';
 
 export const metadata: Metadata = {
   title: 'Admin: Order Management',
@@ -143,15 +143,6 @@ function AddressDisplay({ address, name }: { address: Address; name: string }) {
   );
 }
 
-function getCardBackgroundClass(order: Order): string {
-  const isUtanvet = order.paymentMethod === 'cash_on_delivery';
-  const isExpress = order.shippingType?.toLowerCase().includes('express');
-  if (isUtanvet && isExpress) return 'bg-gradient-to-r from-yellow-50 to-blue-50';
-  if (isUtanvet) return 'bg-blue-50';
-  if (isExpress) return 'bg-yellow-50';
-  return '';
-}
-
 export default async function AdminOrders() {
   const orders = await getOrders();
   if (orders.length === 0) {
@@ -171,17 +162,17 @@ export default async function AdminOrders() {
         <h1 className="text-3xl font-bold mb-6">Admin: Order Management</h1>
         <div className="space-y-6">
           {orders.map((order) => (
-            <Card key={order._id.toString()} className={getCardBackgroundClass(order)}>
+            <Card key={order._id.toString()} className="relative">
+              {/* status dropdown top-right */}
+              <div className="absolute top-4 right-4">
+                <OrderStatusDropdown
+                  orderId={order._id.toString()}
+                  initialStatus={(order.status as any) ?? 'pending'}
+                />
+              </div>
+
               <CardHeader>
-                <CardTitle className="flex justify-between items-center">
-                  <span>Order ID: {order.sessionId}</span>
-                  <div className="flex gap-2">
-                    {order.paymentMethod === 'cash_on_delivery' && (
-                      <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">Utanvet (COD)</Badge>
-                    )}
-                    <Badge variant={order.status === 'paid' ? 'default' : 'secondary'}>{order.status}</Badge>
-                  </div>
-                </CardTitle>
+                <CardTitle>Order ID: {order.sessionId}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4">
@@ -196,9 +187,6 @@ export default async function AdminOrders() {
                       <p>Phone: <span className="font-medium">{formatPhoneNumber(order.shippingDetails)}</span></p>
                       <p>Email: <span className="font-medium">{formatEmail(order.billingDetails)}</span></p>
                       <p>Total Items: <span className="font-medium">{order.items?.reduce((sum, item) => sum + item.q, 0) || 0}</span></p>
-                    </div>
-                    <div className="flex-shrink-0 ml-4">
-                      <OrderFulfillmentCheckbox orderId={order._id.toString()} initialFulfilled={!!order.fulfilled} />
                     </div>
                   </div>
 
