@@ -166,7 +166,7 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review11.png", 
       name: "Bodzán Margó", 
-      text: ",,Nagyon gyors és hatékony! Sosem gondoltam volna, hogy egyszer szükség lesz rá, de hála az égnek kéznél volt!''"
+      text: ",,Sajnos élésben is tesztelnem kellett, viszont szó szerint életet mentett, ÚGY ÉRZEM ÉLETEM LEGJOBB DÖNTÉSE VOLT MEGVENNI''"
     },
     { 
       src: "/uploads/reviews/review12.png", 
