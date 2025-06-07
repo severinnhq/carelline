@@ -5,7 +5,6 @@ import { parseISO, format } from 'date-fns';
 import { MongoClient, ObjectId } from 'mongodb';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import AuthWrapper from '@/components/AuthWrapper';
 import { OrderStatusDropdown } from '@/components/OrderStatusDropdown';
