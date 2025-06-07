@@ -121,7 +121,7 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review2.png", 
       name: "Mohácsi Eszter", 
-      text: ",,Nagyon gyors és hatékony! Sosem gondoltam volna, hogy egyszer szükség lesz rá, de hála az égnek kéznél volt!''"
+      text: ",,Remélem sosem lesz rá szükség, viszont minden otthonban ott kellene lennie!''"
     },
     { 
       src: "/uploads/reviews/review3.png", 
@@ -136,12 +136,12 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review5.png", 
       name: "Kanozsai Erzsébet", 
-      text: ",,Remélem sosem lesz rá szükség, viszont minden otthonban ott kellene lennie!''"
+      text: ",,Gyorsan és egyszerűen használható. Életeket menthet.''"
     },
     { 
       src: "/uploads/reviews/review6.png", 
       name: "Horváth Noémi", 
-      text: ",,Először szkeptikus voltam, de amikor a kisfiam elkezdett fuldokolni, ez a készülék megmentette őt. Köszönöm!''"
+      text: ",,Testközelből láttam, hogy életet ment... Örökre belém égett, egyből vettünk itthonra is.'"
     },
     { 
       src: "/uploads/reviews/review7.png", 
@@ -166,7 +166,7 @@ const ReviewSection = () => {
     { 
       src: "/uploads/reviews/review11.png", 
       name: "Bodzán Margó", 
-      text: ",,Gyorsan és egyszerűen használható. Életeket menthet.''"
+      text: ",,Nagyon gyors és hatékony! Sosem gondoltam volna, hogy egyszer szükség lesz rá, de hála az égnek kéznél volt!''"
     },
     { 
       src: "/uploads/reviews/review12.png", 
