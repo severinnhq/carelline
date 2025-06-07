@@ -4,13 +4,14 @@ import { useState } from 'react'
 import { Select, SelectTrigger, SelectContent, SelectItem } from '@/components/ui/select'
 import { ConfirmDialog } from './ConfirmDialog'
 
-export type Status = 'pending' | 'success' | 'sent back' | 'sent'
+export type Status = 'pending' | 'success' | 'sent back' | 'sent' | 'cancelled'
 
 const STATUS_OPTIONS: { value: Status; label: string; emoji: string; color: string }[] = [
   { value: 'pending',   label: 'Pending',   emoji: '⏳', color: 'bg-yellow-100 text-yellow-800' },
   { value: 'success',   label: 'Success',   emoji: '✅', color: 'bg-green-100 text-green-800' },
   { value: 'sent back', label: 'Sent back', emoji: '📦↩️', color: 'bg-red-100 text-red-800' },
   { value: 'sent',      label: 'Sent',      emoji: '📦',   color: 'bg-blue-100 text-blue-800' },
+  { value: 'cancelled',      label: 'Cancelled',      emoji: 'x',   color: 'bg-red-100 text-red-800' }
 ]
 
 interface Props {
