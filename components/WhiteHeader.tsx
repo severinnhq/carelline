@@ -21,7 +21,7 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
   const [countdown, setCountdown] = useState('')
   const [isTransitioning, setIsTransitioning] = useState(false)
 
-  const bannerText = "NYÁR INDÍTÓ AKCIÓ CSAK JÚNIUS 15-IG!!"
+  const bannerText = "NYÁR INDÍTÓ AKCIÓ CSAK JÚNIUS 20-IG!!"
   const bankText = `BANKKÁRTYÁS FIZETÉS ESETÉN -20% A "NYAR20" KÓDDAL`
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
@@ -29,7 +29,7 @@ export function WhiteHeader({ onCartClick, cartItems }: WhiteHeaderProps) {
   // Countdown timer effect
   useEffect(() => {
     const calculateTimeRemaining = () => {
-      const targetDate = new Date('2025-06-15T23:59:00')
+      const targetDate = new Date('2025-06-20T23:59:00')
       const now = new Date()
       const diff = targetDate.getTime() - now.getTime()
       if (diff <= 0) {
