@@ -9,6 +9,8 @@ import AuthWrapper from '@/components/AuthWrapper';
 import { OrderStatusDropdown } from '@/components/OrderStatusDropdown';
 import type { Status } from '@/components/OrderStatusDropdown';
 
+type StatusFilter = 'all' | Status;
+
 interface Address {
   city: string;
   country: string;
@@ -17,7 +19,6 @@ interface Address {
   postal_code: string;
   state: string;
 }
-
 interface OrderItem {
   n: string;
   s: string;
@@ -65,7 +66,7 @@ interface Order {
 
 export default function AdminOrdersClient({ initialOrders }: { initialOrders: Order[] }) {
   const [filter, setFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | Status>('all');
+const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
 
   const filteredOrders = initialOrders.filter(order => {
     // text-based filtering
@@ -104,7 +105,9 @@ export default function AdminOrdersClient({ initialOrders }: { initialOrders: Or
       </>
     );
   }
-
+const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  setStatusFilter(e.target.value as StatusFilter);
+};
   return (
     <AuthWrapper>
       <div className="container mx-auto py-10">
@@ -121,10 +124,10 @@ export default function AdminOrdersClient({ initialOrders }: { initialOrders: Or
           />
 
           <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="border px-3 py-2 rounded-md"
-          >
+  value={statusFilter}
+  onChange={handleStatusChange}
+  className="border px-3 py-2 rounded-md"
+>
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
             <option value="sent">Sent</option>
