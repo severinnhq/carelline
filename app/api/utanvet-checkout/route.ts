@@ -50,7 +50,7 @@ interface Order {
   customerId: string | null;
   amount: number;
   currency: string;
-  status: 'pending' | 'completed' | 'cancelled';
+  status: 'pending' | 'completed' | 'canceled';
   paymentMethod: 'cash_on_delivery';
   items: OrderItem[];
   shippingDetails: ShippingDetails;

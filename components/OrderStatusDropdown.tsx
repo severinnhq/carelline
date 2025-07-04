@@ -4,14 +4,14 @@ import { useState } from 'react'
 import { Select, SelectTrigger, SelectContent, SelectItem } from '@/components/ui/select'
 import { ConfirmDialog } from './ConfirmDialog'
 
-export type Status = 'pending' | 'success' | 'sent back' | 'sent' | 'cancelled' | 'ordered'
+export type Status = 'pending' | 'success' | 'sent back' | 'sent' | 'canceled' | 'ordered'
 
 const STATUS_OPTIONS: { value: Status; label: string; emoji: string; color: string }[] = [
   { value: 'pending',   label: 'Pending',   emoji: '⏳', color: 'bg-yellow-100 text-yellow-800' },
   { value: 'success',   label: 'Success',   emoji: '✅', color: 'bg-green-100 text-green-800' },
   { value: 'sent back', label: 'Sent back', emoji: '📦↩️', color: 'bg-red-100 text-red-800' },
   { value: 'sent',      label: 'Sent',      emoji: '📦',   color: 'bg-blue-100 text-blue-800' },
-  { value: 'cancelled',      label: 'Cancelled',      emoji: '❌',   color: 'bg-red-100 text-red-800' },
+  { value: 'canceled',      label: 'Canceled',      emoji: '❌',   color: 'bg-red-100 text-red-800' },
   { value: 'ordered',      label: 'Ordered',      emoji: '🛒',   color: 'bg-purple text-purple' }
 ]
 
@@ -56,7 +56,7 @@ export function OrderStatusDropdown({ orderId, initialStatus }: Props) {
   return (
     <>
       <Select onValueChange={handleSelect} value={current.value}>
-        <SelectTrigger className={`w-32 rounded ${current.color}`}>
+        <SelectTrigger className={`w-auto rounded ${current.color}`}>
           <span className="flex items-center justify-center gap-1">
             {current.emoji} {current.label}
           </span>
