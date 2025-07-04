@@ -82,12 +82,14 @@ async function getOrders(statusFilter?: FilterStatus): Promise<Order[]> {
     const db = client.db('webstore');
     const ordersCollection = db.collection('orders');
 
+    // Create a case-insensitive filter
     const query: any = {};
     
-    // Handle status filtering
     if (statusFilter && statusFilter !== 'all') {
-      // Case-insensitive match for the entire status string
-      query.status = { $regex: statusFilter, $options: 'i' };
+      // Create a case-insensitive regex for exact match
+      query.status = { 
+        $regex: new RegExp(`^${statusFilter}$`, 'i') 
+      };
     }
 
     const orders = await ordersCollection
@@ -103,6 +105,7 @@ async function getOrders(statusFilter?: FilterStatus): Promise<Order[]> {
     await client.close();
   }
 }
+
 
 function formatCreatedDate(dateString?: string | Date): string {
   if (!dateString) return 'Date not available';
