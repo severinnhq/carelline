@@ -1,364 +1,265 @@
-// app/admin/orders/page.tsx
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-'use client'; // needed for the <form> auto-submit behavior
-
-import React from 'react';
-import { Metadata } from 'next';
-import { parseISO, format } from 'date-fns';
+import { NextResponse } from 'next/server';
 import { MongoClient, ObjectId } from 'mongodb';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Separator } from '@/components/ui/separator';
-import AuthWrapper from '@/components/AuthWrapper';
-import { OrderStatusDropdown } from '@/components/OrderStatusDropdown';
-import type { Status } from '@/components/OrderStatusDropdown';
-
-export const metadata: Metadata = {
-  title: 'Admin: Order Management',
-};
+import { Expo } from 'expo-server-sdk';
 
 const mongoUri = process.env.MONGODB_URI!;
-
-interface OrderItem {
-  id: string;
-  n: string;
-  s: string;
-  q: number;
-  p: number;
-}
-
-interface Address {
-  city: string;
-  country: string;
-  line1: string;
-  line2: string | null;
-  postal_code: string;
-  state: string;
-}
-
-interface ShippingDetails {
-  address: Address;
-  name: string;
-  phone: string;
-}
-
-interface BillingDetails {
-  address: Address;
-  name: string;
-  email: string;
-}
-
-interface StripeDetails {
-  paymentId: string;
-  customerId: string | null;
-  paymentMethodId: string | null;
-  paymentMethodFingerprint: string | null;
-  riskScore: number | null;
-  riskLevel: string | null;
-}
+const expo = new Expo();
 
 interface Order {
   _id: ObjectId;
   sessionId: string;
   amount: number;
-  currency?: string;
-  status: Status;
-  items?: OrderItem[];
-  shippingDetails?: ShippingDetails;
-  billingDetails?: BillingDetails;
+  currency: string;
+  status: string;
+  items?: Array<{ n: string; s: string; q: number; p: number }>;
+  shippingDetails?: {
+    name: string;
+    address: {
+      line1: string;
+      line2: string | null;
+      city: string;
+      state: string;
+      postal_code: string;
+      country: string;
+    };
+    phone: string;
+  };
+  billingDetails?: {
+    name: string;
+    address: {
+      line1: string;
+      line2: string | null;
+      city: string;
+      state: string;
+      postal_code: string;
+      country: string;
+    };
+    email: string;
+  };
+  createdAt: Date;
   shippingType?: string;
-  stripeDetails?: StripeDetails;
-  createdAt?: Date | string;
+  stripeDetails?: {
+    paymentId: string;
+    customerId: string | null;
+    paymentMethodId: string | null;
+    paymentMethodFingerprint: string | null;
+    riskScore: number | null;
+    riskLevel: string | null;
+  };
   fulfilled?: boolean;
   paymentMethod?: string;
   notes?: string;
 }
 
-async function getOrders(statusFilter?: string): Promise<Order[]> {
+function generateChallenge(): string {
+  return Math.random().toString(36).substring(2, 15);
+}
+
+function simpleHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(16);
+}
+
+function verifyResponse(challenge: string, response: string): boolean {
+  const expectedResponse = simpleHash(challenge + 'carelline_secret');
+  return response === expectedResponse;
+}
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const challenge = searchParams.get('challenge');
+  const response = searchParams.get('response');
+  const acceptHeader = request.headers.get('accept');
+
+  // If the request is from a browser (HTML), serve the HTML page
+  if (acceptHeader && acceptHeader.includes('text/html')) {
+    return new NextResponse(
+      `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>404 - Page Not Found</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+          .bg-404::before {
+            content: '404';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20vw;
+            font-weight: bold;
+            opacity: 0.1;
+            z-index: -1;
+          }
+        </style>
+      </head>
+      <body class="bg-white flex items-center justify-center min-h-screen bg-404">
+        <a href="/" class="text-2xl bg-black hover:bg-gray-800 text-white font-bold py-3 px-6 rounded transition duration-300 ease-in-out z-10">
+          Continue Shopping
+        </a>
+      </body>
+      </html>
+      `,
+      {
+        headers: { 'Content-Type': 'text/html' },
+        status: 404,
+      }
+    );
+  }
+
+  // Handle the challenge-response for API requests
+  if (!challenge && !response) {
+    const newChallenge = generateChallenge();
+    return NextResponse.json({ challenge: newChallenge }, { status: 200 });
+  }
+
+  if (!challenge || !response || !verifyResponse(challenge, response)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const id = searchParams.get('id');
   const client = new MongoClient(mongoUri);
+
   try {
     await client.connect();
     const db = client.db('webstore');
     const ordersCollection = db.collection('orders');
 
-    const query: Record<string, any> = {};
-    if (statusFilter && statusFilter !== 'all') {
-      query.status = statusFilter;
+    let orders: Order[];
+
+    if (id) {
+      const order = await ordersCollection.findOne({ _id: new ObjectId(id) });
+      orders = order ? [order as Order] : [];
+    } else {
+      const fetchedOrders = await ordersCollection
+        .find()
+        .sort({ createdAt: -1 })
+        .toArray();
+
+      orders = fetchedOrders.filter((order): order is Order => {
+        return (
+          typeof order.sessionId === 'string' &&
+          typeof order.amount === 'number' &&
+          typeof order.currency === 'string' &&
+          typeof order.status === 'string' &&
+          order.createdAt instanceof Date &&
+          (!order.items || Array.isArray(order.items)) &&
+          (!order.shippingDetails || typeof order.shippingDetails === 'object') &&
+          (!order.billingDetails || typeof order.billingDetails === 'object') &&
+          (!order.shippingType || typeof order.shippingType === 'string') &&
+          (!order.stripeDetails || typeof order.stripeDetails === 'object') &&
+          (typeof order.fulfilled === 'undefined' || typeof order.fulfilled === 'boolean') &&
+          (!order.paymentMethod || typeof order.paymentMethod === 'string') &&
+          (!order.notes || typeof order.notes === 'string') &&
+          // ensure nested fields exist
+          !!order.shippingDetails &&
+          typeof order.shippingDetails.phone === 'string' &&
+          !!order.billingDetails &&
+          typeof order.billingDetails.email === 'string'
+        );
+      });
     }
 
-    const orders = await ordersCollection
-      .find(query)
-      .sort({ createdAt: -1 })
-      .toArray();
-
-    return orders as Order[];
+    return NextResponse.json(orders);
   } catch (error) {
     console.error('Failed to fetch orders:', error);
-    return [];
+    return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 });
   } finally {
     await client.close();
   }
 }
 
-function formatCreatedDate(dateString?: string | Date): string {
-  if (!dateString) return 'Date not available';
+export async function POST(request: Request) {
+  const client = new MongoClient(mongoUri);
+
   try {
-    const date = typeof dateString === 'string' ? parseISO(dateString) : dateString;
-    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-    const gmt1Time = new Date(utcDate.getTime() + 60 * 60 * 1000);
-    return format(gmt1Time, "yyyy-MM-dd HH:mm:ss 'GMT+1'");
+    await client.connect();
+    const db = client.db('webstore');
+    const ordersCollection = db.collection('orders');
+    const pushTokensCollection = db.collection('push_tokens');
+
+    const newOrder = await request.json();
+    const result = await ordersCollection.insertOne(newOrder);
+
+    // Fetch all registered push tokens
+    const pushTokens = await pushTokensCollection.find({}).toArray();
+
+    // Prepare notification body
+    let notificationBody = '';
+    if (newOrder.items && newOrder.items.length > 0) {
+      const firstItem = newOrder.items[0];
+      notificationBody = `${firstItem.n} - €${firstItem.p.toFixed(2)}`;
+      if (newOrder.items.length > 1) {
+        notificationBody += ` + ${newOrder.items.length - 1} others`;
+      }
+    }
+
+    // Send push notifications
+    for (const { token } of pushTokens) {
+      if (!Expo.isExpoPushToken(token)) {
+        console.error(`Push token ${token} is not a valid Expo push token`);
+        continue;
+      }
+
+      const message = {
+        to: token,
+        sound: 'default',
+        title: 'CARELLINE',
+        body: notificationBody,
+        data: {
+          orderId: result.insertedId.toString(),
+          phoneNumber: newOrder.shippingDetails?.phone ?? 'No phone number'
+        },
+      };
+
+      try {
+        await expo.sendPushNotificationsAsync([message]);
+      } catch (err) {
+        console.error('Error sending push notification:', err);
+      }
+    }
+
+    return NextResponse.json({ success: true, orderId: result.insertedId }, { status: 201 });
   } catch (error) {
-    console.error('Error formatting date:', error);
-    return 'Invalid date';
+    console.error('Failed to create order:', error);
+    return NextResponse.json({ error: 'Failed to create order' }, { status: 500 });
+  } finally {
+    await client.close();
   }
 }
 
-function formatPhoneNumber(shippingDetails?: ShippingDetails): string {
-  return shippingDetails?.phone ?? 'No phone number provided';
-}
+export async function PUT(request: Request) {
+  const client = new MongoClient(mongoUri);
 
-function formatEmail(billingDetails?: BillingDetails): string {
-  return billingDetails?.email ?? 'No email provided';
-}
+  try {
+    await client.connect();
+    const db = client.db('webstore');
+    const pushTokensCollection = db.collection('push_tokens');
 
-function areAddressesSame(shipping?: ShippingDetails, billing?: BillingDetails): boolean {
-  if (!shipping || !billing) return false;
-  const s = shipping.address;
-  const b = billing.address;
-  return (
-    s.line1 === b.line1 &&
-    s.line2 === b.line2 &&
-    s.city === b.city &&
-    s.state === b.state &&
-    s.postal_code === b.postal_code &&
-    s.country === b.country
-  );
-}
+    const { token } = await request.json();
+    if (!token) {
+      return NextResponse.json({ error: 'No token provided' }, { status: 400 });
+    }
 
-function AddressDisplay({ address, name }: { address: Address; name: string }) {
-  return (
-    <>
-      <p>{name}</p>
-      <p>{address.line1}</p>
-      {address.line2 && <p>{address.line2}</p>}
-      <p>
-        {address.city},&nbsp;
-        {address.state || <span className="text-gray-500 italic">Megye not set</span>}&nbsp;
-        {address.postal_code}
-      </p>
-      <p>{address.country}</p>
-    </>
-  );
-}
+    await pushTokensCollection.updateOne(
+      { token },
+      { $set: { token, updatedAt: new Date() } },
+      { upsert: true }
+    );
 
-const STATUSES: Array<'all' | Status> = [
-  'all',
-  'pending',
-  'paid',
-  'fulfilled',
-  'canceled',
-];
-
-export default async function AdminOrders({
-  searchParams,
-}: {
-  searchParams: { status?: string };
-}) {
-  const selectedStatus = searchParams.status ?? 'all';
-  const orders = await getOrders(selectedStatus);
-
-  return (
-    <AuthWrapper>
-      <div className="container mx-auto py-10">
-        <h1 className="text-3xl font-bold mb-6">Admin: Order Management</h1>
-
-        {/* Status Filter */}
-        <form method="get" className="mb-6">
-          <label htmlFor="status" className="mr-2 font-medium">
-            Filter by status:
-          </label>
-          <select
-            id="status"
-            name="status"
-            defaultValue={selectedStatus}
-            onChange={(e) => (e.target as HTMLSelectElement).form?.submit()}
-            className="border rounded p-1"
-          >
-            {STATUSES.map((st) => (
-              <option key={st} value={st}>
-                {st === 'all' ? 'All' : st.charAt(0).toUpperCase() + st.slice(1)}
-              </option>
-            ))}
-          </select>
-        </form>
-
-        {orders.length === 0 ? (
-          <p>No orders found{selectedStatus !== 'all' && ` for “${selectedStatus}”` }.</p>
-        ) : (
-          <div className="space-y-6">
-            {orders.map((order) => (
-              <Card key={order._id.toString()} className="relative">
-                <div className="absolute top-4 right-4">
-                  <OrderStatusDropdown
-                    orderId={order._id.toString()}
-                    initialStatus={order.status}
-                  />
-                </div>
-
-                <CardHeader>
-                  <CardTitle>Order ID: {order.sessionId}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-4">
-                    <div className="flex justify-between items-center">
-                      <div className="flex-grow">
-                        <h3 className="font-semibold mb-2">Order Details</h3>
-                        <p>
-                          Amount: {order.amount.toFixed(2)}{' '}
-                          {order.currency?.toUpperCase()}
-                        </p>
-                        <p>Created: {formatCreatedDate(order.createdAt)}</p>
-                        <p>Shipping: {order.shippingType}</p>
-                        <p>
-                          Payment:{' '}
-                          {order.paymentMethod === 'cash_on_delivery'
-                            ? 'COD'
-                            : 'Card'}
-                        </p>
-                        <p>
-                          Megye:{' '}
-                          {order.shippingDetails?.address.state || 'Not set'}
-                        </p>
-                        <p>
-                          Phone:{' '}
-                          <span className="font-medium">
-                            {formatPhoneNumber(order.shippingDetails)}
-                          </span>
-                        </p>
-                        <p>
-                          Email:{' '}
-                          <span className="font-medium">
-                            {formatEmail(order.billingDetails)}
-                          </span>
-                        </p>
-                        <p>
-                          Total Items:{' '}
-                          <span className="font-medium">
-                            {order.items?.reduce((sum, item) => sum + item.q, 0) ||
-                              0}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold mb-2">Items</h3>
-                      {order.items?.length ? (
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Name</TableHead>
-                              <TableHead>Size</TableHead>
-                              <TableHead>Qty</TableHead>
-                              <TableHead>Price</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {order.items.map((item, i) => (
-                              <TableRow key={i}>
-                                <TableCell>{item.n}</TableCell>
-                                <TableCell>{item.s}</TableCell>
-                                <TableCell>{item.q}</TableCell>
-                                <TableCell>
-                                  {item.p.toFixed(2)}{' '}
-                                  {order.currency?.toUpperCase()}
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      ) : (
-                        <p>No items</p>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {order.shippingDetails && (
-                        <div>
-                          <h3 className="font-semibold mb-2">
-                            Shipping Details
-                          </h3>
-                          <AddressDisplay
-                            address={order.shippingDetails.address}
-                            name={order.shippingDetails.name}
-                          />
-                        </div>
-                      )}
-                      <div>
-                        <h3 className="font-semibold mb-2">Billing Details</h3>
-                        {order.billingDetails ? (
-                          areAddressesSame(
-                            order.shippingDetails,
-                            order.billingDetails
-                          ) ? (
-                            <p>Same as shipping</p>
-                          ) : (
-                            <AddressDisplay
-                              address={order.billingDetails.address}
-                              name={order.billingDetails.name}
-                            />
-                          )
-                        ) : (
-                          <p>No billing</p>
-                        )}
-
-                        {order.notes && (
-                          <div className="mt-4 p-3 bg-gray-50 rounded-md">
-                            <h4 className="font-medium text-sm mb-1">Notes</h4>
-                            <p className="text-sm">{order.notes}</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {order.stripeDetails && (
-                      <div>
-                        <h3 className="font-semibold mb-2">Stripe Details</h3>
-                        <p>Payment ID: {order.stripeDetails.paymentId}</p>
-                        <p>
-                          Customer:{' '}
-                          {order.stripeDetails.customerId || 'Guest'}
-                        </p>
-                        <p>
-                          Method ID:{' '}
-                          {order.stripeDetails.paymentMethodId || 'N/A'}
-                        </p>
-                        <p>
-                          Fingerprint:{' '}
-                          {order.stripeDetails.paymentMethodFingerprint ||
-                            'N/A'}
-                        </p>
-                        <p>
-                          Risk Score:{' '}
-                          {order.stripeDetails.riskScore ?? 'N/A'}
-                        </p>
-                        <p>
-                          Risk Level:{' '}
-                          {order.stripeDetails.riskLevel || 'N/A'}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
-    </AuthWrapper>
-  );
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error('Failed to register push token:', error);
+    return NextResponse.json({ error: 'Failed to register push token' }, { status: 500 });
+  } finally {
+    await client.close();
+  }
 }
