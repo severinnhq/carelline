@@ -49,6 +49,7 @@ interface StripeDetails {
 
 interface Order {
   _id: string;
+  orderNumber: string;
   sessionId?: string;
   amount: number;
   currency?: string;
@@ -92,21 +93,17 @@ const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
     }
   }
 
-  function AddressDisplay({ address, name }: { address: Address; name: string }) {
-    return (
-      <>
-        <p>{name}</p>
-        <p>{address.line1}</p>
-        {address.line2 && <p>{address.line2}</p>}
-        <p>
-          {address.city}, {address.state || 'N/A'} {address.postal_code}
-        </p>
-        <p>{address.country}</p>
-      </>
-    );
-  }
 const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   setStatusFilter(e.target.value as StatusFilter);
+};
+// Somewhere at the top of your component file:
+const statusBgClass: Record<Status, string> = {
+  success:   'bg-green-100',
+  pending:   'bg-yellow-100',
+  sent:      'bg-blue-100',
+  'sent back':'bg-red-100',
+  canceled:  'bg-gray-200',
+  ordered:  'bg-white',
 };
   return (
     <AuthWrapper>
@@ -114,7 +111,7 @@ const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         <h1 className="text-3xl font-bold mb-6">Admin: Order Management</h1>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-6">
+        <div className="flex flex-wrap gap-4 mx-6 mb-6 justify-between">
           <input
             type="text"
             placeholder="Filter by ID, name, or email"
@@ -124,10 +121,10 @@ const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
           />
 
           <select
-  value={statusFilter}
-  onChange={handleStatusChange}
-  className="border px-3 py-2 rounded-md"
->
+            value={statusFilter}
+            onChange={handleStatusChange}
+            className="border px-3 py-2 rounded-md"
+          >
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
             <option value="sent">Sent</option>
@@ -139,12 +136,14 @@ const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         </div>
 
         {/* Orders List */}
-        <div className="space-y-6 space-x-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 m-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 m-6">
           {filteredOrders.length === 0 ? (
             <p>No orders match your filter.</p>
           ) : (
             filteredOrders.map((order) => (
-              <Card key={order._id} className="relative">
+              <Card key={order._id}
+                className={`relative ${statusBgClass[order.status] ?? 'bg-white'} hover:shadow-lg transition`}
+              >
                 <div className="absolute top-4 right-4">
                   <OrderStatusDropdown
                     orderId={order._id}
@@ -152,20 +151,15 @@ const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                   />
                 </div>
                 <CardHeader>
-                  <CardTitle>Order ID: {order.sessionId || 'N/A'}</CardTitle>
+                  <CardTitle>ID: {order.orderNumber || 'N/A'}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>
-                    Amount: {order.amount.toFixed(2)} {order.currency?.toUpperCase()}
-                  </p>
-                  <p>Created: {formatCreatedDate(order.createdAt)}</p>
-                  <p>Shipping: {order.shippingType || 'N/A'}</p>
-                  <p>
-                    Payment:{' '}
+                  <p className='text-sm'><strong>Created:</strong> {formatCreatedDate(order.createdAt)}</p>
+                  <p className='text-sm'><strong>Shipping:</strong> {order.shippingType || 'N/A'}</p>
+                  <p className='text-sm'>
+                    <strong>Payment:</strong>{' '}
                     {order.paymentMethod === 'cash_on_delivery' ? 'COD' : 'Card'}
                   </p>
-                  <p>Email: {order.billingDetails?.email || 'N/A'}</p>
-
                   <Separator className="my-2" />
 
                   {order.items?.length ? (
@@ -183,7 +177,7 @@ const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                             <TableCell>{item.n}</TableCell>
                             <TableCell>{item.q}</TableCell>
                             <TableCell>
-                              {item.p.toFixed(2)} {order.currency?.toUpperCase()}
+                              {item.p.toFixed(0)} {order.currency?.toUpperCase()}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -195,13 +189,23 @@ const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
                   <Separator className="my-2" />
 
+                  <p className='text-lg font-bold'>
+                    Amount: <i className='cursor-pointer active:font-medium' onClick={() => navigator.clipboard.writeText(order.amount.toFixed(0))}>{order.amount.toFixed(0)} {order.currency?.toUpperCase()}</i>
+                  </p>
+
+                  <p className='my-1 font-medium text-md cursor-pointer active:font-bold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.name)}>{order.shippingDetails?.name || 'N/A'}</p>
+                  <p><strong>Email:</strong> <i className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.billingDetails!.email)}>{order.billingDetails?.email || 'N/A'}</i></p>
+                  <p><strong>Phone:</strong> <i className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.phone)}>{order.shippingDetails?.phone || 'N/A'}</i></p>
+
+                  <Separator className="my-2" />
+
                   {order.shippingDetails && (
                     <div>
                       <h4 className="font-semibold mb-1">Shipping Address</h4>
-                      <AddressDisplay
-                        address={order.shippingDetails.address}
-                        name={order.shippingDetails.name}
-                      />
+                      <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.address.postal_code)}>{order.shippingDetails.address.postal_code}</p> 
+                        
+                      <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.address.city)}>{order.shippingDetails.address.city}</p> 
+                      <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.address.line1)}>{order.shippingDetails.address.line1}</p>
                     </div>
                   )}
                 </CardContent>
