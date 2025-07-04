@@ -17,7 +17,6 @@ export const metadata: Metadata = {
 
 const mongoUri = process.env.MONGODB_URI!;
 
-// Use string type for status to match your API
 type FilterStatus = 'all' | 'pending' | 'success' | 'sent' | 'back' | 'cancelled' | 'ordered';
 
 interface OrderItem {
@@ -63,7 +62,7 @@ interface Order {
   sessionId: string;
   amount: number;
   currency?: string;
-  status: string; // Changed to string to match your API
+  status: string;
   items?: OrderItem[];
   shippingDetails?: ShippingDetails;
   billingDetails?: BillingDetails;
@@ -75,25 +74,15 @@ interface Order {
   notes?: string;
 }
 
-async function getOrders(statusFilter?: FilterStatus): Promise<Order[]> {
+async function getOrders(): Promise<Order[]> {
   const client = new MongoClient(mongoUri);
   try {
     await client.connect();
     const db = client.db('webstore');
     const ordersCollection = db.collection('orders');
 
-    // Create a case-insensitive filter
-    const query: any = {};
-    
-    if (statusFilter && statusFilter !== 'all') {
-      // Create a case-insensitive regex for exact match
-      query.status = { 
-        $regex: new RegExp(`^${statusFilter}$`, 'i') 
-      };
-    }
-
     const orders = await ordersCollection
-      .find(query)
+      .find({})
       .sort({ createdAt: -1 })
       .toArray();
 
@@ -105,7 +94,6 @@ async function getOrders(statusFilter?: FilterStatus): Promise<Order[]> {
     await client.close();
   }
 }
-
 
 function formatCreatedDate(dateString?: string | Date): string {
   if (!dateString) return 'Date not available';
@@ -142,7 +130,6 @@ function areAddressesSame(shipping?: ShippingDetails, billing?: BillingDetails):
   );
 }
 
-// Function to reverse name order: "Lastname Firstname" => "Firstname Lastname"
 function reverseNameOrder(fullName: string): string {
   const nameParts = fullName.split(' ');
   if (nameParts.length > 1) {
@@ -175,9 +162,20 @@ export default async function AdminOrders({
   searchParams: { status?: FilterStatus }
 }) {
   const statusFilter = searchParams?.status || 'all';
-  const orders = await getOrders(statusFilter);
+  const allOrders = await getOrders();
   
   const filterStatuses: FilterStatus[] = ['all', 'pending', 'success', 'sent', 'back', 'cancelled', 'ordered'];
+
+  // Client-side filtering function
+  const filterOrders = (orders: Order[], status: FilterStatus): Order[] => {
+    if (status === 'all') return orders;
+    return orders.filter(order => 
+      order.status.toLowerCase() === status.toLowerCase()
+    );
+  };
+
+  // Apply the filter to our orders
+  const filteredOrders = filterOrders(allOrders, statusFilter);
 
   return (
     <AuthWrapper>
@@ -204,13 +202,13 @@ export default async function AdminOrders({
           </div>
         </div>
 
-        {orders.length === 0 ? (
+        {filteredOrders.length === 0 ? (
           <div className="bg-white p-6 rounded-lg shadow">
             <p className="text-lg">No orders found with status: <span className="font-medium">{statusFilter}</span></p>
           </div>
         ) : (
           <div className="space-y-6">
-            {orders.map((order) => (
+            {filteredOrders.map((order) => (
               <Card key={order._id.toString()} className="relative">
                 <div className="absolute top-4 right-4">
                   <OrderStatusDropdown
@@ -245,8 +243,6 @@ export default async function AdminOrders({
                           <TableHeader>
                             <TableRow>
                               <TableHead>Name</TableHead>
-                              {/* Size column commented out - removed from display */}
-                              {/* <TableHead>Size</TableHead> */}
                               <TableHead>Qty</TableHead>
                               <TableHead>Price</TableHead>
                             </TableRow>
@@ -255,8 +251,6 @@ export default async function AdminOrders({
                             {order.items.map((item, i) => (
                               <TableRow key={i}>
                                 <TableCell>{item.n}</TableCell>
-                                {/* Size cell commented out - removed from display */}
-                                {/* <TableCell>{item.s}</TableCell> */}
                                 <TableCell>{item.q}</TableCell>
                                 <TableCell>{item.p.toFixed(2)} {order.currency?.toUpperCase()}</TableCell>
                               </TableRow>
