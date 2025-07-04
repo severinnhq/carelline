@@ -84,17 +84,6 @@ function generateOrderNumber(): string {
   return `UTN-${year}${month}${day}-${random}`;
 }
 
-// Helper: Reorder Hungarian names: family name first, then given name
-function formatHungarianName(fullName: string): string {
-  const parts = fullName.trim().split(/\s+/);
-  if (parts.length >= 2) {
-    const firstName = parts[0];
-    const lastName = parts.slice(1).join(' ');
-    return `${lastName} ${firstName}`;
-  }
-  return fullName;
-}
-
 async function sendConfirmationEmail(email: string, order: Order) {
   console.log('[Email] Attempting to send confirmation email to:', email);
   
@@ -151,7 +140,7 @@ async function sendConfirmationEmail(email: string, order: Order) {
           <div class="section">
             <h2>Szállítási adatok</h2>
             <p>
-              ${formatHungarianName(order.shippingDetails.name)}<br>
+              ${order.shippingDetails.name}<br>
               ${order.shippingDetails.address.line1}<br>
               ${order.shippingDetails.address.city}, ${order.shippingDetails.address.postal_code}
             </p>
@@ -203,5 +192,86 @@ async function sendConfirmationEmail(email: string, order: Order) {
   } catch (error) {
     console.error('[Email] Unexpected error:', error);
     return false;
+  }
+}
+
+async function saveOrder(data: RequestBody): Promise<Order> {
+  const client = await connectToDatabase();
+  const db = client.db('webstore');
+  const ordersCollection = db.collection<Order>('orders');
+
+  const subtotal = data.items.reduce((sum, item) => sum + (item.p * item.q), 0);
+  let shippingCost = 0;
+  
+  if (data.shippingType.includes('Standard')) {
+    const freeShippingThreshold = 30000;
+    shippingCost = subtotal >= freeShippingThreshold ? 0 : 1990;
+  } else {
+    shippingCost = 3990;
+  }
+  
+  const total = subtotal + shippingCost + data.cashOnDeliveryFee;
+
+  if (total !== data.amount) {
+    throw new Error('A kalkulált összeg nem egyezik a megadott összeggel.');
+  }
+
+  const orderNumber = generateOrderNumber();
+  
+  const order: Omit<Order, '_id'> = {
+    orderNumber,
+    customerId: null,
+    amount: data.amount,
+    currency: data.currency,
+    status: 'pending',
+    paymentMethod: 'cash_on_delivery',
+    items: data.items,
+    shippingDetails: data.shippingDetails,
+    billingDetails: data.billingDetails,
+    shippingType: data.shippingType,
+    cashOnDeliveryFee: data.cashOnDeliveryFee,
+    subtotal,
+    shippingCost,
+    total,
+    notes: data.notes,
+    createdAt: new Date()
+  };
+
+  const result = await ordersCollection.insertOne(order);
+  return { ...order, _id: result.insertedId };
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    console.log('[Order] Starting order processing');
+    const body: RequestBody = await req.json();
+    
+    console.log('[Order] Received order data:', {
+      ...body,
+      items: body.items.slice(0, 2)
+    });
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(body.email)) {
+      throw new Error('Invalid email format');
+    }
+
+    const order = await saveOrder(body);
+    console.log('[Order] Order saved with ID:', order._id);
+
+    const emailSent = await sendConfirmationEmail(body.email, order);
+    
+    return NextResponse.json({ 
+      success: true, 
+      orderId: order._id?.toString(),
+      orderNumber: order.orderNumber,
+      emailSent
+    });
+  } catch (err) {
+    console.error('[Order] Processing error:', err);
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Internal server error' }, 
+      { status: 500 }
+    );
   }
 }
