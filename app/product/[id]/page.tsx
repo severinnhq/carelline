@@ -588,7 +588,7 @@ export default function ProductPage() {
                       ]}
                       onClick={handleAddToCart}
                       className="
-                      flex-1 block py-6 
+                      flex-1 py-6 
                       bg-[#dc2626] text-white 
                       flex items-center justify-center 
                       text-xs sm:text-lg font-bold 

@@ -136,7 +136,7 @@ export default function AdminOrdersClient({ initialOrders }: { initialOrders: Or
         </div>
 
         {/* Orders List */}
-        <div className="space-y-6 space-x-6 grid grid-cols-2 m-6">
+        <div className="space-y-6 space-x-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 m-6">
           {filteredOrders.length === 0 ? (
             <p>No orders match your filter.</p>
           ) : (
