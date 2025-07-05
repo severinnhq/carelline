@@ -36,6 +36,7 @@ interface BillingDetails {
   address: Address;
   name: string;
   email: string;
+  phone: string;
 }
 
 interface StripeDetails {
@@ -72,7 +73,7 @@ const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const filteredOrders = initialOrders.filter(order => {
     // text-based filtering
     const textMatch =
-      (order.sessionId || '').toLowerCase().includes(filter.toLowerCase()) ||
+      (order.orderNumber || '').toLowerCase().includes(filter.toLowerCase()) ||
       (order.shippingDetails?.name || '').toLowerCase().includes(filter.toLowerCase()) ||
       (order.billingDetails?.email || '').toLowerCase().includes(filter.toLowerCase());
 
@@ -92,23 +93,35 @@ const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
       return 'Invalid date';
     }
   }
-
+function areAddressesSame(shipping?: ShippingDetails, billing?: BillingDetails): boolean {
+  if (!shipping || !billing) return false;
+  const s = shipping.address;
+  const b = billing.address;
+  return (
+    s.line1 === b.line1 &&
+    s.line2 === b.line2 &&
+    s.city === b.city &&
+    s.state === b.state &&
+    s.postal_code === b.postal_code &&
+    s.country === b.country
+  );
+}
 const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   setStatusFilter(e.target.value as StatusFilter);
 };
 // Somewhere at the top of your component file:
 const statusBgClass: Record<Status, string> = {
-  success:   'bg-green-100',
-  pending:   'bg-yellow-100',
-  sent:      'bg-blue-100',
-  'sent back':'bg-red-100',
-  canceled:  'bg-gray-200',
-  ordered:  'bg-white',
+  success:   'bg-green-300',
+  pending:   'bg-yellow-300',
+  sent:      'bg-blue-300',
+  'sent back':'bg-red-400',
+  canceled:  'bg-pink-300',
+  ordered:  'bg-gray-300',
 };
   return (
     <AuthWrapper>
       <div className="container mx-auto py-10">
-        <h1 className="text-3xl font-bold mb-6">Admin: Order Management</h1>
+        <h1 className="text-3xl font-bold mb-6 text-white">Admin: Order Management</h1>
 
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mx-6 mb-6 justify-between">
@@ -117,13 +130,13 @@ const statusBgClass: Record<Status, string> = {
             placeholder="Filter by ID, name, or email"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="border px-3 py-2 rounded-md flex-grow max-w-sm"
+            className="border-2 border-white bg-black text-white px-3 py-2 rounded-md flex-grow max-w-sm"
           />
 
           <select
             value={statusFilter}
             onChange={handleStatusChange}
-            className="border px-3 py-2 rounded-md"
+            className="border-2 border-white bg-black text-white px-3 py-2 rounded-md shadow-md cursor-pointer"
           >
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
@@ -136,13 +149,13 @@ const statusBgClass: Record<Status, string> = {
         </div>
 
         {/* Orders List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 m-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6 m-6">
           {filteredOrders.length === 0 ? (
             <p>No orders match your filter.</p>
           ) : (
             filteredOrders.map((order) => (
               <Card key={order._id}
-                className={`relative ${statusBgClass[order.status] ?? 'bg-white'} hover:shadow-lg transition`}
+                className={`relative ${statusBgClass[order.status] ?? 'bg-white'} border-0 h-min rounded-xl`}
               >
                 <div className="absolute top-4 right-4">
                   <OrderStatusDropdown
@@ -151,14 +164,13 @@ const statusBgClass: Record<Status, string> = {
                   />
                 </div>
                 <CardHeader>
-                  <CardTitle>ID: {order.orderNumber || 'N/A'}</CardTitle>
+                  <CardTitle>ID: <span className="font-thin italic cursor-pointer active:font-medium" onClick={() => navigator.clipboard.writeText(order.orderNumber!)}>{order.orderNumber || 'N/A'}</span></CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className='text-sm'><strong>Created:</strong> {formatCreatedDate(order.createdAt)}</p>
-                  <p className='text-sm'><strong>Shipping:</strong> {order.shippingType || 'N/A'}</p>
                   <p className='text-sm'>
                     <strong>Payment:</strong>{' '}
-                    {order.paymentMethod === 'cash_on_delivery' ? 'COD' : 'Card'}
+                    {order.paymentMethod === 'cash_on_delivery' ? 'Utánvét' : 'Card'}
                   </p>
                   <Separator className="my-2" />
 
@@ -166,21 +178,46 @@ const statusBgClass: Record<Status, string> = {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Qty</TableHead>
-                          <TableHead>Price</TableHead>
+                          <TableHead><span className='text-black font-semibold'>Name</span></TableHead>
+                          <TableHead><span className='text-black font-semibold'>Qty</span></TableHead>
+                          <TableHead><span className='text-black font-semibold'>Price</span></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {order.items.map((item, idx) => (
                           <TableRow key={idx}>
-                            <TableCell>{item.n}</TableCell>
-                            <TableCell>{item.q}</TableCell>
-                            <TableCell>
-                              {item.p.toFixed(0)} {order.currency?.toUpperCase()}
+                            <TableCell className='bg-black text-white'><strong>{item.n}</strong></TableCell>
+                            <TableCell className='bg-black text-white'><strong>{item.q}</strong></TableCell>
+                            <TableCell className='bg-black text-white'>
+                              <strong>{item.p.toFixed(0)} {order.currency?.toUpperCase()}</strong>
                             </TableCell>
                           </TableRow>
                         ))}
+                        {order.shippingType === "Standard Shipping" ? (
+                          <TableRow>
+                            <TableCell><span className='text-xs italic'>Standard Shipping</span></TableCell>
+                            <TableCell><span className='text-xs italic'>-</span></TableCell>
+                            <TableCell><span className='text-xs italic'>1990 HUF</span></TableCell>
+                          </TableRow>
+                        ):(<>{order.shippingType === "Free Standard Shipping" ? (
+                          <TableRow>
+                            <TableCell><span className='text-xs italic'>Free Standard Shipping</span></TableCell>
+                            <TableCell><span className='text-xs italic'>-</span></TableCell>
+                            <TableCell><span className='text-xs italic'>0 HUF</span></TableCell>
+                          </TableRow>
+                        ):(<>{order.shippingType === "Express Shipping" ? (
+                          <TableRow>
+                            <TableCell><span className='text-xs italic'>Express Shipping</span></TableCell>
+                            <TableCell><span className='text-xs italic'>-</span></TableCell>
+                            <TableCell><span className='text-xs italic'>3 990 HUF</span></TableCell>
+                          </TableRow>
+                        ):("")}</>)}</>)}
+                        {order.paymentMethod === 'cash_on_delivery' ? (
+                          <TableRow>
+                            <TableCell><span className='text-xs italic'>Cash on Delivery</span></TableCell>
+                            <TableCell><span className='text-xs italic'>-</span></TableCell>
+                            <TableCell><span className='text-xs italic'>590 HUF</span></TableCell>
+                          </TableRow>) : ("")}
                       </TableBody>
                     </Table>
                   ) : (
@@ -190,7 +227,7 @@ const statusBgClass: Record<Status, string> = {
                   <Separator className="my-2" />
 
                   <p className='text-lg font-bold'>
-                    Amount: <i className='cursor-pointer active:font-medium' onClick={() => navigator.clipboard.writeText(order.amount.toFixed(0))}>{order.amount.toFixed(0)} {order.currency?.toUpperCase()}</i>
+                    <u>Utánvét:</u><i className='cursor-pointer active:font-medium' onClick={() => navigator.clipboard.writeText(order.amount.toFixed(0))}> {order.amount.toFixed(0)} {order.currency?.toUpperCase()}</i>
                   </p>
 
                   <p className='my-1 font-medium text-md cursor-pointer active:font-bold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.name)}>{order.shippingDetails?.name || 'N/A'}</p>
@@ -200,12 +237,33 @@ const statusBgClass: Record<Status, string> = {
                   <Separator className="my-2" />
 
                   {order.shippingDetails && (
-                    <div>
-                      <h4 className="font-semibold mb-1">Shipping Address</h4>
-                      <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.address.postal_code)}>{order.shippingDetails.address.postal_code}</p> 
-                        
-                      <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.address.city)}>{order.shippingDetails.address.city}</p> 
-                      <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.address.line1)}>{order.shippingDetails.address.line1}</p>
+                    <div className="grid grid-cols-2">
+                      <div>
+                        <h4 className="font-semibold mb-1">Shipping Address</h4>
+                        <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.address.postal_code)}>{order.shippingDetails.address.postal_code}</p> 
+                          
+                        <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.address.city)}>{order.shippingDetails.address.city}</p> 
+                        <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.address.line1)}>{order.shippingDetails.address.line1}</p>
+                      </div>
+                      {order.billingDetails ? (
+                          areAddressesSame(order.shippingDetails, order.billingDetails) ? ("") : (
+                            <div>
+                              <h4 className="font-semibold mb-1">Billing Address</h4>
+                              <p>
+                                <span className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.billingDetails!.address.postal_code)}>{order.billingDetails.address.postal_code}</span><span> | </span>
+                                <span className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.billingDetails!.address.city)}>{order.billingDetails.address.city}</span>
+                              </p> 
+                              <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.billingDetails!.address.line1)}>{order.billingDetails.address.line1}</p>
+                              <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.billingDetails!.name)}>{order.billingDetails.name}</p>
+                              <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.billingDetails!.phone)}>{order.billingDetails.phone}</p>
+                            </div>
+                          )) : ("")}
+                    </div>
+                  )}
+                  {order.notes && (
+                    <div className="bg-gray-100 rounded-lg p-4 mt-4">
+                      <h4 className="font-semibold text-sm">Notes:</h4>
+                      <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.notes!)}>{order.notes}</p>
                     </div>
                   )}
                 </CardContent>

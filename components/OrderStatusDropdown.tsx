@@ -7,12 +7,12 @@ import { ConfirmDialog } from './ConfirmDialog'
 export type Status = 'pending' | 'success' | 'sent back' | 'sent' | 'canceled' | 'ordered'
 
 const STATUS_OPTIONS: { value: Status; label: string; emoji: string; color: string }[] = [
-  { value: 'pending',   label: 'Pending',   emoji: '⏳', color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'success',   label: 'Success',   emoji: '✅', color: 'bg-green-100 text-green-800' },
-  { value: 'sent back', label: 'Sent back', emoji: '📦↩️', color: 'bg-red-100 text-red-800' },
-  { value: 'sent',      label: 'Sent',      emoji: '📦',   color: 'bg-blue-100 text-blue-800' },
-  { value: 'canceled',      label: 'Canceled',      emoji: '❌',   color: 'bg-red-100 text-red-800' },
-  { value: 'ordered',      label: 'Ordered',      emoji: '🛒',   color: 'bg-purple text-purple' }
+  { value: 'pending',   label: 'Pending',   emoji: '⏳', color: 'bg-yellow-700 text-white' },
+  { value: 'success',   label: 'Success',   emoji: '✅', color: 'bg-green-700 text-white' },
+  { value: 'sent back', label: 'Sent back', emoji: '📦↩️', color: 'bg-red-600 text-white' },
+  { value: 'sent',      label: 'Sent',      emoji: '📦',   color: 'bg-blue-700 text-white' },
+  { value: 'canceled',      label: 'Canceled',      emoji: '❌',   color: 'bg-pink-700 text-white' },
+  { value: 'ordered',      label: 'Ordered',      emoji: '🛒',   color: 'bg-white' }
 ]
 
 interface Props {
@@ -56,12 +56,12 @@ export function OrderStatusDropdown({ orderId, initialStatus }: Props) {
   return (
     <>
       <Select onValueChange={handleSelect} value={current.value}>
-        <SelectTrigger className={`w-auto rounded ${current.color}`}>
+        <SelectTrigger className={`w-auto rounded-lg border-2 border-black ${current.color} shadow-md`}>
           <span className="flex items-center justify-center gap-1">
             {current.emoji} {current.label}
           </span>
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className='bg-white border-2 border-black shadow-md'>
           {STATUS_OPTIONS.map(opt => (
             <SelectItem key={opt.value} value={opt.value}>
               <span className="flex items-center gap-1">
