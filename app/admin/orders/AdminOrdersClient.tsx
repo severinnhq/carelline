@@ -226,13 +226,13 @@ const statusBgClass: Record<Status, string> = {
 
                   <Separator className="my-2" />
 
-                  <p className='text-lg font-bold flex justify-between'>
+                  <p className='text-lg font-bold flex justify-between mb-4'>
                     <u>Utánvét:</u><i className='cursor-pointer active:font-medium' onClick={() => navigator.clipboard.writeText(order.amount.toFixed(0))}> {order.amount.toFixed(0)} {order.currency?.toUpperCase()}</i>
                   </p>
 
-                  <p className='my-1 font-medium text-md cursor-pointer active:font-bold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.name)}>{order.shippingDetails?.name || 'N/A'}</p>
-                  <p><strong>Email:</strong> <i className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.billingDetails!.email)}>{order.billingDetails?.email || 'N/A'}</i></p>
-                  <p><strong>Phone:</strong> <i className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.phone)}>{order.shippingDetails?.phone || 'N/A'}</i></p>
+                  <div className='flex justify-between'><strong>Név:</strong> <i className='font-medium text-md cursor-pointer active:font-bold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.name)}>{order.shippingDetails?.name || 'N/A'}</i></div>
+                  <div className='flex justify-between'><strong>Email:</strong> <i className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.billingDetails!.email)}>{order.billingDetails?.email || 'N/A'}</i></div>
+                  <div className='flex justify-between'><strong>Phone:</strong> <i className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.shippingDetails!.phone)}>{order.shippingDetails?.phone || 'N/A'}</i></div>
 
                   <Separator className="my-2" />
 
