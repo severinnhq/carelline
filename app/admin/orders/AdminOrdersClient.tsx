@@ -226,7 +226,7 @@ const statusBgClass: Record<Status, string> = {
 
                   <Separator className="my-2" />
 
-                  <p className='text-lg font-bold'>
+                  <p className='text-lg font-bold flex justify-between'>
                     <u>Utánvét:</u><i className='cursor-pointer active:font-medium' onClick={() => navigator.clipboard.writeText(order.amount.toFixed(0))}> {order.amount.toFixed(0)} {order.currency?.toUpperCase()}</i>
                   </p>
 
