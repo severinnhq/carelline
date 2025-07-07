@@ -71,6 +71,8 @@ export default function AdminOrdersClient({ initialOrders }: { initialOrders: Or
 const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
 
   const filteredOrders = initialOrders.filter(order => {
+    // Skip orders with status 'paid'
+    if ((order.status as string) === 'paid') return false;
     // text-based filtering
     const textMatch =
       (order.orderNumber || '').toLowerCase().includes(filter.toLowerCase()) ||
