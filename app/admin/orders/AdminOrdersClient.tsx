@@ -268,6 +268,13 @@ const statusBgClass: Record<Status, string> = {
                       <p className='cursor-pointer active:font-semibold' onClick={() => navigator.clipboard.writeText(order.notes!)}>{order.notes}</p>
                     </div>
                   )}
+                  {order.status === 'pending' && (
+                    <div>
+                      <button onClick={() => window.open(`https://foxpost.hu/csomag-feladas?recipientName=${order.shippingDetails!.name}&recipientEmail=${order.billingDetails!.email}&recipientPhone=${order.shippingDetails!.phone}&destination=HD|recipient_zipcode%3D${order.shippingDetails!.address.postal_code}|recipient_city%3D${order.shippingDetails!.address.city}|recipient_address%3D${order.shippingDetails!.address.line1}`, "_blank")} className='bg-red-700 p-3 text-center mt-6 font-bold text-lg text-white w-full rounded-full shadow-black shadow-md active:shadow-inner hover:bg-red-600'>
+                        Go to Foxpost
+                      </button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))
