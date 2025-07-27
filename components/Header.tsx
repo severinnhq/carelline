@@ -24,7 +24,7 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
   const [countdown, setCountdown] = useState('')
   const [isTransitioning, setIsTransitioning] = useState(false)
 
-  const bannerText = "NYÁR INDÍTÓ AKCIÓ CSAK JÚLIUS 20-IG!!"
+  const bannerText = "NYÁRI AKCIÓ CSAK AUGUSZTUS 10-IG!!"
   const bankText = `BANKKÁRTYÁS FIZETÉS ESETÉN -20% A "NYAR20" KÓDDAL`
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0)
@@ -32,7 +32,7 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
   // Countdown timer effect
   useEffect(() => {
     const calculateTimeRemaining = () => {
-      const targetDate = new Date('2025-07-20T23:59:00')
+      const targetDate = new Date('2025-08-10T23:59:00')
       const now = new Date()
       const diff = targetDate.getTime() - now.getTime()
       if (diff <= 0) {
