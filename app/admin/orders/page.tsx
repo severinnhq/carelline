@@ -1,5 +1,5 @@
+export const dynamic = 'force-dynamic'
 import AdminOrdersClient from './AdminOrdersClient';
-
 export const metadata = {
   title: 'Admin: Order Management',
 };
@@ -28,6 +28,8 @@ export default async function AdminOrdersPage() {
   const orders = await getOrders();
 
   return (
-    <AdminOrdersClient initialOrders={orders} />
+    <main className='bg-black'>
+      <AdminOrdersClient initialOrders={orders} />
+    </main>
   );
 }

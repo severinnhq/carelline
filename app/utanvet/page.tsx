@@ -143,7 +143,7 @@ const UtanvetPage = () => {
   }
 
   const validateForm = () => {
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'postalCode', 'county']
+    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'postalCode']
     for (const field of requiredFields) {
       if (!formData[field as keyof FormData]) {
         setError(`Kérjük töltse ki a csillaggal jelölt mezőket!`)
@@ -170,8 +170,7 @@ const UtanvetPage = () => {
         'billingLastName',
         'billingAddress',
         'billingCity',
-        'billingPostalCode',
-        'billingCounty'
+        'billingPostalCode'
       ]
       for (const field of requiredBillingFields) {
         if (!formData[field as keyof FormData]) {
@@ -213,7 +212,7 @@ const UtanvetPage = () => {
               city: formData.city,
               postal_code: formData.postalCode,
               country: formData.country,
-              state: formData.county
+              state: "nostate"
             },
             email: formData.email,
             phone: formData.phone
@@ -225,7 +224,7 @@ const UtanvetPage = () => {
               city: formData.billingCity,
               postal_code: formData.billingPostalCode,
               country: formData.billingCountry,
-              state: formData.billingCounty
+              state: "nostate"
             },
             email: formData.email,
             phone: formData.phone
@@ -238,7 +237,7 @@ const UtanvetPage = () => {
           city: formData.city,
           postal_code: formData.postalCode,
           country: formData.country,
-          state: formData.county
+          state: "nostate"
         },
         phone: formData.phone
       }
@@ -327,11 +326,11 @@ const UtanvetPage = () => {
                 <h2 className="text-lg font-medium mb-4">Szállítási adatok</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">Keresztnév*</Label>
+                    <Label htmlFor="firstName">Vezetéknév*</Label>
                     <Input id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} required />
                   </div>
                   <div>
-                    <Label htmlFor="lastName">Vezetéknév*</Label>
+                    <Label htmlFor="lastName">Keresztnév*</Label>
                     <Input id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} required />
                   </div>
                 </div>
@@ -362,7 +361,7 @@ const UtanvetPage = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div className="mt-4">
                   <div>
                     <Label htmlFor="country">Ország*</Label>
                     <Select value="HU" onValueChange={(value) => handleSelectChange('country', value)} disabled>
@@ -374,10 +373,6 @@ const UtanvetPage = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
-  <Label htmlFor="county">Megye*</Label>
-  <Input id="county" name="county" value={formData.county} onChange={handleInputChange} required />
-</div>
                 </div>
 
                 <div className="mt-4">
@@ -405,11 +400,11 @@ const UtanvetPage = () => {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="billingFirstName">Keresztnév*</Label>
+                        <Label htmlFor="billingFirstName">Vezetéknév*</Label>
                         <Input id="billingFirstName" name="billingFirstName" value={formData.billingFirstName} onChange={handleInputChange} required={!formData.sameAsBilling} />
                       </div>
                       <div>
-                        <Label htmlFor="billingLastName">Vezetéknév*</Label>
+                        <Label htmlFor="billingLastName">Keresztnév*</Label>
                         <Input id="billingLastName" name="billingLastName" value={formData.billingLastName} onChange={handleInputChange} required={!formData.sameAsBilling} />
                       </div>
                     </div>
@@ -430,7 +425,7 @@ const UtanvetPage = () => {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="mt-4">
                       <div>
                         <Label htmlFor="billingCountry">Ország*</Label>
                         <Select value="HU" onValueChange={(value) => handleSelectChange('billingCountry', value)} disabled>
@@ -442,10 +437,6 @@ const UtanvetPage = () => {
                           </SelectContent>
                         </Select>
                       </div>
-                      <div>
-  <Label htmlFor="billingCounty">Megye*</Label>
-  <Input id="billingCounty" name="billingCounty" value={formData.billingCounty} onChange={handleInputChange} required={!formData.sameAsBilling} />
-</div>
                     </div>
                   </div>
                 )}
@@ -646,7 +637,7 @@ const UtanvetPage = () => {
         </p>
         <p>
   <strong>Cím:</strong> {orderSummary.formData.address}, {orderSummary.formData.city},{' '}
-  {orderSummary.formData.postalCode}, {orderSummary.formData.county}, {orderSummary.formData.country}
+  {orderSummary.formData.postalCode}, {orderSummary.formData.country}
 </p>
         <p>
           <strong>Telefonszám:</strong> {orderSummary.formData.phone}
@@ -662,7 +653,7 @@ const UtanvetPage = () => {
             </p>
             <p>
   <strong>Cím:</strong> {orderSummary.formData.billingAddress}, {orderSummary.formData.billingCity},{' '}
-  {orderSummary.formData.billingPostalCode}, {orderSummary.formData.billingCounty}, {orderSummary.formData.billingCountry}
+  {orderSummary.formData.billingPostalCode}, {orderSummary.formData.billingCountry}
 </p>
           </div>
         </>

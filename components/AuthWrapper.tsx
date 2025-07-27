@@ -20,14 +20,14 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
   if (!authenticated) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-3xl font-bold mb-4">Admin Login</h1>
+        <h1 className="text-3xl font-bold mb-4 text-white">Admin Login</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter admin password"
-            className="px-4 py-2 border rounded"
+            className="px-4 py-2 rounded text-white bg-black border-2 border-white"
           />
           <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
             Login
