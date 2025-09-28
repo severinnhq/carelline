@@ -23,6 +23,7 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
   const [bannerIndex, setBannerIndex] = useState(0)
   const [countdown, setCountdown] = useState('')
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [expired, setExpired] = useState(false)
 
   const bannerText = "ŐSZI KIÁRUSÍTÁS CSAK OKTÓBER 10-IG!!"
   const bankText = `BANKKÁRTYÁS FIZETÉS ESETÉN -20% A "OSZ20" KÓDDAL`
@@ -36,9 +37,11 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
       const now = new Date()
       const diff = targetDate.getTime() - now.getTime()
       if (diff <= 0) {
-        setCountdown('Lejárt!')
+        setCountdown('')
+        setExpired(true)
         return
       }
+      setExpired(false)
       const days = Math.floor(diff / (1000 * 60 * 60 * 24))
       const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
       if (days <= 0) {
@@ -57,21 +60,29 @@ export function Header({ onCartClick, cartItems }: HeaderProps) {
     const alternateText = () => {
       setIsTransitioning(true)
       setTimeout(() => {
-        setBannerIndex(prev => (prev + 1) % 3)
+        setBannerIndex(prev => {
+          if (expired) {
+            // Only rotate between bannerText and bankText
+            return (prev + 1) % 2
+          }
+          return (prev + 1) % 3
+        })
         setIsTransitioning(false)
       }, 500)
     }
     const intervalId = setInterval(alternateText, 5000)
     return () => clearInterval(intervalId)
-  }, [])
+  }, [expired])
 
   const handleLogoClick = () => sessionStorage.removeItem('productListScrollPosition')
 
-  const currentText = bannerIndex === 0
-    ? bannerText
-    : bannerIndex === 1
-    ? bankText
-    : countdown
+  const currentText = expired
+    ? (bannerIndex === 0 ? bannerText : bankText)
+    : (bannerIndex === 0
+        ? bannerText
+        : bannerIndex === 1
+        ? bankText
+        : countdown)
 
   return (
     <>
