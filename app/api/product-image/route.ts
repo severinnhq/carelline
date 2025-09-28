@@ -15,8 +15,8 @@ export async function GET(request: NextRequest) {
   try {
     const imageBuffer = await readFile(imagePath)
     const contentType = getContentType(filename)
-    
-    return new Response(imageBuffer, {
+
+    return new Response(new Uint8Array(imageBuffer), {
       status: 200,
       headers: {
         'Content-Type': contentType,
@@ -47,4 +47,3 @@ function getContentType(filename: string): string {
 }
 
 export const dynamic = 'force-dynamic'
-
