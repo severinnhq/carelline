@@ -212,7 +212,7 @@ export default function ProductList() {
     </div>
   )}
 
-        {/* Image swap */}
+        {/* Image swapp */}
         <div className={`absolute inset-0 transition-opacity duration-300 ease-out ${
           product.sizes.length === 0 ? 'opacity-40 md:group-hover:opacity-0' : 'md:group-hover:opacity-0'
         }`}>
