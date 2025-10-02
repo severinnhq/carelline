@@ -111,7 +111,7 @@ function areAddressesSame(shipping?: ShippingDetails, billing?: BillingDetails):
 const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   setStatusFilter(e.target.value as StatusFilter);
 };
-// Somewhere at the top of your compo nent f ile:
+// Somewhere at the top of your  compo nent f ile:
 const statusBgClass: Record<Status, string> = {
   success:   'bg-green-300',
   pending:   'bg-yellow-300',
