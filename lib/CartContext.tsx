@@ -12,11 +12,18 @@ interface CartItem {
   product: Product
   size: string
   quantity: number
+  selectedImage?: string
+  characterName?: string
+}
+
+type AddToCartOptions = {
+  selectedImage?: string
+  characterName?: string
 }
 
 interface CartContextType {
   cartItems: CartItem[]
-  addToCart: (product: Product, size: string, quantity: number) => void
+  addToCart: (product: Product, size: string, quantity?: number, options?: AddToCartOptions) => void
   removeFromCart: (index: number) => void
   updateQuantity: (index: number, newQuantity: number) => void
   clearCart: () => void
@@ -30,7 +37,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const savedCartItems = localStorage.getItem('cartItems')
     if (savedCartItems) {
-      setCartItems(JSON.parse(savedCartItems))
+      try {
+        setCartItems(JSON.parse(savedCartItems))
+      } catch {
+        // ignore parse errors
+        setCartItems([])
+      }
     }
   }, [])
 
@@ -38,22 +50,41 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('cartItems', JSON.stringify(cartItems))
   }, [cartItems])
 
-  const addToCart = (product: Product, size: string, quantity: number = 1) => {
-    setCartItems(prev => {
-      const existingItemIndex = prev.findIndex(
-        item => item.product._id === product._id && item.size === size
-      )
-      if (existingItemIndex > -1) {
-        return prev.map((item, index) => 
-          index === existingItemIndex 
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        )
-      } else {
-        return [...prev, { product, size, quantity }]
-      }
+ const addToCart = (
+  product: Product,
+  size: string,
+  quantity: number = 1,
+  options: AddToCartOptions = {}
+) => {
+  const incomingImage = options.selectedImage ?? product.mainImage
+  const incomingName = options.characterName ?? ""
+
+  setCartItems(prev => {
+    // find existing item that matches product, size and chosen image
+    const existingItemIndex = prev.findIndex(item => {
+      const itemImage = item.selectedImage ?? item.product.mainImage
+      return item.product._id === product._id && item.size === size && itemImage === incomingImage
     })
-  }
+
+    if (existingItemIndex > -1) {
+      return prev.map((item, idx) =>
+        idx === existingItemIndex
+          ? { ...item, quantity: item.quantity + quantity, characterName: incomingName, selectedImage: incomingImage }
+          : item
+      )
+    } else {
+      const newItem: CartItem = {
+        product,
+        size,
+        quantity,
+        selectedImage: incomingImage,
+        characterName: incomingName,
+      }
+      return [...prev, newItem]
+    }
+  })
+}
+
 
   const removeFromCart = (index: number) => {
     setCartItems(prev => prev.filter((_, i) => i !== index))
@@ -62,7 +93,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateQuantity = (index: number, newQuantity: number) => {
     setCartItems(prev => {
       const newItems = [...prev]
-      newItems[index].quantity = newQuantity
+      if (newItems[index]) {
+        newItems[index] = { ...newItems[index], quantity: newQuantity }
+      }
       return newItems
     })
   }
@@ -73,12 +106,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   return (
-    <CartContext.Provider value={{ 
-      cartItems, 
-      addToCart, 
-      removeFromCart, 
-      updateQuantity, 
-      clearCart 
+    <CartContext.Provider value={{
+      cartItems,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart
     }}>
       {children}
     </CartContext.Provider>

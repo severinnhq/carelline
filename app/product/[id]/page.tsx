@@ -42,7 +42,8 @@ export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState<string>('')
   const [quantity, setQuantity] = useState(1)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [selectedImage, setSelectedImage] = useState<string>('')
+const [selectedImage, setSelectedImage] = useState<string>("")
+const [selectedCharacterName, setSelectedCharacterName] = useState<string>("")
   const { id } = useParams()
   const { cartItems, addToCart, removeFromCart, updateQuantity } = useCart()
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set())
@@ -57,6 +58,28 @@ export default function ProductPage() {
   const [containerWidth, setContainerWidth] = useState(0)
   const [upsellProducts, setUpsellProducts] = useState<Product[]>([])
   const [selectedUpsells, setSelectedUpsells] = useState<Set<string>>(new Set())
+  // helper (in ProductPage)
+const characterImages = [
+  "prod9zumi.png","prod9mezi.png","prod9pillepihe.png","prod9pofike.png",
+  "prod9tekike.png","prod9bekaur.png","prod9leo.png","prod9tuzi.png","prod9uniponi.png"
+]
+const characterNames = ["Zümi","Mézi","Pillepihe","Pöfike","Tekike","Béka úr","Leó","Tüzi","Unipóni"]
+
+const getCharacterNameFromImage = (img?: string) => {
+  const idx = characterImages.findIndex(i => i === img)
+  return idx >= 0 ? characterNames[idx] : undefined
+}
+
+const handleSetSelectedCharacter = (img: string, name: string) => {
+  setSelectedImage(img)
+  setSelectedCharacterName(name)
+}
+
+// when adding
+// The addToCart logic is handled in handleAddToCart, so this direct call is not needed and causes a type error.
+// Removed to prevent calling addToCart with a possibly null product.
+
+  
 
   const shippingFeatures = [
     {
@@ -195,23 +218,32 @@ export default function ProductPage() {
   }, [])
 
   const handleAddToCart = () => {
-    if (product && selectedSize) {
-      addToCart(product, selectedSize, quantity)
-      
-      selectedUpsells.forEach(upsellId => {
-        const upsellProduct = upsellProducts.find(p => p._id === upsellId)
-        if (upsellProduct) {
-          const defaultSize = upsellProduct.sizes && upsellProduct.sizes.length > 0 
-            ? upsellProduct.sizes[0] 
-            : "One Size"
-          addToCart(upsellProduct, defaultSize, 1)
-        }
-      })
-      
-      setIsSidebarOpen(true)
-    }
-  }
+  if (!product || !selectedSize) return  
 
+  addToCart(product, selectedSize, quantity, {
+    selectedImage: selectedImage || product.mainImage,
+    characterName: selectedCharacterName || getCharacterNameFromImage(selectedImage) || "",
+  })
+
+  // upsells
+  selectedUpsells.forEach(upsellId => {
+    const upsellProduct = upsellProducts.find(p => p._id === upsellId)
+    if (upsellProduct) {
+      const defaultSize = upsellProduct.sizes?.[0] ?? "One Size"
+      addToCart(upsellProduct, defaultSize, 1, {
+        selectedImage: upsellProduct.mainImage,
+        characterName: "", // upsells don’t have characters
+      })
+    }
+  })
+
+  setIsSidebarOpen(true)
+}
+
+
+
+      
+     
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size)
   }
@@ -489,6 +521,60 @@ export default function ProductPage() {
                           </div>
                         </div>
                       </div>
+
+                     {product?.categories?.includes("multioption") && (
+  <div className="mt-6">
+    <p className="font-medium text-base mb-2">
+      Karakter:{" "}
+      <span className="font-semibold">
+        {(() => {
+          const characterNames = [
+            "Zümi",   // prod9zumi.png
+            "Mézi",   // prod9mezi.png
+            "Pillepihe",    // prod93.png  ← you can replace later
+            "Pöfike",    // prod94.png
+            "Tekike",    // prod95.png
+            "Béka úr",    // prod96.png
+            "Leó",    // prod97.png
+            "Tüzi",    // prod98.png
+            "Unipóni",    // prod99.png
+          ]
+          const baseNames = ["prod9zumi.png", "prod9mezi.png"]
+          const allImages = [
+            ...baseNames,
+            ...Array.from({ length: 7 }).map((_, i) => `prod9${i + 3}.png`),
+          ]
+          const currentIndex = allImages.findIndex(img => img === selectedImage)
+          return currentIndex >= 0 ? characterNames[currentIndex] : characterNames[0]
+        })()}
+      </span>
+    </p>
+
+    <div className="flex gap-2 flex-wrap">
+      {(() => {
+        const baseNames = ["prod9zumi.png", "prod9mezi.png"]
+        const allImages = [
+          ...baseNames,
+          ...Array.from({ length: 7 }).map((_, i) => `prod9${i + 3}.png`),
+        ]
+        return allImages.map((imageName, i) => (
+          <Image
+            key={i}
+            src={`/uploads/${imageName}`}
+            alt={`Karakter ${i + 1}`}
+            width={48}
+            height={48}
+            className={`rounded-full object-cover cursor-pointer border-2 ${
+              selectedImage === imageName ? "border-black" : "border-gray-300"
+            }`}
+            onClick={() => setSelectedImage(imageName)}
+          />
+        ))
+      })()}
+    </div>
+  </div>
+)}
+
                     
                       <div className="flex flex-col xl:flex-row items-start justify-between w-[85%] max-lg:w-full">
                         <div className="order-1 xl:order-2 mt-4 xl:mt-0">
@@ -697,16 +783,21 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
-      <AnimatePresence>
-        {showFloatingBox && product && isProductAvailable && (
-          <FloatingProductBox
-            product={product}
-            selectedSize={selectedSize}
-            quantity={quantity}
-            onAddToCart={handleAddToCart}
-          />
-        )}
-      </AnimatePresence>
+ <AnimatePresence>
+  {showFloatingBox && product && isProductAvailable && (
+    <FloatingProductBox
+  product={product}
+  quantity={quantity}
+  selectedSize={selectedSize}
+  onAddToCart={handleAddToCart}
+  selectedImage={selectedImage}
+  selectedCharacterName={selectedCharacterName}   // ✅ new
+  setSelectedCharacter={handleSetSelectedCharacter} // ✅ matches props
+/>
+
+  )}
+</AnimatePresence>
+
       <Sidebar
         isOpen={isSidebarOpen}
         cartItems={cartItems}
@@ -716,6 +807,7 @@ export default function ProductPage() {
       />
       <GoogleReviewsSection />
       <RecommendedProducts />
+      
     </div>
   )
 }

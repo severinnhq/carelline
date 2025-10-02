@@ -22,7 +22,10 @@ interface CartItem {
   };
   size: string;
   quantity: number;
+  characterName?: string; // NEW
+  selectedImage?: string; // NEW
 }
+
 
 interface SidebarProps {
   cartItems: CartItem[];
@@ -167,23 +170,29 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                     <div className="flow-root">
                       <ul role="list" className="-my-6 divide-y divide-gray-200">
                         {cartItems.map((item, index) => (
-                          <li key={`${item.product._id}-${item.size}`} className="py-6 flex">
-                            <Link
-                              href={`/product/${item.product._id}`}
-                              className="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                onClose()
-                              }}
-                            >
-                              <Image
-                                src={`/uploads/${item.product.mainImage}`}
-                                alt={item.product.name}
-                                width={96}
-                                height={96}
-                                className="w-full h-full object-center object-cover"
-                              />
-                            </Link>
+  <li
+    key={`${item.product._id}-${item.size}-${item.characterName ?? 'nochar'}-${item.selectedImage ?? 'default'}`}
+    className="py-6 flex"
+  >
+
+                           <Link
+  href={`/product/${item.product._id}`}
+  className="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden"
+  onClick={(e) => {
+    e.stopPropagation()
+    onClose()
+  }}
+>
+  <Image
+    src={`/uploads/${item.selectedImage ?? item.product.mainImage}`}
+    alt={item.product.name}
+    width={96}
+    height={96}
+    className="w-full h-full object-center object-cover"
+  />
+</Link>
+
+
 
                             <div className="ml-4 flex-1 flex flex-col">
                               <div>
@@ -206,7 +215,15 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
                                   </p>
                                 </div>
-                                <p className="text-sm text-gray-500 mb-1">Carelline</p>
+                                <p className="text-sm text-gray-600">
+
+</p>
+{item.characterName && (
+  <p className="text-sm text-gray-600">
+    Karakter: {item.characterName}  
+  </p>
+)}
+
                               </div>
                               <div className="flex justify-between text-sm mt-1">
                                 <div className="flex items-center">

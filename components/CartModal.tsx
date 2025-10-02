@@ -21,41 +21,48 @@ interface Product {
 interface CartModalProps {
   product: Product
   onClose: () => void
-  onAddToCart: (size: string) => void
+  onAddToCart: (size: string, characterImage?: string, characterName?: string) => void
+  selectedImage?: string
+  selectedCharacterName?: string
 }
 
-const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) => {
+const CartModal: React.FC<CartModalProps> = ({
+  product,
+  onClose,
+  onAddToCart,
+  selectedImage,
+  selectedCharacterName,
+}) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(true)
 
   useEffect(() => {
-    const firstAvailableSize = product.sizes[0];
+    const firstAvailableSize = product.sizes[0]
     if (firstAvailableSize) {
-      setSelectedSize(firstAvailableSize);
+      setSelectedSize(firstAvailableSize)
     }
-  }, [product.sizes]);
+  }, [product.sizes])
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    document.body.style.overflow = isOpen ? 'hidden' : ''
     return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
 
   const handleAddToCart = () => {
-    if (product.sizes.includes('One Size')) {
-      onAddToCart('One Size')
-    } else if (selectedSize) {
-      onAddToCart(selectedSize)
+    const sizeToAdd = product.sizes.includes('One Size') ? 'One Size' : selectedSize
+
+    if (sizeToAdd) {
+      onAddToCart(sizeToAdd, selectedImage, selectedCharacterName)
     }
+
     setIsOpen(false)
   }
 
   const handleClose = () => {
     setIsOpen(false)
   }
-
-
 
   return (
     <AnimatePresence onExitComplete={onClose}>
@@ -90,30 +97,63 @@ const CartModal: React.FC<CartModalProps> = ({ product, onClose, onAddToCart }) 
               </button>
               <div className="flex items-center mb-4">
                 <Image
-                  src={`/uploads/${product.mainImage}`}
-                  alt={product.name}
-                  width={80}
-                  height={80}
-                  className="rounded object-cover mr-4"
-                />
+  src={`/uploads/${selectedImage ?? product.mainImage}`}
+  alt={product.name}
+  width={64}
+  height={64}
+  className="rounded"
+/>
+<div className="ml-3">
+  <p className="font-bold">{product.name}</p>
+  <p className="text-sm text-gray-600">
+    Méret: {selectedSize ?? (product.sizes.includes('One Size') ? 'One Size' : '')}
+  </p>
+  {selectedCharacterName && (
+    <p className="text-sm text-gray-600">Karakter: {selectedCharacterName}</p>
+  )}
+</div>
+
                 <div>
                   <h3 className="text-base font-bold">{product.name}</h3>
                   <p className="mt-1">
                     {product.salePrice ? (
                       <>
-                        <span className="text-[#dc2626] font-semibold text-lg">{product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
-                        <span className="text-gray-500 line-through ml-2 text-sm">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+                        <span className="text-[#dc2626] font-semibold text-lg">
+                          {product.salePrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+                        </span>
+                        <span className="text-gray-500 line-through ml-2 text-sm">
+                          {product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+                        </span>
                       </>
                     ) : (
-                      <span className="font-bold text-lg">{product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft</span>
+                      <span className="font-bold text-lg">
+                        {product.price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+                      </span>
                     )}
                   </p>
+
+                  {/* ✅ Show karakter info if provided */}
+               {selectedCharacterName && (
+  <div className="flex items-center gap-2 mt-2">
+    <span className="text-xs font-medium">Karakter:</span>
+    <span className="text-xs">{selectedCharacterName}</span>
+    {selectedImage && (
+      <Image
+        src={`/uploads/${selectedImage}`}
+        alt={selectedCharacterName}
+        width={28}
+        height={28}
+        className="rounded-full border object-cover"
+      />
+    )}
+  </div>
+)}
+
                 </div>
               </div>
-             
-            
+
               <Button 
-                className="w-full bg-[#dc2626] text-white  transition-colors duration-200" 
+                className="w-full bg-[#dc2626] text-white transition-colors duration-200" 
                 disabled={!selectedSize && !product.sizes.includes('One Size')}
                 onClick={handleAddToCart}
               >

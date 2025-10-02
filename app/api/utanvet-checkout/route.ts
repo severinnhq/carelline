@@ -9,6 +9,7 @@ interface OrderItem {
   s: string;
   q: number;
   p: number;
+    characterName?: string; // <-- add this optional field
 }
 
 interface ShippingAddress {

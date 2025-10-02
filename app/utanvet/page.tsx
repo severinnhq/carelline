@@ -23,7 +23,10 @@ export interface CartItem {
   }
   size: string
   quantity: number
+  characterName?: string
+  selectedImage?: string
 }
+
 
 interface FormData {
   firstName: string
@@ -458,30 +461,31 @@ const UtanvetPage = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {cartItems.map((item, index) => (
-                    <div key={`${item.product._id}-${item.size}-${index}`} className="flex items-center py-2">
-                      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                        <Image
-                          src={`/uploads/${item.product.mainImage}`}
-                          alt={item.product.name}
-                          width={64}
-                          height={64}
-                          className="h-full w-full object-cover object-center"
-                        />
-                      </div>
-                      <div className="ml-4 flex flex-1 flex-col">
-  <div className="flex justify-between text-base font-medium text-gray-900 lg:flex-row flex-col">
-    <h3>{item.product.name}</h3>
-    <p className="lg:ml-4 mt-1 lg:mt-0">
-      {((item.product.salePrice || item.product.price) * item.quantity)
-        .toFixed(0)
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} Ft
-    </p>
-  </div>
+                {cartItems.map((item, index) => (
+  <div key={`${item.product._id}-${item.size}-${item.characterName ?? 'nochar'}-${index}`} className="flex items-center py-2">
+    <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+      <Image
+        src={`/uploads/${item.selectedImage ?? item.product.mainImage}`}
+        alt={item.product.name}
+        width={64}
+        height={64}
+        className="h-full w-full object-cover object-center"
+      />
+    </div>
+    <div className="ml-4 flex flex-1 flex-col">
+      <div className="ml-4 flex flex-1 flex-col">
+  <h3 className="text-base font-medium text-gray-900">{item.product.name}</h3>
+  {item.characterName && (
+    <p className="text-sm text-gray-500">Karakter: {item.characterName}</p>
+  )}
   <p className="mt-0 text-sm text-gray-500">Mennyiség: {item.quantity}</p>
 </div>
-                    </div>
-                  ))}
+
+   
+    </div>
+  </div>
+))}
+
 
                   <div className="border-t border-gray-200 pt-4">
                     <h3 className="text-base font-semibold mb-3">Szállítás</h3>
@@ -608,27 +612,34 @@ const UtanvetPage = () => {
       </p>
 
       <h3 className="text-2xl font-bold mt-6 mb-3">Termékek</h3>
-      {orderSummary.cartItems.map((item, index) => (
-        <div key={`${item.product._id}-${item.size}-${index}`} className="flex items-center py-3 border-b border-gray-200">
-          <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-            <Image
-              src={`/uploads/${item.product.mainImage}`}
-              alt={item.product.name}
-              width={64}
-              height={64}
-              className="h-full w-full object-cover object-center"
-            />
-          </div>
-          <div className="ml-4">
-            <p className="font-medium">{item.product.name}</p>
-            <p className="text-sm text-gray-500">Mérete: {item.size}</p>
-            <p className="text-sm text-gray-500">Mennyiség: {item.quantity}</p>
-            <p className="text-sm text-gray-500">
-              Ár: {(item.product.salePrice || item.product.price).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} Ft
-            </p>
-          </div>
-        </div>
-      ))}
+   {orderSummary.cartItems.map((item, index) => (
+  <div key={`${item.product._id}-${item.size}-${item.characterName ?? 'nochar'}-${index}`} className="flex items-center py-3 border-b border-gray-200">
+    <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+      <Image
+        src={`/uploads/${item.selectedImage ?? item.product.mainImage}`}
+        alt={item.product.name}
+        width={64}
+        height={64}
+        className="h-full w-full object-cover object-center"
+      />
+    </div>
+   <div className="ml-4 flex-1">
+  <p className="font-medium">{item.product.name}</p>
+  {item.characterName && (
+    <p className="text-sm text-gray-500">Karakter: {item.characterName}</p>
+  )}
+  <p className="text-sm text-gray-500">Mennyiség: {item.quantity}</p>
+  <p className="text-sm text-gray-500">
+    Ár: {(item.product.salePrice || item.product.price)
+      .toFixed(0)
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} Ft
+  </p>
+</div>
+
+  </div>
+))}
+
+
 
       <h3 className="text-2xl font-bold mt-6 mb-3">Szállítási adatok</h3>
       <div className="mb-4">

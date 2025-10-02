@@ -35,24 +35,27 @@ export async function PUT(request: NextRequest) {
     const db = client.db("webstore")
     const body = await request.json()
 
-    const { name, description, price, salePrice, mainImage, categories, sizes, galleryImages, inventoryStatus, stockQuantity } = body
+    const { name, description, price, salePrice, mainImage, categories, sizes, galleryImages, inventoryStatus, stockQuantity, karakter } = body
+
 
     const result = await db.collection("products").updateOne(
       { _id: new ObjectId(id) },
       {
         $set: {
-          name,
-          description,
-          price,
-          salePrice,
-          mainImage,
-          categories: Array.isArray(categories) ? categories : [categories].filter(Boolean),
-          sizes,
-          galleryImages,
-          inventoryStatus: inventoryStatus || 'elfogyott',
-          stockQuantity: stockQuantity || 0,
-          updatedAt: new Date(),
-        },
+  name,
+  description,
+  price,
+  salePrice,
+  mainImage,
+  categories: Array.isArray(categories) ? categories : [categories].filter(Boolean),
+  sizes,
+  galleryImages,
+  inventoryStatus: inventoryStatus || 'elfogyott',
+  stockQuantity: stockQuantity || 0,
+  karakter, // ✅ new field
+  updatedAt: new Date(),
+},
+
       }
     )
 
