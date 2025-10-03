@@ -149,23 +149,44 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           required
         />
       </div>
-      <div>
-        <Label>Categories</Label>
+             <div>
+        <Label>Colors</Label> {/* <-- changed label */}
         <div className="flex gap-2 mb-2">
           <Input
-            value={newCategory}
+            value={newCategory} // re-use a local state for new color input
             onChange={(e) => setNewCategory(e.target.value)}
-            placeholder="Add category"
+            placeholder="Add a color"
           />
-          <Button type="button" onClick={handleCategoryAdd}>Add</Button>
+          <Button
+            type="button"
+            onClick={() => {
+              if (newCategory && !product.sizes.includes(newCategory)) {
+                setProduct(prev => ({
+                  ...prev,
+                  sizes: [...prev.sizes, newCategory]
+                }))
+                setNewCategory("")
+              }
+            }}
+          >
+            Add
+          </Button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {product.categories.map((category) => (
-            <div key={category} className="bg-gray-100 px-2 py-1 rounded flex items-center">
-              <span>{category}</span>
+          {product.sizes.map((color) => (
+            <div
+              key={color}
+              className="bg-gray-100 px-2 py-1 rounded flex items-center"
+            >
+              <span>{color}</span>
               <button
                 type="button"
-                onClick={() => handleCategoryRemove(category)}
+                onClick={() =>
+                  setProduct(prev => ({
+                    ...prev,
+                    sizes: prev.sizes.filter(c => c !== color)
+                  }))
+                }
                 className="ml-2 text-red-500"
               >
                 &times;
@@ -174,22 +195,7 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           ))}
         </div>
       </div>
-      <div>
-        <Label>Sizes</Label>
-        <div className="flex flex-wrap gap-2">
-          {availableSizes.map((size) => (
-            <Button
-              key={size}
-              type="button"
-              onClick={() => handleSizeToggle(size)}
-              variant={product.sizes.includes(size) ? "default" : "outline"}
-              className={size === 'One Size' ? "w-24 h-12 rounded-md" : "w-12 h-12 rounded-full"}
-            >
-              {size}
-            </Button>
-          ))}
-        </div>
-      </div>
+
       <div>
         <Label>Gallery Images</Label>
         <div className="flex gap-2 mb-2">
