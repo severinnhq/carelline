@@ -13,7 +13,7 @@ interface Product {
   salePrice?: number
   mainImage: string
   categories: string[]
-  sizes: string[]
+  sizes: string[] // reused for colors
   galleryImages: string[]
   inventoryStatus: 'raktáron' | 'rendelésre' | 'elfogyott'
   stockQuantity: number
@@ -25,8 +25,6 @@ interface ProductFormProps {
   onCancel?: () => void
 }
 
-const availableSizes = ['One Size', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
-
 export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormProps) {
   const [product, setProduct] = useState<Omit<Product, '_id'>>({
     name: initialProduct?.name || '',
@@ -35,58 +33,51 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
     salePrice: initialProduct?.salePrice,
     mainImage: initialProduct?.mainImage || '',
     categories: initialProduct?.categories || [],
-    sizes: initialProduct?.sizes || [],
+    sizes: initialProduct?.sizes || [], // now used as colors
     galleryImages: initialProduct?.galleryImages || [],
     inventoryStatus: initialProduct?.inventoryStatus || 'elfogyott',
     stockQuantity: initialProduct?.stockQuantity || 0,
   })
+
   const [newGalleryImage, setNewGalleryImage] = useState('')
   const [newCategory, setNewCategory] = useState('')
+  const [newColor, setNewColor] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setProduct(prev => ({
       ...prev,
-      [name]: name === 'price' || name === 'salePrice' || name === 'stockQuantity' ? Number(value) || 0 : value,
+      [name]:
+        name === 'price' || name === 'salePrice' || name === 'stockQuantity'
+          ? Number(value) || 0
+          : value,
     }))
   }
 
-  const handleInventoryStatusChange = (value: 'raktáron' | 'rendelésre' | 'elfogyott') => {
+  const handleInventoryStatusChange = (
+    value: 'raktáron' | 'rendelésre' | 'elfogyott'
+  ) => {
     setProduct(prev => ({
       ...prev,
-      inventoryStatus: value
-    }))
-  }
-
-  const handleSizeToggle = (size: string) => {
-    setProduct(prev => ({
-      ...prev,
-      sizes: prev.sizes.includes(size)
-        ? prev.sizes.filter(s => s !== size)
-        : [...prev.sizes, size]
+      inventoryStatus: value,
     }))
   }
 
   const handleGalleryImageAdd = () => {
     if (newGalleryImage && !product.galleryImages.includes(newGalleryImage)) {
-      setProduct(prev => ({ ...prev, galleryImages: [...prev.galleryImages, newGalleryImage] }))
+      setProduct(prev => ({
+        ...prev,
+        galleryImages: [...prev.galleryImages, newGalleryImage],
+      }))
       setNewGalleryImage('')
     }
   }
 
   const handleGalleryImageRemove = (image: string) => {
-    setProduct(prev => ({ ...prev, galleryImages: prev.galleryImages.filter(img => img !== image) }))
-  }
-
-  const handleCategoryAdd = () => {
-    if (newCategory && !product.categories.includes(newCategory)) {
-      setProduct(prev => ({ ...prev, categories: [...prev.categories, newCategory] }))
-      setNewCategory('')
-    }
-  }
-
-  const handleCategoryRemove = (category: string) => {
-    setProduct(prev => ({ ...prev, categories: prev.categories.filter(cat => cat !== category) }))
+    setProduct(prev => ({
+      ...prev,
+      galleryImages: prev.galleryImages.filter(img => img !== image),
+    }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -106,6 +97,7 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           required
         />
       </div>
+
       <div>
         <Label htmlFor="description">Description</Label>
         <Textarea
@@ -116,6 +108,7 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           required
         />
       </div>
+
       <div>
         <Label htmlFor="price">Price</Label>
         <Input
@@ -128,6 +121,7 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           step="0.01"
         />
       </div>
+
       <div>
         <Label htmlFor="salePrice">Sale Price (optional)</Label>
         <Input
@@ -139,6 +133,7 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           step="0.01"
         />
       </div>
+
       <div>
         <Label htmlFor="mainImage">Main Image</Label>
         <Input
@@ -149,23 +144,75 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           required
         />
       </div>
-             <div>
-        <Label>Colors</Label> {/* <-- changed label */}
+
+      {/* Categories */}
+      <div>
+        <Label>Categories</Label>
         <div className="flex gap-2 mb-2">
           <Input
-            value={newCategory} // re-use a local state for new color input
+            value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
-            placeholder="Add a color"
+            placeholder="Add category"
           />
           <Button
             type="button"
             onClick={() => {
-              if (newCategory && !product.sizes.includes(newCategory)) {
+              if (newCategory && !product.categories.includes(newCategory)) {
                 setProduct(prev => ({
                   ...prev,
-                  sizes: [...prev.sizes, newCategory]
+                  categories: [...prev.categories, newCategory],
                 }))
-                setNewCategory("")
+                setNewCategory('')
+              }
+            }}
+          >
+            Add
+          </Button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {product.categories.map((category) => (
+            <div
+              key={category}
+              className="bg-gray-100 px-2 py-1 rounded flex items-center"
+            >
+              <span>{category}</span>
+              <button
+                type="button"
+                onClick={() =>
+                  setProduct(prev => ({
+                    ...prev,
+                    categories: prev.categories.filter(
+                      (cat) => cat !== category
+                    ),
+                  }))
+                }
+                className="ml-2 text-red-500"
+              >
+                &times;
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Colors (was Sizes) */}
+      <div>
+        <Label>Colors</Label>
+        <div className="flex gap-2 mb-2">
+          <Input
+            value={newColor}
+            onChange={(e) => setNewColor(e.target.value)}
+            placeholder="Add color"
+          />
+          <Button
+            type="button"
+            onClick={() => {
+              if (newColor && !product.sizes.includes(newColor)) {
+                setProduct(prev => ({
+                  ...prev,
+                  sizes: [...prev.sizes, newColor],
+                }))
+                setNewColor('')
               }
             }}
           >
@@ -184,7 +231,7 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
                 onClick={() =>
                   setProduct(prev => ({
                     ...prev,
-                    sizes: prev.sizes.filter(c => c !== color)
+                    sizes: prev.sizes.filter((c) => c !== color),
                   }))
                 }
                 className="ml-2 text-red-500"
@@ -196,6 +243,7 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
         </div>
       </div>
 
+      {/* Gallery Images */}
       <div>
         <Label>Gallery Images</Label>
         <div className="flex gap-2 mb-2">
@@ -204,11 +252,16 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
             onChange={(e) => setNewGalleryImage(e.target.value)}
             placeholder="Add image URL"
           />
-          <Button type="button" onClick={handleGalleryImageAdd}>Add</Button>
+          <Button type="button" onClick={handleGalleryImageAdd}>
+            Add
+          </Button>
         </div>
         <div className="flex flex-wrap gap-2">
           {product.galleryImages.map((image) => (
-            <div key={image} className="bg-gray-100 px-2 py-1 rounded flex items-center">
+            <div
+              key={image}
+              className="bg-gray-100 px-2 py-1 rounded flex items-center"
+            >
               <span>{image}</span>
               <button
                 type="button"
@@ -221,13 +274,15 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           ))}
         </div>
       </div>
-      
-      {/* Add inventory status and stock quantity fields */}
+
+      {/* Inventory */}
       <div>
         <Label htmlFor="inventoryStatus">Inventory Status</Label>
-        <Select 
-          value={product.inventoryStatus} 
-          onValueChange={(value: 'raktáron' | 'rendelésre' | 'elfogyott') => handleInventoryStatusChange(value)}
+        <Select
+          value={product.inventoryStatus}
+          onValueChange={(value: 'raktáron' | 'rendelésre' | 'elfogyott') =>
+            handleInventoryStatusChange(value)
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder="Select status" />
@@ -239,7 +294,7 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           </SelectContent>
         </Select>
       </div>
-      
+
       <div>
         <Label htmlFor="stockQuantity">Stock Quantity</Label>
         <Input
@@ -253,7 +308,8 @@ export function ProductForm({ initialProduct, onSubmit, onCancel }: ProductFormP
           step="1"
         />
       </div>
-      
+
+      {/* Submit / Cancel */}
       <div className="flex justify-end gap-2">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
