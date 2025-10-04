@@ -6,21 +6,28 @@ interface Product {
   price: number
   salePrice?: number
   mainImage: string
+  category?: string   // 🔹 ensure this is here
 }
+
+
 
 interface CartItem {
   product: Product
   size: string
   quantity: number
+  image: string   // 🔹 has image
 }
+
+
 
 interface CartContextType {
   cartItems: CartItem[]
-  addToCart: (product: Product, size: string, quantity: number) => void
+  addToCart: (product: Product, size: string, quantity: number, image: string) => void
   removeFromCart: (index: number) => void
   updateQuantity: (index: number, newQuantity: number) => void
   clearCart: () => void
 }
+
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
@@ -38,22 +45,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('cartItems', JSON.stringify(cartItems))
   }, [cartItems])
 
-  const addToCart = (product: Product, size: string, quantity: number = 1) => {
-    setCartItems(prev => {
-      const existingItemIndex = prev.findIndex(
-        item => item.product._id === product._id && item.size === size
+  const addToCart = (product: Product, size: string, quantity: number = 1, image: string) => {
+  setCartItems(prev => {
+    const existingItemIndex = prev.findIndex(
+      item => item.product._id === product._id && item.size === size
+    )
+    if (existingItemIndex > -1) {
+      return prev.map((item, index) => 
+        index === existingItemIndex 
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
       )
-      if (existingItemIndex > -1) {
-        return prev.map((item, index) => 
-          index === existingItemIndex 
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        )
-      } else {
-        return [...prev, { product, size, quantity }]
-      }
-    })
-  }
+    } else {
+      return [...prev, { product, size, quantity, image }]
+    }
+  })
+}
+
 
   const removeFromCart = (index: number) => {
     setCartItems(prev => prev.filter((_, i) => i !== index))

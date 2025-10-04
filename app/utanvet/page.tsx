@@ -23,7 +23,9 @@ export interface CartItem {
   }
   size: string
   quantity: number
+  image: string   // ✅ store chosen variant image
 }
+
 
 interface FormData {
   firstName: string
@@ -242,12 +244,16 @@ const UtanvetPage = () => {
         phone: formData.phone
       }
 
-      const compactCartItems = cartItems.map((item) => ({
-        n: item.product.name,
-        s: item.size,
-        q: item.quantity,
-        p: item.product.salePrice || item.product.price
-      }))
+   const compactCartItems = cartItems.map((item) => ({
+  id: item.product._id,
+  n: item.product.name,
+  s: item.size,
+  q: item.quantity,
+  p: item.product.salePrice || item.product.price,
+  image: item.image  // ✅ use the chosen image, not mainImage
+}));
+
+
 
       const shippingTypeName =
         formData.shippingType === 'standard'
@@ -461,13 +467,14 @@ const UtanvetPage = () => {
                   {cartItems.map((item, index) => (
                     <div key={`${item.product._id}-${item.size}-${index}`} className="flex items-center py-2">
                       <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                        <Image
-                          src={`/uploads/${item.product.mainImage}`}
-                          alt={item.product.name}
-                          width={64}
-                          height={64}
-                          className="h-full w-full object-cover object-center"
-                        />
+                       <Image
+  src={`/uploads/${item.image || item.product.mainImage}`}
+  alt={item.product.name}
+  width={64}
+  height={64}
+  className="h-full w-full object-cover object-center"
+/>
+
                       </div>
                       <div className="ml-4 flex flex-1 flex-col">
   <div className="flex justify-between text-base font-medium text-gray-900 lg:flex-row flex-col">
@@ -611,13 +618,14 @@ const UtanvetPage = () => {
       {orderSummary.cartItems.map((item, index) => (
         <div key={`${item.product._id}-${item.size}-${index}`} className="flex items-center py-3 border-b border-gray-200">
           <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-            <Image
-              src={`/uploads/${item.product.mainImage}`}
-              alt={item.product.name}
-              width={64}
-              height={64}
-              className="h-full w-full object-cover object-center"
-            />
+           <Image
+  src={`/uploads/${item.image || item.product.mainImage}`}
+  alt={item.product.name}
+  width={64}
+  height={64}
+  className="h-full w-full object-cover object-center"
+/>
+
           </div>
           <div className="ml-4">
             <p className="font-medium">{item.product.name}</p>

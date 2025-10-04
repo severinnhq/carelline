@@ -19,10 +19,15 @@ interface CartItem {
     mainImage: string;
     price: number;
     salePrice?: number;
+    category?: string;   // 🔹 add this
   };
   size: string;
   quantity: number;
+  image: string;
 }
+
+
+
 
 interface SidebarProps {
   cartItems: CartItem[];
@@ -176,38 +181,51 @@ const Sidebar: React.FC<SidebarProps> = ({ cartItems, isOpen, onClose, onRemoveI
                                 onClose()
                               }}
                             >
-                              <Image
-                                src={`/uploads/${item.product.mainImage}`}
-                                alt={item.product.name}
-                                width={96}
-                                height={96}
-                                className="w-full h-full object-center object-cover"
-                              />
+                             <Image
+  src={`/uploads/${item.image}`}
+  alt={item.product.name}
+  width={96}
+  height={96}
+  className="w-full h-full object-center object-cover"
+/>
+
+
                             </Link>
 
                             <div className="ml-4 flex-1 flex flex-col">
-                              <div>
-                                <div className="flex justify-between text-base font-medium text-gray-900">
-                                  <h3 className="text-base font-bold"> 
-                                    <Link
-                                      href={`/product/${item.product._id}`}
-                                      onClick={(e) => {
-                                        e.stopPropagation() 
-                                        onClose()
-                                      }}
-                                      className="hover:underline"
-                                    >
-                                      {item.product.name}
-                                    </Link>
-                                  </h3>
-                                  <p className="ml-4 font-semibold text-sm whitespace-nowrap">
-                                    {((item.product.salePrice || item.product.price) * item.quantity)
-                                      .toFixed(0)
-                                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
-                                  </p>
-                                </div>
-                                <p className="text-sm text-gray-500 mb-1">Carelline</p>
-                              </div>
+                            <div>
+  <div className="flex justify-between text-base font-medium text-gray-900">
+    <h3 className="text-base font-bold"> 
+      <Link
+        href={`/product/${item.product._id}`}
+        onClick={(e) => {
+          e.stopPropagation() 
+          onClose()
+        }}
+        className="hover:underline"
+      >
+        {item.product.name}
+      </Link>
+    </h3>
+    <p className="ml-4 font-semibold text-sm whitespace-nowrap">
+      {((item.product.salePrice || item.product.price) * item.quantity)
+        .toFixed(0)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} Ft
+    </p>
+  </div>
+
+  {/* 🔹 New line: show size if available */}
+ {item.size && item.product.category?.toLowerCase() === "multioption" && (
+  <p className="text-sm text-gray-600">Karakter: {item.size}</p>
+)}
+
+
+
+
+
+  <p className="text-sm text-gray-500 mb-1">Carelline</p>
+</div>
+
                               <div className="flex justify-between text-sm mt-1">
                                 <div className="flex items-center">
                                   <input

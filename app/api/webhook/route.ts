@@ -13,6 +13,7 @@ interface OrderItem {
   s: string;
   q: number;
   p: number;
+  image: string;
 }
 
 interface Order {
@@ -103,13 +104,18 @@ async function sendOrderConfirmation(email: string, order: Order) {
 
         <div class="section products">
           <h2>Termékek</h2>
-          ${order.items.map(item => `
-            <div class="product-item">
-              <strong>${item.n}</strong><br>
-              Méret: ${item.s} | Mennyiség: ${item.q}<br>
-              Ár: ${formatPrice(item.p * item.q)} Ft
-            </div>
-          `).join('')}
+       ${order.items.map(item => 
+  `<div class="product-item">
+    <img src="https://carelline.com/uploads/${item.image}" 
+         alt="${item.n}" 
+         style="width:80px;height:auto;margin-bottom:10px;border-radius:8px;" />
+    <strong>${item.n}</strong><br>
+    Méret: ${item.s} | Mennyiség: ${item.q}<br>
+    Ár: ${formatPrice(item.p * item.q)} Ft
+  </div>`
+).join('')}
+
+
         </div>
 
         ${shippingHtml}

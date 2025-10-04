@@ -12,13 +12,15 @@ interface FloatingProductBoxProps {
     mainImage: string
     price: number
     salePrice?: number
+    categories?: string[]
   }
+  selectedImage: string
   selectedSize: string
   quantity: number
   onAddToCart: () => void
 }
 
-export function FloatingProductBox({ product, quantity, onAddToCart }: FloatingProductBoxProps) {
+export function FloatingProductBox({ product, selectedImage, selectedSize, quantity, onAddToCart }: FloatingProductBoxProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -27,7 +29,7 @@ export function FloatingProductBox({ product, quantity, onAddToCart }: FloatingP
       className={`fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 flex items-center space-x-4 z-50 ${sora.className} hidden lg:flex`}
     >
       <Image
-        src={`/uploads/${product.mainImage}`}
+        src={`/uploads/${selectedImage || product.mainImage}`}
         alt={product.name}
         width={60}
         height={60}
@@ -35,6 +37,9 @@ export function FloatingProductBox({ product, quantity, onAddToCart }: FloatingP
       />
       <div className="flex-grow space-y-1">
         <h3 className="font-bold text-sm">{product.name}</h3>
+        {product.categories?.includes("multioption") && selectedSize && (
+          <p className="text-xs text-gray-500">Karakter: {selectedSize}</p>
+        )}
 
         <p className="text-sm text-gray-600">Mennyiség: {quantity}</p>
         <p className="text-sm font-bold">

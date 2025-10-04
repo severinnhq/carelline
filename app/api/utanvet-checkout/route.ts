@@ -5,11 +5,14 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface OrderItem {
-  n: string;
-  s: string;
-  q: number;
-  p: number;
+  n: string;      // name
+  s: string;      // size
+  q: number;      // quantity
+  p: number;      // price
+  image: string;  // ✅ add this so TS recognizes variant image
 }
+
+
 
 interface ShippingAddress {
   line1: string;

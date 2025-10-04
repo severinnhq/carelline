@@ -195,26 +195,43 @@ export default function ProductPage() {
   }, [])
 
   const handleAddToCart = () => {
-    if (product && selectedSize) {
-      addToCart(product, selectedSize, quantity)
-      
-      selectedUpsells.forEach(upsellId => {
-        const upsellProduct = upsellProducts.find(p => p._id === upsellId)
-        if (upsellProduct) {
-          const defaultSize = upsellProduct.sizes && upsellProduct.sizes.length > 0 
-            ? upsellProduct.sizes[0] 
-            : "One Size"
-          addToCart(upsellProduct, defaultSize, 1)
-        }
-      })
-      
-      setIsSidebarOpen(true)
-    }
+  if (!product) return;
+
+  // ✅ Require size if product is multioption
+  if (product.categories?.includes("multioption") && !selectedSize) {
+    alert("Kérlek válassz méretet!");
+    return;
   }
 
-  const handleSizeSelect = (size: string) => {
-    setSelectedSize(size)
+  // Add main product
+ addToCart(product, selectedSize || "One Size", quantity, selectedImage || product.mainImage);
+
+
+  // Add upsell products with default size fallback
+  selectedUpsells.forEach(upsellId => {
+    const upsellProduct = upsellProducts.find(p => p._id === upsellId);
+    if (upsellProduct) {
+      const defaultSize =
+        upsellProduct.sizes?.length > 0
+          ? upsellProduct.sizes[0]
+          : "One Size";
+ addToCart(upsellProduct, defaultSize, 1, upsellProduct.mainImage);
+
+    }
+  });
+
+  // Open sidebar
+  setIsSidebarOpen(true);
+};
+
+
+  const handleSizeSelect = (size: string, index: number) => {
+  setSelectedSize(size)
+  if (optionImages[index]) {
+    setSelectedImage(optionImages[index])
   }
+}
+
 
   const handleQuantityChange = (newQuantity: number) => {
     if (product && newQuantity >= 1) {
@@ -357,7 +374,9 @@ export default function ProductPage() {
     }
   ]
 
-  const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+ const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+const optionImages = product ? [product.mainImage, ...(product.galleryImages || [])] : []
+
   const isProductAvailable = (product?.sizes?.length ?? 0) > 0 && product?.inventoryStatus !== 'elfogyott'
   const displayedViewers = currentViewers > 0 ? currentViewers - 1 : 0
   const viewerSuffix = [3, 6, 8].includes(displayedViewers)
@@ -403,27 +422,23 @@ export default function ProductPage() {
               />
             </div>
             <div className="flex gap-2 overflow-x-auto">
-              <Image
-                src={`/uploads/${product.mainImage}`}
-                alt={product.name}
-                width={160}
-                height={160}
-                quality={80}
-                className={`w-20 h-20 object-cover rounded-md cursor-pointer ${selectedImage === product.mainImage ? 'border-2 border-blue-500' : ''}`}
-                onClick={() => setSelectedImage(product.mainImage)}
-              />
-              {product.galleryImages.map((image, index) => (
-                <Image
-                  key={index}
-                  src={`/uploads/${image}`}
-                  alt={`${product.name} - Gallery ${index + 1}`}
-                  width={160}
-                  height={160}
-                  quality={80}
-                  className={`w-20 h-20 object-cover rounded-md cursor-pointer ${selectedImage === image ? 'border-2 border-blue-500' : ''}`}
-                  onClick={() => setSelectedImage(image)}
-                />
-              ))}
+            {optionImages.slice(0, product.categories?.includes('multioption') ? product.sizes.length : optionImages.length).map((image, index) => (
+  <Image
+    key={index}
+    src={`/uploads/${image}`}
+    alt={`${product.name} - Option ${index + 1}`}
+    width={160}
+    height={160}
+    quality={80}
+    className={`w-20 h-20 object-cover rounded-md cursor-pointer ${selectedImage === image ? 'border-2 border-blue-500' : ''}`}
+    onClick={() => {
+      setSelectedImage(image)
+      const sizeOptions = product.categories?.includes('multioption') ? product.sizes : availableSizes
+      if (sizeOptions[index]) setSelectedSize(sizeOptions[index])
+    }}
+  />
+))}
+
             </div>
           </div>
           
@@ -457,24 +472,26 @@ export default function ProductPage() {
               </div>
               
               {isProductAvailable ? (
-                <>
-                  <div className="mb-3">
-                    <div className="flex flex-wrap gap-2">
-                      {product.sizes.includes('One Size') ? null : (
-                        availableSizes.map((size) => (
-                          <Button
-                            key={size}
-                            variant={selectedSize === size ? 'outline' : 'ghost'}
-                            onClick={() => handleSizeSelect(size)}
-                            className={`border text-sm py-1 ${selectedSize === size ? 'border-black border-2 text-black' : 'border-gray-300 text-gray-700'} ${!product.sizes.includes(size) && 'opacity-50 cursor-not-allowed'}`}
-                            disabled={!product.sizes.includes(size)}
-                          >
-                            {size}
-                          </Button>
-                        ))
-                      )}
-                    </div>
-                  </div>
+  <>
+    <div className="mb-3">
+      <div className="flex flex-wrap gap-2">
+        {product.sizes.includes('One Size') ? null : (() => {
+  const sizeOptions = product.categories?.includes('multioption') ? product.sizes : availableSizes
+  return sizeOptions.map((size, index) => (
+    <Button
+      key={size}
+      variant={selectedSize === size ? 'outline' : 'ghost'}
+      onClick={() => handleSizeSelect(size, index)}
+      className={`border text-sm py-1 ${selectedSize === size ? 'border-black border-2 text-black' : 'border-gray-300 text-gray-700'} ${!product.sizes.includes(size) && 'opacity-50 cursor-not-allowed'}`}
+      disabled={!product.sizes.includes(size)}
+    >
+      {size}
+    </Button>
+  ))
+})()}
+
+      </div>
+    </div>
                   <div className="mb-6">
                     <div className="flex flex-col">
                       <div className="mt-0 mb-4 w-[85%] max-lg:w-full">
@@ -700,11 +717,13 @@ export default function ProductPage() {
       <AnimatePresence>
         {showFloatingBox && product && isProductAvailable && (
           <FloatingProductBox
-            product={product}
-            selectedSize={selectedSize}
-            quantity={quantity}
-            onAddToCart={handleAddToCart}
-          />
+  product={product}
+  selectedImage={selectedImage}
+  selectedSize={selectedSize}
+  quantity={quantity}
+  onAddToCart={handleAddToCart}
+/>
+
         )}
       </AnimatePresence>
       <Sidebar
