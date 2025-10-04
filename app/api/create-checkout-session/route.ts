@@ -6,6 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-02-24.acacia',
 });
 
+// ✅ Updated CartItem interface with image
 interface CartItem {
   product: {
     _id: string;
@@ -16,6 +17,7 @@ interface CartItem {
   };
   size: string;
   quantity: number;
+  image?: string; // added image for variant
 }
 
 interface RequestPayload {
@@ -25,7 +27,6 @@ interface RequestPayload {
 
 const FIXED_AMOUNT = 'fixed_amount' as const;
 const BUSINESS_DAY = 'business_day' as const;
-
 
 export async function POST(request: NextRequest) {
   try {
@@ -69,9 +70,11 @@ export async function POST(request: NextRequest) {
     const MIN_AMOUNT_HUF = 175;
     let totalBeforeShipping = 0;
 
-    // Build line items from the cart items
+    // ✅ Build line items from the cart items
     const lineItems = cartItems.map(item => {
-      let priceInHUF = item.product.salePrice ? Math.round(item.product.salePrice) : Math.round(item.product.price);
+      let priceInHUF = item.product.salePrice
+        ? Math.round(item.product.salePrice)
+        : Math.round(item.product.price);
 
       if (priceInHUF <= 0) {
         console.error(`Invalid price for product ${item.product._id}: ${priceInHUF}`);
@@ -84,23 +87,23 @@ export async function POST(request: NextRequest) {
         `Product: ${item.product.name}, Price: ${priceInHUF} HUF, Quantity: ${item.quantity}, Line Total: ${lineItemTotal} HUF`
       );
 
+      // ✅ use variant image if available, fallback to mainImage
+      const productImage = item.image || item.product.mainImage;
+
       return {
         price_data: {
           currency: 'huf',
           product_data: {
             name: `${item.product.name} (${item.size})`,
             images: [
-              `${process.env.NEXT_PUBLIC_BASE_URL}/api/product-image?filename=${encodeURIComponent(
-                item.product.mainImage
-              )}`
+              `${process.env.NEXT_PUBLIC_BASE_URL}/uploads/${encodeURIComponent(productImage)}`
             ],
             metadata: {
               productId: item.product._id,
               size: item.size,
             },
           },
-          // Convert to fillér (smallest HUF unit)
-          unit_amount_decimal: (priceInHUF * 100).toString(),
+          unit_amount_decimal: (priceInHUF * 100).toString(), // Convert to fillér
         },
         quantity: item.quantity,
       };
@@ -206,23 +209,7 @@ export async function POST(request: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
       shipping_address_collection: {
-        allowed_countries: [
-          'AC','AD','AE','AF','AG','AI','AL','AM','AO','AQ','AR','AT','AU','AW','AX','AZ',
-          'BA','BB','BD','BE','BF','BG','BH','BI','BJ','BL','BM','BN','BO','BQ','BR','BS',
-          'BT','BV','BW','BY','BZ','CA','CD','CF','CG','CH','CI','CK','CL','CM','CN','CO',
-          'CR','CV','CW','CY','CZ','DE','DJ','DK','DM','DO','DZ','EC','EE','EG','EH','ER',
-          'ES','ET','FI','FJ','FK','FO','FR','GA','GB','GD','GE','GF','GG','GH','GI','GL',
-          'GM','GN','GP','GQ','GR','GS','GT','GU','GW','GY','HK','HN','HR','HT','HU','ID',
-          'IE','IL','IM','IN','IO','IQ','IS','IT','JE','JM','JO','JP','KE','KG','KH','KI',
-          'KM','KN','KR','KW','KY','KZ','LA','LB','LC','LI','LK','LR','LS','LT','LU','LV',
-          'LY','MA','MC','MD','ME','MF','MG','MK','ML','MM','MN','MO','MQ','MR','MS','MT',
-          'MU','MV','MW','MX','MY','MZ','NA','NC','NE','NG','NI','NL','NO','NP','NR','NU',
-          'NZ','OM','PA','PE','PF','PG','PH','PK','PL','PM','PN','PR','PS','PT','PY','QA',
-          'RE','RO','RS','RU','RW','SA','SB','SC','SE','SG','SH','SI','SJ','SK','SL','SM',
-          'SN','SO','SR','SS','ST','SV','SX','SZ','TA','TC','TD','TF','TG','TH','TJ','TK',
-          'TL','TM','TN','TO','TR','TT','TV','TW','TZ','UA','UG','US','UY','UZ','VA','VC',
-          'VE','VG','VN','VU','WF','WS','XK','YE','YT','ZA','ZM','ZW'
-        ]
+        allowed_countries: ['HU', 'DE', 'AT', 'RO', 'SK', 'CZ', 'PL', 'HR', 'SI', 'IT', 'FR', 'NL', 'BE', 'GB', 'IE', 'US'], // ✨ shorten list for sanity
       },
       billing_address_collection: 'required',
       shipping_options: shippingOptions,
