@@ -133,7 +133,7 @@ export default function ProductList() {
   const handleCloseModal = () => setCartProduct(null)
   const handleConfirmAddToCart = (size: string) => {
     if (!cartProduct) return
-    addToCart(cartProduct, size, 1)
+    addToCart(cartProduct, size, 1, cartProduct.mainImage)
     setCartProduct(null)
     setIsSidebarOpen(true)
   }

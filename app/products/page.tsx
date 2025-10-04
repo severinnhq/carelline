@@ -39,13 +39,15 @@ export default function Home() {
   }
 
   // Once the user confirms (e.g., selecting a size) in the CartModal, add the product.
-  const handleConfirmAddToCart = (size: string) => {
-    if (cartProduct) {
-      addToCart(cartProduct, size, 1);
-      setCartProduct(null);
-      setIsSidebarOpen(true);
-    }
-  };
+const handleConfirmAddToCart = (size: string) => {
+  if (cartProduct) {
+    // If you don’t have variant images here, just use mainImage
+    addToCart(cartProduct, size, 1, cartProduct.mainImage); 
+    setCartProduct(null);
+    setIsSidebarOpen(true);
+  }
+};
+
 
   return (
     <main className="flex flex-col min-h-screen">
