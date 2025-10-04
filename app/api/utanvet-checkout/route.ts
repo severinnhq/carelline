@@ -134,7 +134,7 @@ async function sendConfirmationEmail(email: string, order: Order) {
             ${order.items.map(item => 
               `<div class="product-item">
                 <strong>${item.n}</strong><br>
-                Méret: ${item.s} | Mennyiség: ${item.q}<br>
+                Karakter: ${item.s} | Mennyiség: ${item.q}<br>
                 Ár: ${formatCurrency(item.p * item.q)} Ft
               </div>`
             ).join('')}

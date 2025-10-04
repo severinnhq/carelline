@@ -110,7 +110,7 @@ async function sendOrderConfirmation(email: string, order: Order) {
          alt="${item.n}" 
          style="width:80px;height:auto;margin-bottom:10px;border-radius:8px;" />
     <strong>${item.n}</strong><br>
-    Méret: ${item.s} | Mennyiség: ${item.q}<br>
+    Karakter: ${item.s} | Mennyiség: ${item.q}<br>
     Ár: ${formatPrice(item.p * item.q)} Ft
   </div>`
 ).join('')}
