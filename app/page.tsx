@@ -16,14 +16,20 @@ import ProductList from '../components/ProductList';
 import { useCart } from '@/lib/CartContext';
 
 // Updated Product interface with required properties
+interface ProductOption {
+  size: string;
+  image: string;
+}
+
 interface Product {
   _id: string;
   name: string;
   price: number;
   mainImage: string;
-  sizes: string[];  // Array of available sizes
-  // Add other product properties as needed
+  sizes: string[];  
+  options?: ProductOption[]; // ✅ allow size → image mapping
 }
+
 
 const SHOW_COUNTDOWN = false;
 
@@ -47,13 +53,16 @@ export default function Home() {
   }
 
   // Once the user confirms (e.g., selecting a size) in the CartModal, add the product.
-  const handleConfirmAddToCart = (size: string) => {
-    if (cartProduct) {
-      addToCart(cartProduct, size, 1);
-      setCartProduct(null);
-      setIsSidebarOpen(true);
-    }
-  };
+ const handleConfirmAddToCart = (size: string) => {
+  if (cartProduct) {
+    const selectedOption = cartProduct.options?.find(opt => opt.size === size);
+    const image = selectedOption?.image || cartProduct.mainImage;
+
+    addToCart(cartProduct, size, 1, image);  // ✅ now 4 args
+    setCartProduct(null);
+    setIsSidebarOpen(true);
+  }
+};
 
   return (
     <main className="flex flex-col min-h-screen">
