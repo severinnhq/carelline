@@ -29,7 +29,7 @@ export default function CancelPage() {
           </CardTitle>
         </CardHeader>
        
-        <CardContent className="p-8">
+        <CardContent className="p-8 pt-0">
           <p className="text-center text-gray-700 mb-6 leading-relaxed">
             Sajnáljuk, hogy elállt a rendelésétől. Ha problémát tapasztal a rendelés leadásakor, vagy kérdései vannak, kérjük, vegye fel a kapcsolatot ügyfélszolgálatunkkal.
           </p>

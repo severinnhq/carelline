@@ -5,13 +5,15 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertCircle, ShoppingBag, ArrowLeft, Info } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
+import { useCheckout } from '@/lib/useCheckout'
 import { motion } from 'framer-motion'
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export interface CartItem {
   product: {
@@ -23,9 +25,7 @@ export interface CartItem {
   }
   size: string
   quantity: number
-  image: string   // ✅ store chosen variant image
 }
-
 
 interface FormData {
   firstName: string
@@ -116,6 +116,7 @@ const UtanvetPage = () => {
   const [error, setError] = useState<string | null>(null)
   const [orderSummary, setOrderSummary] = useState<OrderSummary | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -244,16 +245,12 @@ const UtanvetPage = () => {
         phone: formData.phone
       }
 
-   const compactCartItems = cartItems.map((item) => ({
-  id: item.product._id,
-  n: item.product.name,
-  s: item.size,
-  q: item.quantity,
-  p: item.product.salePrice || item.product.price,
-  image: item.image  // ✅ use the chosen image, not mainImage
-}));
-
-
+      const compactCartItems = cartItems.map((item) => ({
+        n: item.product.name,
+        s: item.size,
+        q: item.quantity,
+        p: item.product.salePrice || item.product.price
+      }))
 
       const shippingTypeName =
         formData.shippingType === 'standard'
@@ -307,12 +304,75 @@ const UtanvetPage = () => {
 
   const totals = calculateTotal(cartItems, formData.shippingType)
 
+  const { handleCheckout } = useCheckout();
+
+  const processCheckout = async () => {
+    setIsCheckoutLoading(true);
+    await handleCheckout();
+    setIsCheckoutLoading(false);
+  };
+
   return (
     <div className="max-w-7xl mx-auto pt-[4rem] pb-[8rem] px-4 relative">
       <Link href="/#products" className="inline-flex items-center text-sm font-medium mb-6 hover:underline">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Vissza a vásárláshoz
       </Link>
+
+      <div className="fixed inset-0 bg-black/65 z-40">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="min-h-screen bg-black/65 flex items-center justify-center p-4"
+    >
+      <Card className="w-full max-w-md shadow-xl rounded-2xl overflow-hidden border-0">
+        <CardHeader className="bg-white p-8">
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            className="flex justify-center mb-6"
+          >
+            <div className="p-4 bg-red-100 rounded-full">
+              <ExclamationTriangleIcon className="w-16 h-16 text-red-600" strokeWidth={1.5} />
+            </div>
+          </motion.div>
+          <CardTitle className="text-3xl font-extrabold text-center text-black">
+            Utánvét nem elérhető
+          </CardTitle>
+        </CardHeader>
+       
+        <CardContent className="p-8 pt-0">
+          <p className="text-center text-gray-700 mb-6 leading-relaxed">
+            Sajnálattal közöljük, hogy átmenetileg az átvételkor való fizetés szünetel. Ha problémát tapasztal a rendelés leadásakor, vagy kérdései vannak, kérjük, vegye fel a kapcsolatot ügyfélszolgálatunkkal.
+          </p>
+          <div className="text-center text-sm text-[#222] space-y-1">
+            <p>✉️ support@carelline.com</p>
+          </div>
+        </CardContent>
+        <CardFooter className="p-8 pt-0">
+          <div className="w-full flex flex-col items-center space-y-4">
+      <Button 
+        onClick={processCheckout} 
+        disabled={isCheckoutLoading} 
+        className="w-2/3 border-2 border-black text-white bg-[#dc2626] hover:bg-red-900"
+        variant="outline"
+      >
+        {isCheckoutLoading ? 'Feldolgozás...' : (
+          <div className="flex items-center justify-center space-x-2">
+            <span>Értettem</span>
+          </div>
+        )}
+      </Button>
+      {/* <Link href="/#products" className="inline-flex items-center text-sm font-medium hover:underline mt-4">
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Vissza a vásárláshoz
+      </Link> */}
+          </div>
+        </CardFooter>
+      </Card>
+    </motion.div>
+      </div>
+      
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         <div className="md:col-span-7">
@@ -325,7 +385,8 @@ const UtanvetPage = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
+          {/* <form onSubmit={handleSubmit}> */}
+          <form>
             <div className="space-y-6">
               {/* Shipping Details */}
               <div>
@@ -467,14 +528,13 @@ const UtanvetPage = () => {
                   {cartItems.map((item, index) => (
                     <div key={`${item.product._id}-${item.size}-${index}`} className="flex items-center py-2">
                       <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                       <Image
-  src={`/uploads/${item.image || item.product.mainImage}`}
-  alt={item.product.name}
-  width={64}
-  height={64}
-  className="h-full w-full object-cover object-center"
-/>
-
+                        <Image
+                          src={`/uploads/${item.product.mainImage}`}
+                          alt={item.product.name}
+                          width={64}
+                          height={64}
+                          className="h-full w-full object-cover object-center"
+                        />
                       </div>
                       <div className="ml-4 flex flex-1 flex-col">
   <div className="flex justify-between text-base font-medium text-gray-900 lg:flex-row flex-col">
@@ -564,9 +624,11 @@ const UtanvetPage = () => {
                     <div className="mt-4 w-full">
                       <Button
                         type="submit"
-                        onClick={handleSubmit}
-                        disabled={isLoading}
-                        className="bg-[#dc2626] hover:bg-[#b91c1c] text-white w-full"
+                        // onClick={handleSubmit}
+                        disabled={true}
+                        // disabled={isLoading}
+                        className="bg-neutral-400 text-white w-full"
+                        // className="bg-[#dc2626] hover:bg-[#b91c1c] text-white w-full"
                       >
                         {isLoading ? 'Feldolgozás...' : 'Rendelés leadása'}
                       </Button>
@@ -618,14 +680,13 @@ const UtanvetPage = () => {
       {orderSummary.cartItems.map((item, index) => (
         <div key={`${item.product._id}-${item.size}-${index}`} className="flex items-center py-3 border-b border-gray-200">
           <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-           <Image
-  src={`/uploads/${item.image || item.product.mainImage}`}
-  alt={item.product.name}
-  width={64}
-  height={64}
-  className="h-full w-full object-cover object-center"
-/>
-
+            <Image
+              src={`/uploads/${item.product.mainImage}`}
+              alt={item.product.name}
+              width={64}
+              height={64}
+              className="h-full w-full object-cover object-center"
+            />
           </div>
           <div className="ml-4">
             <p className="font-medium">{item.product.name}</p>
