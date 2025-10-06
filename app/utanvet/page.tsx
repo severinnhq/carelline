@@ -385,8 +385,8 @@ const UtanvetPage = () => {
             </div>
           )}
 
-          {/* <form onSubmit={handleSubmit}> */}
-          <form>
+           <form onSubmit={handleSubmit}> 
+          
             <div className="space-y-6">
               {/* Shipping Details */}
               <div>
