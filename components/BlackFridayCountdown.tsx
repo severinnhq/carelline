@@ -95,7 +95,7 @@ export default function NextDropCountdown() {
   ))
 
   if (!isClient) {
-    return null // or a loabvding spinner
+    return null // or a loabvdin g spinner
   }
 
   return (
